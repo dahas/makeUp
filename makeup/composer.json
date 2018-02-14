@@ -1,0 +1,16 @@
+{
+    "name": "dahas/makeup",
+    "description": "A basic framework for web development",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Wolf",
+            "email": "dahas@gmx.de"
+        }
+    ],
+    "require": {
+        "doctrine/annotations": "^1.3",
+        "php-di/php-di": "^5.4"
+    }
+}

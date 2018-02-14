@@ -1,0 +1,11 @@
+# Ignore folders
+/.idea/
+/.vscode/
+/makeup/vendor/
+/public/vendor/
+/makeup/modules/test/
+
+# Ignore files
+/makeup/create_phar.php
+/makeup/cli.php
+/makeup/services/test.php

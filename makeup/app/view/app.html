@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="##CONFIG_LANG##">
+  <head>
+    
+    ##CONF_METATAGS##
+
+    ##TITLE##
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/components/font-awesome/css/font-awesome.min.css">
+
+    ##CONF_CSS_FILES##
+
+    ##CONF_JS_FILES_HEAD##
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="makeup/app/res/js/html5shiv.min.js"></script>
+    <script src="makeup/app/res/js/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    
+    ##NAVBAR##
+    
+    <div class="jumbotron">
+      <div class="container theme-showcase" role="main">
+        <img src="resources/img/logo.svg" style="width: 25%" class="pull-right"/>
+        <h1 class="bold" style="font-size:90px;"><span style="color: #777;">make</span><span style="color: #999;">Up</span></h1>
+        <p>##PAGE_TITLE##</p>
+      </div>
+    </div>
+    
+    ##CONTENT##
+    
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">&copy; 2016 Martin J. Wolf</p>
+      </div>
+    </footer>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="vendor/components/jquery/jquery.min.js"></script>
+    <!-- Cookie handler -->
+    <script src="vendor/dahas/cookie_management/cookie_mgmt.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    ##CONF_JS_FILES_BODY##
+    
+  </body>
+</html>
