@@ -1,0 +1,176 @@
+Templates
+---------
+
+Templates are HTML snippets that contain markers and slices. A template of a module is usually a subset of the apps template. Templates always reside in the view folder of a module. 
+
+[source,groovy]
+----
+<!-- Content of main template "your_module.html" -->
+
+<table class="table">
+    <thead>
+         <tr>
+              <th scope="col">#</th>
+              <th scope="col">NAME</th>
+              <th scope="col">AGE</th>
+              <th scope="col">CITY</th>
+              <th scope="col">COUNTRY</th>
+          </tr>
+    </thead>
+    <tbody>
+          <!-- ##SLICE_ROWS## begin -->
+          <tr>
+              <th scope="row">##UID##</th>
+              <td>##NAME##</td>
+              <td>##AGE##</td>
+              <td>##CITY##</td>
+              <td>##COUNTRY##</td>
+          </tr>
+          <!-- ##SLICE_ROWS## end -->
+     </tbody>
+</table>
+----
+
+Markers
+-------
+
+Markers are placeholders that will be replaced with dynamic content. 
+
+- You can shape markers as you like. Here are some suggestions: + 
++ 
+[source,groovy]
+----
+ ##MARKER##
+ {{MARKER}}
+ ***MARKER***
+----
++ 
+I recommend the double-hashtags, but it´s up to you. The decisive factor is that the marker matches its definition in the controller.
+
+- You assign content to the markers in the controllers `build()` methode: + 
++ 
+[source,groovy]
+----
+$m = [];
+$m["##MARKER##"] = "You are beautiful!";
+// or
+$m["{{MARKER}}"] = "You are beautiful!";
+----
+
+- The controller will render the markers when you inject them into the `parse()` methode of the template object: + 
++ 
+[source,groovy]
+----
+return $this->getTemplate()->parse($m);
+----
+
+Slices
+------
+
+- A slice is an HTML Snippet within a template. It is defined by two markers, one at the beginning and one at the end. Both markers are included in comments, so they do not interrupt the HTML. In order to distinguish slice markers from regular markers, I shaped the markers differently in this example: + 
++ 
+[source,groovy]
+----
+<!-- {{SLICE_ROWS}} begin -->
+<tr>
+    <th scope="row">##UID##</th>
+    <td>##NAME##</td>
+    <td>##AGE##</td>
+    <td>##CITY##</td>
+    <td>##COUNTRY##</td>
+</tr>
+<!-- {{SLICE_ROWS}} end -->
+----
+
+- With the `getSlice()` methode of the template object you create the slice object in the controller: + 
++ 
+[source,groovy]
+----
+$slice = $this->getTemplate()->getSlice("{{SLICE_ROWS}}");
+----
++ 
+- Then you render the slice and inject it to the template:
++
+[source,groovy]
+----
+$s = [];
+$s["{{SLICE_ROWS}}"] = "";
+
+// Iterate through data:
+foreach ($Item = $this->YourService->next()) {
+     $sm = [
+         "##UID##" => $Item->getProperty("uid"),
+         "##NAME##" => $Item->getProperty("name"),
+         "##AGE##" => $Item->getProperty("age"),
+         "##CITY##" => $Item->getProperty("city"),
+         "##COUNTRY##" => $Item->getProperty("country")
+    ];
+     .    
+    // Parse the slice and assign it to the slices array:
+    $s["{{SLICE_ROWS}}"] .= $slice->parse($sm);
+}
+
+// Inject the slices as 2nd parameter into the parse() methode of the template:
+return $this->getTemplate()->parse($m, $s);
+----
+
+- An alternative way to work with slices is to outsource the HTML snippets to their own files and treat them like regular templates: + 
++ 
+[source,groovy]
+----
+<!-- Content of main template "your_module.html" -->
+
+<table class="table">
+    <thead>
+         <tr>
+              <th scope="col">#</th>
+              <th scope="col">NAME</th>
+              <th scope="col">AGE</th>
+              <th scope="col">CITY</th>
+              <th scope="col">COUNTRY</th>
+          </tr>
+    </thead>
+    <tbody>
+          {{SLICE_ROWS}}
+    </tbody>
+</table>
+----
++ 
+[source,groovy]
+----
+<!-- Content of slice template "your_module.rows.html" -->
+
+<tr>
+    <th scope="row">##UID##</th>
+    <td>##NAME##</td>
+    <td>##AGE##</td>
+    <td>##CITY##</td>
+    <td>##COUNTRY##</td>
+</tr>
+----
++ 
+[source,groovy]
+----
+// Create object of the slice template:
+$slice = $this->getTemplate("your_module.rows.html");
+----
++ 
+[source,groovy]
+----
+$m = [];
+// Iterate through data:
+foreach ($Item = $this->YourService->next()) {
+     $sm = [
+         "##UID##" => $Item->getProperty("uid"),
+         "##NAME##" => $Item->getProperty("name"),
+         "##AGE##" => $Item->getProperty("age"),
+         "##CITY##" => $Item->getProperty("city"),
+         "##COUNTRY##" => $Item->getProperty("country")
+    ];
+     .    
+    // Parse the slice and assign it to the markers array:
+    $m["{{SLICE_ROWS}}"] .= $slice->parse($sm);
+}
+ .    
+return $this->getTemplate()->parse($m);
+----

@@ -1,0 +1,117 @@
+Create a sample database
+------------------------
+
+There is a SQL file `sample_database.sql` in the makeup folder. Execute this file in your favourite MySQL workbench or in PhpMyAdmin. It will create the sample database `makeup`.
+
+Database configuration
+----------------------
+
+In `makeup/app/config/` open the `app.ini` file. Scroll down to the database section and set it up correctly like shown below:
+
+[source,groovy]
+----
+; Database settings
+[database]
+host = "localhost" // Change this accordingly
+username = "root" // Change this accordingly
+password = "" // Change this accordingly
+db_name = "makeup"
+charset = "utf8"
+----
+
+Connect the controller with the database
+----------------------------------------
+
+TIP: This section is for complete understanding only. The recommended way to use the database is described in https://github.com/dahas/makeup/wiki/4.-Creating-and-using-services[Creating and using services].
+
+1. Open the controller file of your module and include the database library: + 
++ 
+[source,groovy]
+----
+use makeup\lib\DB;
+----
+
+1. Create the database singleton in the `build()` methode: + 
++ 
+[source,groovy]
+----
+$db = DB::getInstance();
+----
+
+Read from a table
+-----------------
+
+1. This example shows how you use the `select()` methode to create a recordset: + 
++ 
+[source,groovy]
+----
+$recordset = $db->select([
+    "columns" => "name, age, city",
+    "from" => "sampledata"
+]);
+----
++ 
+Check the _API Documentation_ to learn more about the `select()` methode.
+
+1. This is how you get the amount of rows in a recordset: + 
++ 
+[source,groovy]
+----
+$count = $recordset->getRecordCount();
+----
+
+1. The `$recordset` object also comes with a `next()` methode, which creates an object of each record. Use the `next()` methode to iterate through the collection: + 
++ 
+[source,groovy]
+----
+while ($record = $recordset->next()) {
+    echo $record->name . ", " . $record->age . "\n";
+}
+----
+
+Update a record
+---------------
+
+1. This example shows how you use the `update()` methode to update a specific record: + 
++ 
+[source,groovy]
+----
+$db->update([
+    "table" => "sampledata",
+    "set" => "name='Claudia', city='Berlin'",
+    "where" => "uid=1"
+]);
+----
++ 
+Check the _API Documentation_ to learn more about the `update()` methode.
+
+Create a record
+---------------
+
+1. This example shows how you use the `insert()` methode to create a new record: + 
++ 
+[source,groovy]
+----
+$db->insert([
+    "into" => "sampledata",
+    "columns" => "name, age, city, country",
+    "values" => "Harri, 19, Oslo, Finland"
+]);
+----
++ 
+Check the _API Documentation_ to learn more about the `insert()` methode.
+
+Delete a record
+---------------
+
+1. This example shows how you use the `delete()` methode to delete an existing record: + 
++ 
+[source,groovy]
+----
+$this->DB->delete([
+    "from" => "sampledata",
+    "where" => "uid=3"
+]);
+----
++ 
+Check the _API Documentation_ to learn more about the `delete()` methode.

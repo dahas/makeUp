@@ -1,0 +1,27 @@
+RQ
+--
+
+The RQ class ensures that the values transmitted in forms or by query-string are clean and secure.
+
+1. Included the RQ class in your modules like this: + 
++ 
+[source,groovy]
+----
+use makeup\lib\RQ;
+----
+
+1. The `GET()` method returns the value of a specific request parameter. + 
++ 
+E.g. `?mod=your_module&param=Hello`: + 
++ 
+[source,groovy]
+----
+RQ::GET("param");  // "Hello"
+----
+
+1. The `POST()` method returns the value of a formular field: + 
++ 
+[source,groovy]
+----
+RQ::POST("field1");
+----

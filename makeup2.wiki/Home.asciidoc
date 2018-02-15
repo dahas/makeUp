@@ -1,0 +1,25 @@
+About makeUp
+------------
+
+*makeUp* is an easy to use, flexible, endless scalable, lightweight PHP framework and a compilation of popular frontend libraries. It is a package that includes almost everything you need to build awesome web applications from the ground up. 
+
+The PHP framework was originally conceived as an MVC pattern, for the complex application of a German telecommunications company, by Martin Wolf. In 2016 it was adjusted to support some capabilities of PHP 5.6 and wasn´t tested in large-scale use since then. So please let me know if you stumble upon errors and problems. 
+
+Not to forget: the processing of the templates was inspired by the early TYPO3 framework. Although it would be easy to include a modern template engine, I kept it, because I still like it. :-)
+
+Read the _Installation & Usage_ guide before you continue.
+
+Have fun!
+
+What comes with it?
+-------------------
+
+- jQuery Javascript Library
+- DHTMLX Suite
+- Twitter Bootstrap CSS Library
+- Font Awesome Icons
+
+Basic requirements
+------------------
+
+In order to get makeUp work properly, you need *PHP 5.6* or above, a *MySQL* database and a local *webserver*. If you have installed Xampp or something similar lately, you should already be set up.
