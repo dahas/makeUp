@@ -19,7 +19,7 @@ class Tools
 	
 	/**
 	 * Loads an ini file. Either the one that belongs to the module, 
-	 * or a special one. If it doesn´t find a file
+	 * or a special one.
 	 * @param type $modName
 	 * @param string $fileName
 	 * @return type

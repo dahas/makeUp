@@ -42,13 +42,13 @@ class App extends Module
 
     /**
      * Build the complete HTML.
-     * @param $modName			The module, that the app should render.
-     * @return mixed|string
+     * @param $module The module to be wrapped into the app. (If empty the default one as set in app.ini will be used)
+     * @return string HTML
      */
-    public function build($modName = "")
+    public function build($module = "")
     {
         // Creating and rendering the requested module. (Must come first!)
-        $marker["##CONTENT##"] = Module::create($modName)->render();
+        $marker["##CONTENT##"] = Module::create($module)->render();
         
         // Adds meta tags to the head section as defined in the ini files.
         $marker["##CONF_METATAGS##"] = Template::createMetaTags();
@@ -66,7 +66,7 @@ class App extends Module
         $marker["##CONF_JS_FILES_BODY##"] = Template::createJsFilesBodyTags();
 
         // Connecting the navbar
-        $marker["##NAVBAR##"] = $this->buildNavbar($modName);
+        $marker["##NAVBAR##"] = Module::create("navigation")->render();
 
         $marker["##CONFIG_LANG##"] = isset($_SESSION["_config"]["page_settings"]["html_lang"]) ? $_SESSION["_config"]["page_settings"]["html_lang"] : "";
 
@@ -78,10 +78,10 @@ class App extends Module
     
     /**
      * Build the top navigation bar
-     * @param type $modName
+     * @param type $module
      * @return type
      */
-    private function buildNavbar($modName)
+    private function buildNavbar($module)
     {
         $menu = [];
         $menu["home"] = ["link" => "/", "text" => "Get started"];
@@ -96,7 +96,7 @@ class App extends Module
             $partialNavbar["##MENU##"] .= $navbarMenu->parse([
                 "##LINK##" => $data["link"],
                 "##TEXT##" => $data["text"],
-                "##ACTIVE##" => $item == $modName ? "class=\"active\"" : ""
+                "##ACTIVE##" => $item == $module ? "class=\"active\"" : ""
             ]);
         }
         

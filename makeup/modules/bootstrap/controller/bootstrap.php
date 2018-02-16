@@ -2,6 +2,7 @@
 
 use makeup\lib\Module;
 use makeup\lib\Tools;
+use makeup\lib\Routing;
 
 
 /**

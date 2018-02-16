@@ -3,7 +3,8 @@
 namespace makeup\lib;
 
 /**
- * Class Session
+ * Class RQ
+ * 
  * @package makeup\lib
  */
 class RQ
