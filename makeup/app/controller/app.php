@@ -47,7 +47,7 @@ class App extends Module
      */
     public function build($module = "")
     {
-        // Creating and rendering the requested module. (Must come first!)
+        // IMPORTANT: Module for pages must come first!
         $marker["##CONTENT##"] = Module::create($module)->render();
         
         // Adds meta tags to the head section as defined in the ini files.
@@ -75,31 +75,4 @@ class App extends Module
         return $this->getTemplate()->parse($marker);
     }
     
-    
-    /**
-     * Build the top navigation bar
-     * @param type $module
-     * @return type
-     */
-    private function buildNavbar($module)
-    {
-        $menu = [];
-        $menu["home"] = ["link" => "/", "text" => "Get started"];
-        $menu["bootstrap"] = ["link" => "?mod=bootstrap", "text" => "Bootstrap Theme"];
-        
-        $navbar = $this->getTemplate("app.navbar.html");
-        $navbarMenu = $navbar->getSlice("##MENU##");
-        $partialNavbar["##MENU##"] = "";
-        
-        foreach ($menu as $item => $data)
-        {
-            $partialNavbar["##MENU##"] .= $navbarMenu->parse([
-                "##LINK##" => $data["link"],
-                "##TEXT##" => $data["text"],
-                "##ACTIVE##" => $item == $module ? "class=\"active\"" : ""
-            ]);
-        }
-        
-        return $navbar->parse([], $partialNavbar);
-    }
 }      
