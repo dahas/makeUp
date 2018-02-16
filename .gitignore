@@ -6,8 +6,6 @@
 /makeup/modules/test/
 
 # Ignore files
-/makeup/create_phar.php
 /makeup/composer.lock
 /public/composer.lock
-/makeup/cli.php
 /makeup/services/test.php
