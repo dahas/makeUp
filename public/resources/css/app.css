@@ -11,7 +11,7 @@ body {
     margin-bottom: 20px;
 }
 
-.theme-showcase > p > .btn {
+.theme-showcase>p>.btn {
     margin: 5px 0;
 }
 
@@ -19,20 +19,21 @@ body {
     width: auto;
 }
 
-
 /*
  * Style tweaks
  * --------------------------------------------------
  */
-html,
-body {
-    overflow-x: hidden; /* Prevent scroll on narrow devices */
+
+html, body {
+    overflow-x: hidden;
+    /* Prevent scroll on narrow devices */
 }
 
 /*
  * Off Canvas
  * --------------------------------------------------
  */
+
 @media screen and (max-width: 767px) {
     .row-offcanvas {
         position: relative;
@@ -40,37 +41,33 @@ body {
         -o-transition: all .25s ease-out;
         transition: all .25s ease-out;
     }
-
     .row-offcanvas-right {
         right: 0;
     }
-
     .row-offcanvas-left {
         left: 0;
     }
-
-    .row-offcanvas-right
-    .sidebar-offcanvas {
-        right: -50%; /* 6 columns */
+    .row-offcanvas-right .sidebar-offcanvas {
+        right: -50%;
+        /* 6 columns */
     }
-
-    .row-offcanvas-left
-    .sidebar-offcanvas {
-        left: -50%; /* 6 columns */
+    .row-offcanvas-left .sidebar-offcanvas {
+        left: -50%;
+        /* 6 columns */
     }
-
     .row-offcanvas-right.active {
-        right: 50%; /* 6 columns */
+        right: 50%;
+        /* 6 columns */
     }
-
     .row-offcanvas-left.active {
-        left: 50%; /* 6 columns */
+        left: 50%;
+        /* 6 columns */
     }
-
     .sidebar-offcanvas {
         position: absolute;
         top: 0;
-        width: 50%; /* 6 columns */
+        width: 50%;
+        /* 6 columns */
     }
 }
 
@@ -127,14 +124,17 @@ body {
 
 /* Sticky footer styles
 -------------------------------------------------- */
+
 html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -144,9 +144,9 @@ body {
     background-color: #f5f5f5;
 }
 
-
 /* Custom page CSS
 -------------------------------------------------- */
+
 /* Not required for template or sticky footer method. */
 
 .container .text-muted {
