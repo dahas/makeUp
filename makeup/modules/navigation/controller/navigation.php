@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Include libraries like below.
- * (Module is mandatory!)
- */
 use makeup\lib\Module;
 use makeup\lib\RQ;
 use makeup\lib\Routing;
@@ -12,23 +8,17 @@ use makeup\lib\Tools;
 use makeup\lib\Template;
 
 /**
- * Class names of modules always have to be UpperCamelCase.
- * But when you create a module, all chars are lowercase
- * and parts are connected with an underscore: Module::create("lower_case")
+ * This is a systeem module
  */
 class Navigation extends Module
 {
-    /**
-     * Calling the parent constructor is required!
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
     /**
-     * This is the manatory default task. It is required
-     * to render the template. It returns pure HTML.
+     * Build before rendering
      *
      * @param string $modName
      * @return string
@@ -45,8 +35,6 @@ class Navigation extends Module
         $m["##MENU_ITEMS##"] = "";
 
         $routing = Routing::getConfig();
-
-        // Tools::debug($routing);
         
         foreach ($routing as $item => $data)
         {
@@ -76,7 +64,7 @@ class Navigation extends Module
 	 *
 	 * @return string HTML
 	 */
-	public function submenu($data, $showOpen = true, $showHeader = true)
+	private function submenu($data, $showOpen = true, $showHeader = true)
 	{
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
