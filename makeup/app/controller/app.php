@@ -47,30 +47,22 @@ class App extends Module
      */
     public function build($module = "")
     {
-        // IMPORTANT: Module for pages must come first!
+        /**** IMPORTANT: Module with page content must come first! *************/
         $marker["##CONTENT##"] = Module::create($module)->render();
-        
-        // Adds meta tags to the head section as defined in the ini files.
-        $marker["##CONF_METATAGS##"] = Template::createMetaTags();
-        
-        // Adds the title to the head section as defined in the ini files.
+
+        /**** Parsing the HTML head section ************************************/
+
         $marker["##TITLE##"] = Template::createTitleTag();
-
-        // Adds stylsheet links to the head section as defined in the ini files.
+        $marker["##HTML_LANG##"] = Config::get("page_settings", "html_lang");
+        $marker["##CONF_METATAGS##"] = Template::createMetaTags();
         $marker["##CONF_CSS_FILES##"] = Template::createStylesheetTags();
-
-        // Adds javascript files to the head section as defined in the ini files.
         $marker["##CONF_JS_FILES_HEAD##"] = Template::createJsFilesHeadTags();
-
-        // Adds javascript files to the body section as defined in the ini files.
         $marker["##CONF_JS_FILES_BODY##"] = Template::createJsFilesBodyTags();
 
-        // Connecting the navbar
-        $marker["##NAVBAR##"] = Module::create("navigation")->render();
+        /**** Parsing the HTML body section ************************************/
 
-        $marker["##CONFIG_LANG##"] = isset($_SESSION["_config"]["page_settings"]["html_lang"]) ? $_SESSION["_config"]["page_settings"]["html_lang"] : "";
-
-        $marker["##PAGE_TITLE##"] = isset($_SESSION["_config"]["page_settings"]["subtitle"]) ? $_SESSION["_config"]["page_settings"]["subtitle"] : "";
+        $marker["##NAVIGATION##"] = Module::create("navigation")->render(); // Connecting the menu to the navbar
+        $marker["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
 
         return $this->getTemplate()->parse($marker);
     }
