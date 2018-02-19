@@ -73,13 +73,22 @@ abstract class Service
 	/**
 	 * CREATE a new record
 	 * 
-	 * @param array $values Values
 	 * @return boolean $inserted
 	 */
-	public function create($values)
+	public function create()
 	{
+		$values = func_get_args();
 		$colsArr = explode(",", $this->columns);
 		$columns = array_map('trim', $colsArr);
+
+		$vSize = count($values);
+		$cSize = count($columns);
+
+		if ($vSize < $cSize) {
+			for ($n = $vSize; $n < $cSize; $n++) {
+				$values[$n] = "";
+			}
+		}
 
 		if (($key = array_search($this->uniqueId, $columns)) !== false) {
 			unset($columns[$key]);
