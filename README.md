@@ -6,7 +6,7 @@
 
 Last but not least: The processing of the templates was inspired by the early TYPO3 framework of Kasper Skårhøj. Although it would be easy to include a modern template engine, I have taken over the basic functionality of the old TYPO3, because I always liked it.
 
-Read the [Installation & Usage](https://github.com/dahas/makeup2/wiki/1.-Installation-&-Usage) guide before you continue.
+Read the [Installation & Usage](https://github.com/dahas/makeup2/wiki/1.-Installation-&-Usage) guide to get started.
 
 Have fun!
 
