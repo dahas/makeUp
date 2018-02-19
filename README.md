@@ -1,34 +1,15 @@
-# makeUp
-<b>makeUp</b> is an easy to use PHP framework and a compilation of popular frontend libraries. It is a package that includes almost everything you need to build awesome web applications from the ground up.
+# About makeUp 2.0
 
-Components:
-- makeUp PHP Framework
-- jQuery
-- Twitter Bootstrap
-- Font Awesome
+*makeUp 2.0* is an easy to use, flexible, endless scalable, lightweight PHP framework. It was originally conceived in 2009 as an MVC pattern, for the complex application of a German telecommunications company, by Martin Wolf. In 2016 it was completely refactored and adjusted to support capabilities of PHP 5.6. Since then it wasn´t tested in large-scale use. So you can use it at your own risk. But you can let me know if you stumble upon errors and/or problems.
 
-## Requirements
-PHP 5.6 or above, MySQL
+*makeUp 2.0* as it comes is specifically designed to develop applications based on Twitter Bootstrap easily from the ground up. Maybe in a future update more frontend frameworks will be supported. For now, with a little tweaking, you can include any other frameworks on your own, if you like.
 
-## Download
+Last but not least: The processing of the templates was inspired by the early TYPO3 framework of Kasper Skårhøj. Although it would be easy to include a modern template engine, I have taken over the basic functionality of the old TYPO3, because I always liked it.
 
-Either download or clone the sources from the Git repository: 
-<pre>$ git clone https://github.com/dahas/makeup.git</pre>
+Read the https://github.com/dahas/makeup2/wiki/1.-Installation-&-Usage[Installation & Usage] guide before you continue.
 
-## Get started
-- The source files must be in a folder named "makeup" within the root directory of your project. 
-- Install dependent libraries: 
-<pre>$ cd makeup 
-$ php composer.phar install</pre>
-- Create file "index.php" in your root directory. Paste the following lines into it:
-<pre>&lt;?php
-require_once('makeup/app/controller/app.php');
-$App = new makeup\app\controller\App();
-$App->execute();</pre>
-- Launch your app in the webbrowser
+Have fun!
 
-## Author 
-Martin J. Wolf
+# Basic requirements
 
-## License
-MIT
+In order to get *makeUp 2.0* to work properly, all you need is *PHP 5.6* or above and a local *webserver*. For data processing you need a *MySQL* database. If you have installed Xampp or something similar lately, you are probably already set up.
