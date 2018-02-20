@@ -25,7 +25,7 @@ class Routing
 
                     // Sub menu
                     if (isset($modIniData["menu"]["submenu_of"]) && $modIniData["menu"]["submenu_of"]) {
-                        $of = $modIniData["menu"]["submenu_of"];
+                        $of = Tools::camelCaseToUnderscore($modIniData["menu"]["submenu_of"]);
                         $subConfig[$of][$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
                     }
                     // Main menu
@@ -34,7 +34,7 @@ class Routing
                         $mainConfig[$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
 
                         if (isset($modIniData["menu"]["submenu_of"]) && $modIniData["menu"]["submenu_of"]) {
-                            $of = $modIniData["menu"]["submenu_of"];
+                            $of = Tools::camelCaseToUnderscore($modIniData["menu"]["submenu_of"]);
                             $subConfig[$of][$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
                         }
                     }
@@ -122,22 +122,32 @@ class Routing
             }
         }
 
+        // Show the separator?
         if (isset($modIniData["menu"]["separate"]) && $modIniData["menu"]["separate"]) {
             $ini["separate"] = 1;
         } else {
             $ini["separate"] = 0;
         }
 
+        // Show a header?
         if (isset($modIniData["menu"]["header"]) && $modIniData["menu"]["header"]) {
             $ini["header"] = $modIniData["menu"]["header"];
         } else {
             $ini["header"] = "";
         }
 
+        // Current active menu item?
         if (RQ::GET("mod") == $module) {
             $ini["active"] = 1;
         } else {
             $ini["active"] = 0;
+        }
+
+        // What type is the module of?
+        if (isset($modIniData["mod_settings"]["type"]) && $modIniData["mod_settings"]["type"] == "MENU") {
+            $ini["show_open"] = false;
+        } else {
+            $ini["show_open"] = true;
         }
 
         return $ini;

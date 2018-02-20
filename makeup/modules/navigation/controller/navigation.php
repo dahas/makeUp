@@ -51,7 +51,7 @@ class Navigation extends Module
                 $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
                     "##LINK##" => "#", // $data["route"],
                     "##TEXT##" => $data["text"],
-                    "##SUBMENU##" => $this->submenu($data)
+                    "##SUBMENU##" => $this->submenu($data, $data["show_open"])
                 ]);
             }
         }
@@ -112,7 +112,7 @@ class Navigation extends Module
             } 
             // With submenu:
             else {
-                $markers["##SUBMENU##"] = $this->submenu($subData, true, true);
+                $markers["##SUBMENU##"] = $this->submenu($subData, $subData["show_open"], true);
                 $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
             }
         }
