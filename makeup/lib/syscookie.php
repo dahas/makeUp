@@ -4,7 +4,7 @@ namespace makeup\lib;
 
 
 /**
- * Class Session
+ * Class SysCookie
  * @package makeup\lib
  */
 class SysCookie

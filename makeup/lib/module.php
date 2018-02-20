@@ -7,7 +7,6 @@ use DI\ContainerBuilder;
 
 /**
  * Abstract Class Module
- * 
  * @package makeup\lib\interfaces
  */
 abstract class Module

@@ -4,7 +4,6 @@ namespace makeup\lib;
 
 /**
  * Class Routing
- *
  * @package makeup\lib
  */
 class Routing

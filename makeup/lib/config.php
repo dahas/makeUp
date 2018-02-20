@@ -2,6 +2,10 @@
 
 namespace makeup\lib;
 
+/**
+ * Class Config
+ * @package makeup\lib
+ */
 class Config
 {
     private static $config = array();

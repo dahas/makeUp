@@ -4,7 +4,6 @@ namespace makeup\lib;
 
 /**
  * Class RQ
- * 
  * @package makeup\lib
  */
 class RQ
