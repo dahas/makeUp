@@ -101,12 +101,22 @@ class Routing
             $ini["text"] = $module;
         }
 
-        if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
-            $ini["route"] = htmlentities("?mod=$module" . "&" . $modIniData["menu"]["params"]);
-        } else if ($module == $defaultMod) {
-            $ini["route"] = "/";
+        if (Config::get("app_settings", "url_rewriting")) {
+            if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
+                $ini["route"] = htmlentities("$module/" . "&" . $modIniData["menu"]["params"]);
+            } else if ($module == $defaultMod) {
+                $ini["route"] = "/";
+            } else {
+                $ini["route"] = "$module/";
+            }
         } else {
-            $ini["route"] = "?mod=$module";
+            if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
+                $ini["route"] = htmlentities("?mod=$module" . "&" . $modIniData["menu"]["params"]);
+            } else if ($module == $defaultMod) {
+                $ini["route"] = "/";
+            } else {
+                $ini["route"] = "?mod=$module";
+            }
         }
 
         if (isset($modIniData["menu"]["separate"]) && $modIniData["menu"]["separate"]) {

@@ -169,7 +169,7 @@ class Tools
 			$html = '<div style="position:fixed; bottom:0; right:0; z-index:99999; background: silver; border: 1px solid grey;">
   <div id="dbg-handle" style="float:left; width: 20px; padding:2px 2px 0 4px; cursor: pointer;" title="Debug panel"><i class="fa '.$dbgHandleIcon.'"> </i></div>
   <div id="dbg-frame" style="display:'.$dbgHandleDspl.'; float:right; width:500px;">
-    <iframe src="div/debug.php" style="width: 100%; height: '.$height.'px; border:none;"></iframe>
+    <iframe src="/div/debug.php" style="width: 100%; height: '.$height.'px; border:none;"></iframe>
   </div>
 </div>';
 			return $html;

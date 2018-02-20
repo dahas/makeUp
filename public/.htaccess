@@ -1,0 +1,15 @@
+# Options +FollowSymlinks
+RewriteEngine on
+RewriteBase /
+
+# if requested URL is NOT a existing file
+#RewriteCond %{REQUEST_FILENAME} !-f [OR]
+# or if requested URL is NOT a directory
+#RewriteCond %{REQUEST_FILENAME} !-d
+
+# Portal and detail pages
+RewriteRule ^([^/]*)\/$ ?mod=$1 [L,QSA]
+# Pages with render
+#RewriteRule ^([^/]*)/([^/]*)/([^/]*)\.html$ /index.php?mod=$1&page=$2&render=$3 [L,QSA]
+# Pages without render
+#RewriteRule ^([^/]*)/([^/]*)\.html$ /index.php?mod=$1&page=$2 [L,QSA]

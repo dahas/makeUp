@@ -267,7 +267,7 @@ class Template
 				$tags[] = sprintf($str, $href);
 			}
 			if (Config::get("app_settings", "dev_mode")) {
-				$tags[] = sprintf($str, "div/system.js");
+				$tags[] = sprintf($str, "/div/system.js");
 			}
 		}
 		return implode("\n", $tags);
