@@ -101,15 +101,18 @@ class Routing
             $ini["text"] = $module;
         }
 
+        // Rewriting enabled:
         if (Config::get("app_settings", "url_rewriting")) {
             if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
-                $ini["route"] = htmlentities("$module/" . "&" . $modIniData["menu"]["params"]);
+                $ini["route"] = htmlentities("$module.html" . "&" . $modIniData["menu"]["params"]);
             } else if ($module == $defaultMod) {
                 $ini["route"] = "/";
             } else {
-                $ini["route"] = "$module/";
+                $ini["route"] = "$module.html";
             }
-        } else {
+        } 
+        // No rewriting:
+        else {
             if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
                 $ini["route"] = htmlentities("?mod=$module" . "&" . $modIniData["menu"]["params"]);
             } else if ($module == $defaultMod) {
