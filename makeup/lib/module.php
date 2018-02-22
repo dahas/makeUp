@@ -103,7 +103,7 @@ abstract class Module
 
 		$realPath = realpath(null);
 
-		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$name/controller/$name.php";
+		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
 			$builder = new ContainerBuilder();

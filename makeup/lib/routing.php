@@ -15,7 +15,7 @@ class Routing
 
         $defaultMod = Config::get("app_settings", "default_module");
 
-        $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules");
+        $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules");
         while (false !== ($module = readdir($handle))) {
             if ($module != "." && $module != "..") {
                 $modIniData = Tools::loadIniFile($module);

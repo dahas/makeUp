@@ -36,7 +36,7 @@ class Template
 		if ($modName == "app")
 			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/$modName/view/$templateFile";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules/$modName/view/$templateFile";
 
 		return new Template($file);
 	}
