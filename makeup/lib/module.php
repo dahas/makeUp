@@ -31,7 +31,7 @@ abstract class Module
 
 		RQ::init();
 		Session::start();
-		SysCookie::read();
+		Cookie::read();
 		Config::init($this->moduleFileName); // Loads config.ini
 	}
 	

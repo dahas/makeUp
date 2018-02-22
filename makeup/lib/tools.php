@@ -157,7 +157,7 @@ class Tools
 	 */
 	public static function renderDebugPanel()
 	{
-		if (SysCookie::get("panel_open") == true) {
+		if (Cookie::get("panel_open") == true) {
 			$dbgHandleIcon = "fa-times";
 			$dbgHandleDspl = "block";
 		} else {

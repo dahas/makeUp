@@ -4,10 +4,10 @@ namespace makeup\lib;
 
 
 /**
- * Class SysCookie
+ * Class Cookie
  * @package makeup\lib
  */
-class SysCookie
+class Cookie
 {
 	private static $value = [];
 
