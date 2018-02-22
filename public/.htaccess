@@ -7,6 +7,10 @@ RewriteCond %{REQUEST_FILENAME} !-f [OR]
 # or if requested URL is NOT a directory
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Rewrite mod parameter.
-# E.g. ?mod=members => members.html
+###### Rewrite mod parameters: #######
+
+# ?mod=members => members.html
 RewriteRule ^([^/]*).html$ ?mod=$1 [L,QSA]
+
+# ?mod=members => members/
+RewriteRule ^([^/]*)/$ ?mod=$1 [L,QSA]
