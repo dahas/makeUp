@@ -9,9 +9,9 @@ use makeup\lib\Config;
  * But when you create a module, you must use the name of the
  * class file (without the extension ".php").
  *
- * Class Home
+ * Class Index
  */
-class Home extends Module
+class Index extends Module
 {
     /**
      * Calling the parent constructor is required!
@@ -28,11 +28,6 @@ class Home extends Module
     public function build()
     {
         $marker["%MAIN_TITLE%"] = Config::get("page_settings|title");
-
-        $marker["%CODE%"] = htmlspecialchars('<?php
-require_once(\'../makeup/app/controller/app.php\');
-$App = new makeup\app\controller\App();
-$App->execute();');
 
         return $this->getTemplate()->parse($marker);
     }
