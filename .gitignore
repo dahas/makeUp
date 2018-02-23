@@ -3,7 +3,7 @@
 /.vscode/
 /makeup/vendor/
 /public/vendor/
-/makeup/modules/test/
+/makeup/app/modules/test/
 
 # Ignore files
 /makeup/composer.lock

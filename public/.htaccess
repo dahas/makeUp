@@ -1,3 +1,4 @@
+
 # Options +FollowSymlinks
 RewriteEngine on
 RewriteBase /
@@ -7,10 +8,42 @@ RewriteCond %{REQUEST_FILENAME} !-f [OR]
 # or if requested URL is NOT a directory
 RewriteCond %{REQUEST_FILENAME} !-d
 
-###### Rewrite mod parameters: #######
 
-# ?mod=members => members.html
-RewriteRule ^([^/]*).html$ ?mod=$1 [L,QSA]
+###### DEFAULT REWRITING: #######
 
-# ?mod=members => members/
-RewriteRule ^([^/]*)/$ ?mod=$1 [L,QSA]
+# ?mod=module_name => module_name.html
+RewriteRule ^([a-z_]*).html$ ?mod=$1 [L,QSA]
+
+# ?mod=module_name => module_name/
+RewriteRule ^([a-z_]*)/$ ?mod=$1 [L,QSA]
+
+
+############################# ADD YOUR RULES BELOW: #######################################
+
+################################### EXAMPLE ###############################################
+# 1. Render a limited list of customers:
+# 
+# This example creates a module that contains a list of customers divided into pages (Pagination).  
+# Therefore the start value and the number of data records are transferred with parameters.
+#
+# In the controller you would request the start and the amount parameters with RQ::GET(), 
+# transform them to a string and inject that string as 4th argument (the limit: "0, 50")  
+# into the read() method of the customers service.
+#
+# E.g. ?mod=customers&start=0&amount=50 => customers/0/50/
+#
+#RewriteRule ^([a-z_]*)/([0-9]+)/([0-9]+)/$ ?mod=$1&start=$2&amount=$3 [L,QSA]
+
+################################### EXAMPLE ###############################################
+# 2. Render the details of a single customer:
+# 
+# This example creates a module that renders a single customer with a specific unique ID.
+#
+# In the controller you would request the parameter of the uid with RQ::GET() and inject it 
+# as argument (the value: 33) into the getByUniqueId() method of the customers service.
+#
+# E.g. ?mod=customers&uid=33 => customers/33/
+#
+#RewriteRule ^([a-z_]*)/([0-9]+)/$ ?mod=$1&uid=$2 [L,QSA]
+
+

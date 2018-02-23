@@ -49,7 +49,7 @@ class Navigation extends Module
             // With submenu:
             else {
                 $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
-                    "##LINK##" => "#", // $data["route"],
+                    "##LINK##" => $data["route"],
                     "##TEXT##" => $data["text"],
                     "##SUBMENU##" => $this->submenu($data, $data["show_open"])
                 ]);

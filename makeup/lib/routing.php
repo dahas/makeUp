@@ -103,11 +103,11 @@ class Routing
         // Rewriting enabled:
         if (Config::get("app_settings", "url_rewriting")) {
             if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
-                $ini["route"] = htmlentities("$module.html" . "&" . $modIniData["menu"]["params"]);
+                $ini["route"] = htmlentities("/$module.html" . "&" . $modIniData["menu"]["params"]);
             } else if ($module == $defaultMod) {
                 $ini["route"] = "/";
             } else {
-                $ini["route"] = "$module.html";
+                $ini["route"] = "/$module.html";
             }
         } 
         // No rewriting:
