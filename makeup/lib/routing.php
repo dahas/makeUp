@@ -102,8 +102,14 @@ class Routing
 
         // Rewriting enabled:
         if (Config::get("app_settings", "url_rewriting")) {
-            if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
-                $ini["route"] = htmlentities("/$module.html" . "&" . $modIniData["menu"]["params"]);
+            if (isset($modIniData["menu"]["route"]) && $modIniData["menu"]["route"]) {
+                $route = "";
+                if (substr($modIniData["menu"]["route"], 0, 1) != "/")
+                    $route .= "/";
+                $route .= $modIniData["menu"]["route"];
+                if (substr($modIniData["menu"]["route"], -1) != "/")
+                    $route .= "/";
+                $ini["route"] = $route;
             } else if ($module == $defaultMod) {
                 $ini["route"] = "/";
             } else {
@@ -112,8 +118,8 @@ class Routing
         } 
         // No rewriting:
         else {
-            if (isset($modIniData["menu"]["params"]) && $modIniData["menu"]["params"]) {
-                $ini["route"] = htmlentities("?mod=$module" . "&" . $modIniData["menu"]["params"]);
+            if (isset($modIniData["menu"]["route"]) && $modIniData["menu"]["route"]) {
+                $ini["route"] = htmlentities($modIniData["menu"]["route"]);
             } else if ($module == $defaultMod) {
                 $ini["route"] = "/";
             } else {
