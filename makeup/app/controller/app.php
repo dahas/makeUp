@@ -13,7 +13,10 @@ namespace makeup\app\controller;
 
 function autoloader($class)
 {
-    require str_replace(__NAMESPACE__, "", __DIR__) . strtolower($class) . ".php";
+    $ns = str_replace("\\", "/", __NAMESPACE__);
+    $dir = str_replace("\\", "/", __DIR__);
+    $class = str_replace("\\", "/", $class);
+    require str_replace($ns, "", $dir) . strtolower($class) . ".php";
 }
 
 spl_autoload_register(__NAMESPACE__ . "\autoloader");
