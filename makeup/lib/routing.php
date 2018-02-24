@@ -2,6 +2,8 @@
 
 namespace makeup\lib;
 
+use makeup\lib\Session;
+
 /**
  * Class Routing
  * @package makeup\lib
@@ -11,39 +13,49 @@ class Routing
     public static function getConfig()
     {
         $mainConfig = [];
-        $subConfig = [];
 
         $defaultMod = Config::get("app_settings", "default_module");
+        $devMode = Config::get("app_settings", "dev_mode");
 
-        $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules");
-        while (false !== ($module = readdir($handle))) {
-            if ($module != "." && $module != "..") {
-                $modIniData = Tools::loadIniFile($module);
-                if (isset($modIniData["menu"]) && isset($modIniData["menu"]["position"])) {
-                    $pos = $modIniData["menu"]["position"];
+        // Create from session:
+        if (!$devMode && Session::get("routing")) {
+            $mainConfig = Session::get("routing");
+        } 
+        // Create from modules folder:
+        else {
+            $subConfig = [];
+            
+            $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules");
+            while (false !== ($module = readdir($handle))) {
+                if ($module != "." && $module != "..") {
+                    $modIniData = Tools::loadIniFile($module);
+                    if (isset($modIniData["menu"]) && isset($modIniData["menu"]["position"])) {
+                        $pos = $modIniData["menu"]["position"];
 
-                    // Sub menu
-                    if (isset($modIniData["menu"]["submenu_of"]) && $modIniData["menu"]["submenu_of"]) {
-                        $of = Tools::camelCaseToUnderscore($modIniData["menu"]["submenu_of"]);
-                        $subConfig[$of][$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
-                    }
-                    // Main menu
-                    else 
-                    {
-                        $mainConfig[$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
-
+                        // Sub menu
                         if (isset($modIniData["menu"]["submenu_of"]) && $modIniData["menu"]["submenu_of"]) {
                             $of = Tools::camelCaseToUnderscore($modIniData["menu"]["submenu_of"]);
                             $subConfig[$of][$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
                         }
+                        // Main menu
+                        else 
+                        {
+                            $mainConfig[$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
+
+                            if (isset($modIniData["menu"]["submenu_of"]) && $modIniData["menu"]["submenu_of"]) {
+                                $of = Tools::camelCaseToUnderscore($modIniData["menu"]["submenu_of"]);
+                                $subConfig[$of][$pos] = self::transformIniConfig($module, $modIniData, $defaultMod);
+                            }
+                        }
                     }
                 }
             }
+            ksort($mainConfig);
+
+            self::extendMainConfig($mainConfig, $subConfig);
+
+            Session::set("routing", $mainConfig);
         }
-
-        ksort($mainConfig);
-
-        self::extendMainConfig($mainConfig, $subConfig);
 
         return $mainConfig;
     }
@@ -139,13 +151,6 @@ class Routing
             $ini["header"] = $modIniData["menu"]["header"];
         } else {
             $ini["header"] = "";
-        }
-
-        // Current active menu item?
-        if (RQ::GET("mod") == $module) {
-            $ini["active"] = 1;
-        } else {
-            $ini["active"] = 0;
         }
 
         // What type is the module of?

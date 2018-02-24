@@ -41,7 +41,7 @@ class Navigation extends Module
             // Main menu:
             if (!isset($data["submenu"])) {
                 $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
-                    "##ACTIVE##" => $data["active"] ? "active" : "",
+                    "##ACTIVE##" => RQ::GET("mod") == $data["module"] ? "active" : "",
                     "##LINK##" => $data["route"],
                     "##TEXT##" => $data["text"]
                 ]);
