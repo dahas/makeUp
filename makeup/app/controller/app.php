@@ -51,7 +51,7 @@ class App extends Module
     public function build($module = "")
     {
         /**** IMPORTANT: Module with page content must come first! *************/
-        $marker["##CONTENT##"] = Module::create($module)->render();
+        $marker["##MODULES##"] = Module::create($module)->render();
 
         /**** Parsing the HTML head section ************************************/
 
