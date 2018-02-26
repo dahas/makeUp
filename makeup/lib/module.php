@@ -159,11 +159,8 @@ abstract class Module
 
 
 	/**
-	 *
-	 * @param
-	 *            $method
-	 * @param
-	 *            $args
+	 * @param $method
+	 * @param $args
 	 * @return string
 	 */
 	public function __call($method, $args)

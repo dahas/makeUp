@@ -125,7 +125,7 @@ class Config
         if (isset($config['additional_css_files']['screen'][0]) && $config['additional_css_files']['screen'][0]) {
             $newPath = [];
             foreach ($config['additional_css_files']['screen'] as $file) {
-                $newPath[] = "/resources/css/$file";
+                $newPath[] = $file;
             }
             return $newPath;
         }
@@ -140,7 +140,7 @@ class Config
         if (isset($config['additional_css_files']['print'][0]) && $config['additional_css_files']['print'][0]) {
             $newPath = [];
             foreach ($config['additional_css_files']['print'] as $file) {
-                $newPath[] = "/resources/css/$file";
+                $newPath[] = $file;
             }
             return $newPath;
         }
@@ -155,7 +155,7 @@ class Config
         if (isset($config['additional_js_files_head']['js'][0]) && $config['additional_js_files_head']['js'][0]) {
             $newPath = [];
             foreach ($config['additional_js_files_head']['js'] as $file) {
-                $newPath[] = "/resources/js/$file";
+                $newPath[] = $file;
             }
             return $newPath;
         }
@@ -170,7 +170,7 @@ class Config
         if (isset($config['additional_js_files_body']['js'][0]) && $config['additional_js_files_body']['js'][0]) {
             $newPath = [];
             foreach ($config['additional_js_files_body']['js'] as $file) {
-                $newPath[] = "/resources/js/$file";
+                $newPath[] = $file;
             }
             return $newPath;
         }
