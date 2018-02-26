@@ -158,16 +158,17 @@ class Tools
 	public static function renderDebugPanel()
 	{
 		if (Cookie::get("panel_open") == true) {
-			$dbgHandleIcon = "fa-times";
+			$dbgHandleIcon = "/div/img/close.png";
 			$dbgHandleDspl = "block";
 		} else {
-			$dbgHandleIcon = "fa-chevron-left";
+			$dbgHandleIcon = "/div/img/open.png";
 			$dbgHandleDspl = "none";
 		}
 		if (Config::get("app_settings", "dev_mode")) {
 			$height = Session::get('_debug') ? 700 : 377;
-			$html = '<div style="position:fixed; bottom:0; right:0; z-index:99999; background: silver; border: 1px solid grey;">
-  <div id="dbg-handle" style="float:left; width: 20px; padding:2px 2px 0 4px; cursor: pointer;" title="Debug panel"><i class="fa '.$dbgHandleIcon.'"> </i></div>
+			$html = '<script type="text/javascript" src="/div/system.js"></script>
+<div style="position:fixed; bottom:0; right:0; z-index:99999; background: silver; border: 1px solid grey;">
+  <div id="dbg-handle" style="float:left; width: 20px; height: 20px; padding: 0px 4px 4px 3px; cursor: pointer;" title="Debug panel"><img id="dbg-img" style="margin-top:-6px;" src="'.$dbgHandleIcon.'" height="14" /></div>
   <div id="dbg-frame" style="display:'.$dbgHandleDspl.'; float:right; width:500px;">
     <iframe src="/div/debug.php" style="width: 100%; height: '.$height.'px; border:none;"></iframe>
   </div>

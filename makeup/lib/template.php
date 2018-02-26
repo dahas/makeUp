@@ -222,8 +222,10 @@ class Template
 		$tags = [];
 		$str = '<link rel="stylesheet" href="%s" media="%s">';
 		if (Config::get('additional_css_files')) {
-			foreach (Config::get('additional_css_files')["screen"] as $href) {
-				$tags[] = sprintf($str, $href, "screen");
+			if (isset(Config::get('additional_css_files')["screen"])) {
+				foreach (Config::get('additional_css_files')["screen"] as $href) {
+					$tags[] = sprintf($str, $href, "screen");
+				}
 			}
 			if (isset(Config::get('additional_css_files')["print"])) {
 				foreach (Config::get('additional_css_files')["print"] as $href) {
@@ -245,8 +247,10 @@ class Template
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
 		if (Config::get('additional_js_files_head')) {
-			foreach (Config::get('additional_js_files_head')['js'] as $href) {
-				$tags[] = sprintf($str, $href);
+			if (isset(Config::get('additional_js_files_head')["js"])) {
+				foreach (Config::get('additional_js_files_head')['js'] as $href) {
+					$tags[] = sprintf($str, $href);
+				}
 			}
 		}
 		return implode("\n", $tags);
@@ -263,11 +267,10 @@ class Template
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
 		if (Config::get('additional_js_files_body')) {
-			foreach (Config::get('additional_js_files_body')['js'] as $href) {
-				$tags[] = sprintf($str, $href);
-			}
-			if (Config::get("app_settings", "dev_mode")) {
-				$tags[] = sprintf($str, "/div/system.js");
+			if (isset(Config::get('additional_js_files_body')["js"])) {
+				foreach (Config::get('additional_js_files_body')['js'] as $href) {
+					$tags[] = sprintf($str, $href);
+				}
 			}
 		}
 		return implode("\n", $tags);

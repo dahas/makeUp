@@ -153,6 +153,13 @@ class Routing
             $ini["header"] = "";
         }
 
+        // Show a header?
+        if (isset($modIniData["menu"]["icon"]) && $modIniData["menu"]["icon"]) {
+            $ini["icon"] = $modIniData["menu"]["icon"];
+        } else {
+            $ini["icon"] = "";
+        }
+
         // What type is the module of?
         if (isset($modIniData["mod_settings"]["type"]) && $modIniData["mod_settings"]["type"] == "MENU") {
             $ini["show_open"] = false;

@@ -19,11 +19,11 @@ abstract class Module
 	public function __construct()
 	{
 		// Parameters "mod" and "task" are mandatory!
-		if (!isset($_GET["mod"]) || !$_GET["mod"])
-			$_GET["mod"] = Config::get("app_settings", "default_module");
+		// if (!isset($_GET["mod"]) || !$_GET["mod"])
+		// 	$_GET["mod"] = Config::get("app_settings", "default_module");
 
-		if (!isset($_GET["task"])|| !$_GET["task"])
-			$_GET["task"] = "build";
+		// if (!isset($_GET["task"])|| !$_GET["task"])
+		// 	$_GET["task"] = "build";
 		
 		$modNsArr = explode("\\", get_class($this));
 		$this->className = array_pop($modNsArr);

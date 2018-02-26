@@ -77,12 +77,17 @@ class Navigation extends Module
         $ss["##SEPARATOR##"] = "";
         $header = $subMenuTmpl->getSlice("##HEADER##");
         $ss["##HEADER##"] = "";
+        $icon = $subMenuTmpl->getSlice("##OI_ICON##");
+        $ss["##OI_ICON##"] = "";
 
         // Open item
         if ($showOpen) {
             $ss["##SUBMENU_NO_SUB##"] .= $subMenuNoSubSlice->parse([
                 "##LINK##" => $data["route"],
-                "##TEXT##" => "Open"
+                "##TEXT##" => "Open",
+                "##ICON##" => $icon->parse([
+                    "##NAME##" => $data["icon"]
+                ])
             ]);
             // With separator
             $ss["##SUBMENU_NO_SUB##"] .= $separator->parse();
@@ -103,7 +108,10 @@ class Navigation extends Module
 
             $markers = [
                 "##LINK##" => $subData["route"],
-                "##TEXT##" => $subData["text"]
+                "##TEXT##" => $subData["text"],
+                "##ICON##" => $icon->parse([
+                    "##NAME##" => $subData["icon"]
+                ])
             ];
 
             // Main menu:

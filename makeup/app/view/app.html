@@ -1,69 +1,67 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="##HTML_LANG##">
-    <head>
+  <head>
+    ##TITLE##
     
     ##CONF_METATAGS##
 
-    ##TITLE##
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/vendor/components/font-awesome/css/font-awesome.min.css">
-
     ##CONF_CSS_FILES##
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="/resources/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 
     ##CONF_JS_FILES_HEAD##
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="/resourcess/js/html5shiv.min.js"></script>
-    <script src="/resourcess/js/respond.min.js"></script>
-    <![endif]-->
-    
-    </head>
-    <body>
-    
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">makeUp</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    ##NAVIGATION##
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
-    
-    <div class="jumbotron">
-        <div class="container theme-showcase" role="main">
-        <img src="/resources/img/logo.svg" style="width: 25%" class="pull-right"/>
-        <h1 class="bold" style="font-size:90px;"><span style="color: #777;">make</span><span style="color: #999;">Up</span></h1>
-        <p>##SUBTITLE##</p>
-        </div>
-    </div>
-    
-    ##CONTENT##
-    
-    <footer class="footer">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">makeUp</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        ##NAVIGATION##
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
         <div class="container">
-        <p class="text-muted">&copy; 2016-2018 Martin J. Wolf</p>
+          <h1 class="display-3">Congratulation! :-)</h1>
+          <p>Your app is up and running. To take a quick look below the surface, check out the app folder and its content.</p>
+          <p><a class="btn btn-primary btn-lg" href="https://github.com/dahas/makeup2/wiki" target="_blank" role="button">Visit the documentation wiki &raquo;</a></p>
         </div>
+      </div>
+
+      ##CONTENT##
+
+    </main>
+
+    <footer class="container">
+      <p>&copy; Martin J. Wolf 2016-2018</p>
     </footer>
 
-    <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-    <script src="/vendor/components/jquery/jquery.min.js"></script>
-    <!-- Cookie handler -->
-    <script src="/vendor/dahas/cookie_management/cookie_mgmt.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Cookie manager -->
+    <script src="/resources/js/cookie_mgmt.js"></script>
 
     ##CONF_JS_FILES_BODY##
-    
-    </body>
-</html>
+
+  </body>
+</html

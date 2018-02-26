@@ -1,6 +1,7 @@
-<ul class="dropdown-menu">
-    <!-- ##SUBMENU_NO_SUB## --><li><a href="##LINK##">##TEXT##</a></li><!-- ##SUBMENU_NO_SUB## -->
-    <!-- ##SUBMENU_HAS_SUB## --><li class="dropdown-submenu multi-level"><a href="##LINK##" class="dropdown-toggle" style="pointer-events: none;" data-toggle="dropdown">##TEXT##</a>##SUBMENU##</li><!-- ##SUBMENU_HAS_SUB## -->
-    <!-- ##SEPARATOR## --><li role="separator" class="divider"></li><!-- ##SEPARATOR## -->
-    <!-- ##HEADER## --><li class="dropdown-header">##TEXT##</li><!-- ##HEADER## -->
-</ul>
+<div class="dropdown-menu" aria-labelledby="dropdown01">
+    <!-- ##SUBMENU_NO_SUB## --><a class="dropdown-item" href="##LINK##">##ICON## ##TEXT##</a><!-- ##SUBMENU_NO_SUB## -->
+    <!-- ##SUBMENU_HAS_SUB## --><a href="##LINK##" class="dropdown-item" style="pointer-events: none; white-space: nowrap;" data-toggle="dropdown">##ICON## ##TEXT##</a>##SUBMENU##<!-- ##SUBMENU_HAS_SUB## -->
+</div>
+<!-- ##SEPARATOR## --><div class="dropdown-divider"></div><!-- ##SEPARATOR## -->
+<!-- ##HEADER## --><h6 class="dropdown-header">##TEXT##</h6><!-- ##HEADER## -->
+<!-- ##OI_ICON## --><span class="oi ##NAME##" title="##NAME##" aria-hidden="true"></span>&nbsp;<!-- ##OI_ICON## -->

@@ -10,26 +10,28 @@ class Config
 {
     private static $config = array();
 
-    public static function init($moduleFileName = "App")
+    public static function init($moduleFileName = "app")
     {
         if (empty(self::$config)) {
             $appConfig = Tools::loadIniFile();
-            $appConfig['additional_css_files']['screen'] = self::setAppCssScreenFilesPath($appConfig);
-            $appConfig['additional_css_files']['print'] = self::setAppCssPrintFilesPath($appConfig);
-            $appConfig['additional_js_files_head']['js'] = self::setAppJsFilesHeadPath($appConfig);
-            $appConfig['additional_js_files_body']['js'] = self::setAppJsFilesBodyPath($appConfig);
+            $appConfig['additional_css_files']['screen'] = self::setCssScreenFilesPath($appConfig);
+            $appConfig['additional_css_files']['print'] = self::setCssPrintFilesPath($appConfig);
+            $appConfig['additional_js_files_head']['js'] = self::setJsFilesHeadPath($appConfig);
+            $appConfig['additional_js_files_body']['js'] = self::setJsFilesBodyPath($appConfig);
         } else {
             $appConfig = self::$config;
         }
 
-        if ($modConfig = Tools::loadIniFile($moduleFileName)) {
-            $modConfig['additional_css_files']['screen'] = self::setModCssScreenFilesPath($modConfig, $moduleFileName);
-            $modConfig['additional_css_files']['print'] = self::setModCssPrintFilesPath($modConfig, $moduleFileName);
-            $modConfig['additional_js_files_head']['js'] = self::setModJsFilesHeadPath($modConfig, $moduleFileName);
-            $modConfig['additional_js_files_body']['js'] = self::setModJsFilesBodyPath($modConfig, $moduleFileName);
-            $appConfig = Tools::arrayMerge($appConfig, $modConfig);
-        }
-
+        if ($moduleFileName != "app") {
+            if ($modConfig = Tools::loadIniFile($moduleFileName)) {
+                $modConfig['additional_css_files']['screen'] = self::setCssScreenFilesPath($modConfig, $moduleFileName);
+                $modConfig['additional_css_files']['print'] = self::setCssPrintFilesPath($modConfig, $moduleFileName);
+                $modConfig['additional_js_files_head']['js'] = self::setJsFilesHeadPath($modConfig, $moduleFileName);
+                $modConfig['additional_js_files_body']['js'] = self::setJsFilesBodyPath($modConfig, $moduleFileName);
+                $appConfig = Tools::arrayMerge($appConfig, $modConfig);
+            }
+        } 
+        
         self::$config = $appConfig;
 
         $_SESSION['_config'] = $appConfig;
@@ -118,7 +120,7 @@ class Config
      * @param $config
      * @return array
      */
-    private static function setAppCssScreenFilesPath($config)
+    private static function setCssScreenFilesPath($config)
     {
         if (isset($config['additional_css_files']['screen'][0]) && $config['additional_css_files']['screen'][0]) {
             $newPath = [];
@@ -133,7 +135,7 @@ class Config
      * @param $config
      * @return array
      */
-    private static function setAppCssPrintFilesPath($config)
+    private static function setCssPrintFilesPath($config)
     {
         if (isset($config['additional_css_files']['print'][0]) && $config['additional_css_files']['print'][0]) {
             $newPath = [];
@@ -148,7 +150,7 @@ class Config
      * @param $config
      * @return array
      */
-    private static function setAppJsFilesHeadPath($config)
+    private static function setJsFilesHeadPath($config)
     {
         if (isset($config['additional_js_files_head']['js'][0]) && $config['additional_js_files_head']['js'][0]) {
             $newPath = [];
@@ -163,71 +165,7 @@ class Config
      * @param $config
      * @return array
      */
-    private static function setAppJsFilesBodyPath($config)
-    {
-        if (isset($config['additional_js_files_body']['js'][0]) && $config['additional_js_files_body']['js'][0]) {
-            $newPath = [];
-            foreach ($config['additional_js_files_body']['js'] as $file) {
-                $newPath[] = "/resources/js/$file";
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $config
-     * @param $mod
-     * @return array
-     */
-    private static function setModCssScreenFilesPath($config, $mod)
-    {
-        if (isset($config['additional_css_files']['screen'][0]) && $config['additional_css_files']['screen'][0]) {
-            $newPath = [];
-            foreach ($config['additional_css_files']['screen'] as $file) {
-                $newPath[] = "/resources/css/$file";
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $config
-     * @param $mod
-     * @return array
-     */
-    private static function setModCssPrintFilesPath($config, $mod)
-    {
-        if (isset($config['additional_css_files']['print'][0]) && $config['additional_css_files']['print'][0]) {
-            $newPath = [];
-            foreach ($config['additional_css_files']['print'] as $file) {
-                $newPath[] = "/resources/css/$file";
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $config
-     * @param $mod
-     * @return array
-     */
-    private static function setModJsFilesHeadPath($config, $mod)
-    {
-        if (isset($config['additional_js_files_head']['js'][0]) && $config['additional_js_files_head']['js'][0]) {
-            $newPath = [];
-            foreach ($config['additional_js_files_head']['js'] as $file) {
-                $newPath[] = "/resources/js/$file";
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $config
-     * @param $mod
-     * @return array
-     */
-    private static function setModJsFilesBodyPath($config, $mod)
+    private static function setJsFilesBodyPath($config)
     {
         if (isset($config['additional_js_files_body']['js'][0]) && $config['additional_js_files_body']['js'][0]) {
             $newPath = [];
