@@ -25,11 +25,15 @@ class Navigation extends Module
      */
     public function build($modName = "")
     {
+        $mainTmpl = $this->getTemplate();
+
         // Init slices:
-        $menuNoSubSlice = $this->getTemplate()->getSlice("##MENU_NO_SUB##");
+        $menuNoSubSlice = $mainTmpl->getSlice("##MENU_NO_SUB##");
         $s["##MENU_NO_SUB##"] = "";
-        $menuHasSubSlice = $this->getTemplate()->getSlice("##MENU_HAS_SUB##");
+        $menuHasSubSlice = $mainTmpl->getSlice("##MENU_HAS_SUB##");
         $s["##MENU_HAS_SUB##"] = "";
+        $icon = $mainTmpl->getSlice("##OI_ICON##");
+        $s["##OI_ICON##"] = "";
 
         $m = [];
         $m["##MENU_ITEMS##"] = "";
@@ -43,7 +47,10 @@ class Navigation extends Module
                 $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
                     "##ACTIVE##" => RQ::GET("mod") == $data["module"] ? "active" : "",
                     "##LINK##" => $data["route"],
-                    "##TEXT##" => $data["text"]
+                    "##TEXT##" => $data["text"],
+                    "##ICON##" => $icon->parse([
+                        "##NAME##" => $data["icon"]
+                    ])
                 ]);
             } 
             // With submenu:
@@ -51,12 +58,15 @@ class Navigation extends Module
                 $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
                     "##LINK##" => $data["route"],
                     "##TEXT##" => $data["text"],
+                    "##ICON##" => $icon->parse([
+                        "##NAME##" => $data["icon"]
+                    ]),
                     "##SUBMENU##" => $this->submenu($data, $data["show_open"])
                 ]);
             }
         }
 
-        return $this->getTemplate()->parse($m, $s);
+        return $mainTmpl->parse($m, $s);
     }
 
     /**
@@ -85,9 +95,7 @@ class Navigation extends Module
             $ss["##SUBMENU_NO_SUB##"] .= $subMenuNoSubSlice->parse([
                 "##LINK##" => $data["route"],
                 "##TEXT##" => "Open",
-                "##ICON##" => $icon->parse([
-                    "##NAME##" => $data["icon"]
-                ])
+                "##ICON##" => ""
             ]);
             // With separator
             $ss["##SUBMENU_NO_SUB##"] .= $separator->parse();
