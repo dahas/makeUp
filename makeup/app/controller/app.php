@@ -59,8 +59,8 @@ class App extends Module
         $marker["##HTML_LANG##"] = Config::get("page_settings", "html_lang");
         $marker["##CONF_METATAGS##"] = Template::createMetaTags();
         $marker["##CONF_CSS_FILES##"] = Template::createStylesheetTags();
-        $marker["##CONF_JS_FILES_HEAD##"] = Template::createJsFilesHeadTags();
-        $marker["##CONF_JS_FILES_BODY##"] = Template::createJsFilesBodyTags();
+        $marker["##CONF_JS_FILES_HEAD##"] = Template::createJsScriptTagsHead();
+        $marker["##CONF_JS_FILES_BODY##"] = Template::createJsScriptTagsBody();
 
         /**** Parsing the HTML body section ************************************/
 

@@ -242,7 +242,7 @@ class Template
 	 * 
 	 * @return string
 	 */
-	public static function createJsFilesHeadTags()
+	public static function createJsScriptTagsHead()
 	{
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
@@ -262,7 +262,7 @@ class Template
 	 * 
 	 * @return string
 	 */
-	public static function createJsFilesBodyTags()
+	public static function createJsScriptTagsBody()
 	{
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
