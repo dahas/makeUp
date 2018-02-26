@@ -58,9 +58,9 @@ class Navigation extends Module
                 $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
                     "##LINK##" => $data["route"],
                     "##TEXT##" => $data["text"],
-                    "##ICON##" => $icon->parse([
+                    "##ICON##" => $data["icon"] ? $icon->parse([
                         "##NAME##" => $data["icon"]
-                    ]),
+                    ]) : "",
                     "##SUBMENU##" => $this->submenu($data, $data["show_open"])
                 ]);
             }
@@ -117,9 +117,9 @@ class Navigation extends Module
             $markers = [
                 "##LINK##" => $subData["route"],
                 "##TEXT##" => $subData["text"],
-                "##ICON##" => $icon->parse([
+                "##ICON##" => $subData["icon"] ? $icon->parse([
                     "##NAME##" => $subData["icon"]
-                ])
+                ]) : ""
             ];
 
             // Main menu:
