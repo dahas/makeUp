@@ -23,10 +23,10 @@ abstract class Module
 		$this->modName = Tools::camelCaseToUnderscore($this->className);
 
 		// Order matters!
-		Config::init($this->modName); // Loads config.ini
-		RQ::init();
-		Session::start();
-		Cookie::read();
+		Session::start(); // 1st
+		Config::init($this->modName); // 2nd
+		RQ::init(); // 3rd
+		Cookie::read(); // 4th
 	}
 	
 	

@@ -103,6 +103,13 @@ class Routing
 
         $ini["module"] = $module;
 
+        // What type is the module of?
+        if (isset($modIniData["mod_settings"]["type"]) && $modIniData["mod_settings"]["type"] == "MENU") {
+            $ini["type"] = "MENU";
+        } else {
+            $ini["type"] = "PAGE";
+        }
+
         // Menu item text
         if (isset($modIniData["menu"]["text"]) && $modIniData["menu"]["text"]) {
             $ini["text"] = $modIniData["menu"]["text"];
@@ -147,13 +154,6 @@ class Routing
 
         // Show a header?
         $ini["icon"] = $modIniData["menu"]["icon"] ?? "";
-
-        // What type is the module of?
-        if (isset($modIniData["mod_settings"]["type"]) && $modIniData["mod_settings"]["type"] == "MENU") {
-            $ini["show_open"] = false;
-        } else {
-            $ini["show_open"] = true;
-        }
 
         return $ini;
     }

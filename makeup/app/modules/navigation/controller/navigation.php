@@ -44,14 +44,16 @@ class Navigation extends Module
         {
             // Main menu:
             if (!isset($data["submenu"])) {
-                $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
-                    "##ACTIVE##" => RQ::GET("mod") == $data["module"] ? "active" : "",
-                    "##LINK##" => $data["route"],
-                    "##TEXT##" => $data["text"],
-                    "##ICON##" => $data["icon"] ? $icon->parse([
-                        "##NAME##" => $data["icon"]
-                    ]) : ""
-                ]);
+                if ($data["type"] == "PAGE") {
+                    $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
+                        "##ACTIVE##" => RQ::GET("mod") == $data["module"] ? "active" : "",
+                        "##LINK##" => $data["route"],
+                        "##TEXT##" => $data["text"],
+                        "##ICON##" => $data["icon"] ? $icon->parse([
+                            "##NAME##" => $data["icon"]
+                        ]) : ""
+                    ]);
+                }
             } 
             // With submenu:
             else {
@@ -61,7 +63,7 @@ class Navigation extends Module
                     "##ICON##" => $data["icon"] ? $icon->parse([
                         "##NAME##" => $data["icon"]
                     ]) : "",
-                    "##SUBMENU##" => $this->submenu($data, $data["show_open"])
+                    "##SUBMENU##" => $this->submenu($data, $data["type"])
                 ]);
             }
         }
@@ -74,7 +76,7 @@ class Navigation extends Module
 	 *
 	 * @return string HTML
 	 */
-	private function submenu($data, $showOpen = true, $showHeader = true)
+	private function submenu($data, $type = "PAGE", $showHeader = true)
 	{
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
@@ -91,7 +93,7 @@ class Navigation extends Module
         $ss["##OI_ICON##"] = "";
 
         // Open item
-        if ($showOpen) {
+        if ($type == "PAGE") {
             $ss["##SUBMENU_NO_SUB##"] .= $subMenuNoSubSlice->parse([
                 "##LINK##" => $data["route"],
                 "##TEXT##" => "Open",
@@ -128,7 +130,7 @@ class Navigation extends Module
             } 
             // With submenu:
             else {
-                $markers["##SUBMENU##"] = $this->submenu($subData, $subData["show_open"], true);
+                $markers["##SUBMENU##"] = $this->submenu($subData, $subData["type"], true);
                 $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
             }
         }
