@@ -1,0 +1,15 @@
+
+// Do not modify this file!
+// 
+// To change the look of the bootstrap theme use "_customVariables.scss"
+// and/or "_custom.scss". 
+
+// 
+// To apply the watcher run this command in the console:
+// $ sass --watch public/bootstrap-sass/bootstrap-sass-gen.scss:public/resources/css/bootstrap-sass-gen.css
+// 
+
+@import '../resources/bootstrap/scss/functions';
+@import "customVariables";
+@import "custom"; 
+@import "../resources/bootstrap/scss/bootstrap";
