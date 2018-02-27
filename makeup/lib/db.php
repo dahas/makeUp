@@ -248,7 +248,7 @@ class Record
      */
     public function getProperty($item)
     {
-        return isset($this->record->$item) ? $this->record->$item : null;
+        return $this->record->$item ?? null;
     }
 
     /**

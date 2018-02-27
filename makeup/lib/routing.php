@@ -140,25 +140,13 @@ class Routing
         }
 
         // Show the separator?
-        if (isset($modIniData["menu"]["separate"]) && $modIniData["menu"]["separate"]) {
-            $ini["separate"] = 1;
-        } else {
-            $ini["separate"] = 0;
-        }
+        $ini["separate"] = $modIniData["menu"]["separate"] ?? 0;
 
         // Show a header?
-        if (isset($modIniData["menu"]["header"]) && $modIniData["menu"]["header"]) {
-            $ini["header"] = $modIniData["menu"]["header"];
-        } else {
-            $ini["header"] = "";
-        }
+        $ini["header"] = $modIniData["menu"]["header"] ?? "";
 
         // Show a header?
-        if (isset($modIniData["menu"]["icon"]) && $modIniData["menu"]["icon"]) {
-            $ini["icon"] = $modIniData["menu"]["icon"];
-        } else {
-            $ini["icon"] = "";
-        }
+        $ini["icon"] = $modIniData["menu"]["icon"] ?? "";
 
         // What type is the module of?
         if (isset($modIniData["mod_settings"]["type"]) && $modIniData["mod_settings"]["type"] == "MENU") {

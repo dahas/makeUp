@@ -28,7 +28,7 @@ class Cookie
 	 */
 	public static function get($key)
 	{
-		return isset(self::$value[$key]) ? self::$value[$key] : null;
+		return self::$value[$key] ?? null;
 	}
 
 
