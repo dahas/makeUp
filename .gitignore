@@ -1,6 +1,7 @@
 # Ignore folders
 /.idea/
 /.vscode/
+/.sass-cache/
 /makeup/vendor/
 /public/vendor/
 /makeup/app/modules/test/

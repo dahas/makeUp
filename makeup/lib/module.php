@@ -13,28 +13,29 @@ abstract class Module
 {
 	protected $config = array();
 	private $className = "";
-	private $moduleFileName = "";
+	private $modName = "";
 
 
 	public function __construct()
 	{
 		$modNsArr = explode("\\", get_class($this));
 		$this->className = array_pop($modNsArr);
-		$this->moduleFileName = Tools::camelCaseToUnderscore($this->className);
+		$this->modName = Tools::camelCaseToUnderscore($this->className);
 
+		// Order matters!
+		Config::init($this->modName); // Loads config.ini
 		RQ::init();
 		Session::start();
 		Cookie::read();
-		Config::init($this->moduleFileName); // Loads config.ini
 	}
 	
 	
 	/**
 	 * Run and output the app.
 	 * 
-	 * @return mixed|string
+	 * @return string
 	 */
-	public function execute()
+	public function execute() : string
 	{
 		// Debugging:
 		$debugMod = "";
@@ -50,12 +51,12 @@ abstract class Module
 		}
 
 		// Parameter "mod" is the mandatory module name.
-		$modName = $debugMod ? $debugMod : RQ::GET('mod');
-		$modName = $modName ? $modName : Config::get("app_settings", "default_module");
+		$modName = $debugMod ?: RQ::GET('mod');
+		$modName = $modName ?: Config::get("app_settings", "default_module");
 
 		// Parameter "task" is mandatory, so the module knows which task to execute.
-		$task = $debugTask ? $debugTask : RQ::GET('task');
-		$task = $task ? $task : "build";
+		$task = $debugTask ?: RQ::GET('task');
+		$task = $task ?: "build";
 
 		// With parameter "nowrap" a module is rendered with its own template only.
 		// No other HTML (neither app nor layout) is wrapped around it.
@@ -74,7 +75,6 @@ abstract class Module
 
 
 	/**
-	 *
 	 * @return ErrorMod|mixed
 	 * @throws \Exception
 	 */
@@ -116,7 +116,7 @@ abstract class Module
 	 *
 	 * @return mixed
 	 */
-	abstract public function build();
+	abstract protected function build() : string;
 	
 	
 	/**
@@ -126,7 +126,7 @@ abstract class Module
 	 *
 	 * @return mixed|void
 	 */
-	public function render($modName = "")
+	protected function render($modName = "") : string
 	{
 		// Deny access to a protected page as long as the user isn´t signed in.
 		if (Config::get("page_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
@@ -142,11 +142,11 @@ abstract class Module
 	/**
 	 * Returns the template object
 	 *
-	 * @return Template|null
+	 * @return Template
 	 */
-	public function getTemplate($fileName = "")
+	protected function getTemplate($fileName = "") : Template
 	{
-		$fname = $fileName ? $fileName : $this->moduleFileName . ".html";
+		$fname = $fileName ? $fileName : $this->modName . ".html";
 		return Template::load($this->className, $fname);
 	}
 

@@ -46,15 +46,15 @@ class Config
         $args = func_get_args();
         if ($args) {
             if (count($args) == 1) {
-                $arg = isset(self::$config[$args[0]]) ? self::$config[$args[0]] : null;
+                $arg = self::$config[$args[0]] ?? null;
             }
 
             if (count($args) == 2) {
-                $arg = isset(self::$config[$args[0]][$args[1]]) ? self::$config[$args[0]][$args[1]] : null;
+                $arg = self::$config[$args[0]][$args[1]] ?? null;
             }
 
             if (count($args) == 3) {
-                $arg = isset(self::$config[$args[0]][$args[1]][$args[2]]) ? self::$config[$args[0]][$args[1]][$args[2]] : null;
+                $arg = self::$config[$args[0]][$args[1]][$args[2]] ?? null;
             }
 
             return $arg;

@@ -10,6 +10,9 @@ class RQ
 {
 	public static function init()
 	{
+		if (!isset($_GET["mod"])) 
+			$_GET["mod"] = Config::get("app_settings", "default_module");
+
 		$_GET = self::parseQueryString();
 		$_POST = self::parseFormData();
 	}
@@ -22,7 +25,7 @@ class RQ
 	 */
 	public static function GET($key)
 	{
-		return isset($_GET[$key]) ? $_GET[$key] : null;
+		return $_GET[$key] ?? null;
 	}
 
 	/**
@@ -33,7 +36,7 @@ class RQ
 	 */
 	public static function POST($key)
 	{
-		return isset($_POST[$key]) ? $_POST[$key] : null;
+		return $_POST[$key] ?? null;
 	}
 
 	public static function parseQueryString()

@@ -23,7 +23,7 @@ class Navigation extends Module
      * @param string $modName
      * @return string
      */
-    public function build($modName = "")
+    public function build($modName = "") : string
     {
         $mainTmpl = $this->getTemplate();
 
@@ -48,9 +48,9 @@ class Navigation extends Module
                     "##ACTIVE##" => RQ::GET("mod") == $data["module"] ? "active" : "",
                     "##LINK##" => $data["route"],
                     "##TEXT##" => $data["text"],
-                    "##ICON##" => $icon->parse([
+                    "##ICON##" => $data["icon"] ? $icon->parse([
                         "##NAME##" => $data["icon"]
-                    ])
+                    ]) : ""
                 ]);
             } 
             // With submenu:

@@ -48,7 +48,7 @@ class App extends Module
      * @param $module The module to be wrapped into the app. (If empty the default one as set in app.ini will be used)
      * @return string HTML
      */
-    public function build($module = "")
+    protected function build($module = "") : string
     {
         /**** IMPORTANT: Module with page content must come first! *************/
         $marker["##MODULES##"] = Module::create($module)->render();
