@@ -9,19 +9,17 @@ namespace makeup\app\controller;
  * This class is the main module. It creates the HTML skeleton, in which 
  * the modules are wrapped as subsets.
  *
- ***************************************************************************** */
+ *******************************************************************************/
 
 function autoloader($class)
 {
-    $ns = str_replace("\\", "/", __NAMESPACE__);
-    $dir = str_replace("\\", "/", __DIR__);
-    $class = str_replace("\\", "/", $class);
-    require str_replace($ns, "", $dir) . strtolower($class) . ".php";
+    $path = dirname(dirname(dirname(dirname(__FILE__)))) . "/" . strtolower($class) . ".php";
+    require $path;
 }
 
 spl_autoload_register(__NAMESPACE__ . "\autoloader");
 
-require_once str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/vendor/autoload.php";
+require dirname(dirname(dirname(dirname(__FILE__)))) . "/makeup/vendor/autoload.php";
 
 
 use makeup\lib\Session;

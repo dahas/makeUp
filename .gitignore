@@ -9,4 +9,4 @@
 # Ignore files
 /makeup/composer.lock
 /public/composer.lock
-/makeup/services/test.php
+/makeup/services/
