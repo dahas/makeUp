@@ -27,10 +27,8 @@ class DB
         $this->pass = Config::get('database', 'password');
         $this->charset = Config::get('database', 'charset');
 
-        $this->conn = mysqli_connect($this->host, $this->user, $this->pass) or die("Connection to database failed!");
-
-        mysqli_select_db($this->conn, $this->db) or die("Database doesn´t exist!");
-
+        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass) or die("Connection to database failed! Supply the mandatory values in app.ini first.");
+        @mysqli_select_db($this->conn, $this->db) or die("Database '$this->db' doesn´t exist!");
         mysqli_set_charset($this->conn, $this->charset);
     }
 
@@ -159,7 +157,7 @@ class DB
      */
     public function __destruct()
     {
-        if (mysqli_close($this->conn)) {
+        if ($this->conn && mysqli_close($this->conn)) {
             $this->conn = null;
         }
     }

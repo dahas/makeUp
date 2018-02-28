@@ -46,7 +46,7 @@ abstract class Service
 	 * @param string $limit MySQL LIMIT clause (optional)
 	 * @return int $count
 	 */
-	public function read($where = "", $groupBy = "", $orderBy = "", $limit = "")
+	public function read($where = "", $groupBy = "", $orderBy = "", $limit = "") : int
 	{
 		$statement = [
 			"columns" => $this->columns,
@@ -75,11 +75,15 @@ abstract class Service
 	 * 
 	 * @return boolean $inserted
 	 */
-	public function create()
+	public function create() : ?ServiceItem
 	{
 		$values = func_get_args();
 		$colsArr = explode(",", $this->columns);
 		$columns = array_map('trim', $colsArr);
+
+		if (($key = array_search($this->uniqueId, $columns)) !== false) {
+			unset($columns[$key]);
+		}
 
 		$vSize = count($values);
 		$cSize = count($columns);
@@ -88,10 +92,6 @@ abstract class Service
 			for ($n = $vSize; $n < $cSize; $n++) {
 				$values[$n] = "";
 			}
-		}
-
-		if (($key = array_search($this->uniqueId, $columns)) !== false) {
-			unset($columns[$key]);
 		}
 
 		$insertId = $this->DB->insert([
@@ -109,7 +109,7 @@ abstract class Service
 	 * 
 	 * @return int $count
 	 */
-	public function count()
+	public function count() : int
 	{
 		return $this->recordset->getRecordCount();
 	}
@@ -121,7 +121,7 @@ abstract class Service
 	 * @param string|int $value Value
 	 * @return object $serviceItem
 	 */
-	public function getByUniqueId($value)
+	public function getByUniqueId($value) : ?ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
@@ -140,7 +140,7 @@ abstract class Service
 	 * @param string|int $value Value
 	 * @return object $serviceItem
 	 */
-	public function getByKey($key, $value)
+	public function getByKey($key, $value) : ?ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
@@ -157,21 +157,19 @@ abstract class Service
 	 * @return object|null $serviceItem
 	 * @throws \Exception
 	 */
-	public function next($key = "", $value = "")
+	public function next($key = "", $value = "") : ?ServiceItem
 	{
 		if (!$this->recordset) {
 			throw new \Exception('No collection found! Create a recordset first.');
 		}
-
 		if ($record = $this->recordset->next()) {
 			// Getting name of child class (our service)
 			$serviceItem = get_class($this) . "Item";
 			return new $serviceItem($this->DB, $record, $this->table, $key, $value);
+		} else {
+			$this->recordset->reset();
+			return null;
 		}
-
-		$this->recordset->reset();
-
-		return null;
 	}
 
 
@@ -228,7 +226,7 @@ class ServiceItem
      * @param string $item
      * @param string $value
      */
-    public function setProperty($item, $value)
+    public function setProperty($item, $value) : void
     {
         $this->record->$item = $value;
     }
@@ -239,7 +237,7 @@ class ServiceItem
      * 
      * @return boolean $updated
      */
-    public function update()
+    public function update() : bool
     {
         $set = [];
 
@@ -264,7 +262,7 @@ class ServiceItem
      * 
      * @return boolean $deleted
      */
-    public function delete()
+    public function delete() : bool
     {
         return $this->DB->delete([
             "from" => $this->table,
