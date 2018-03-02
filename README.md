@@ -12,7 +12,7 @@ Have fun!
 
 # Basic requirements
 
-In order to get **makeUp 2.0** to work properly, all you need is **PHP 5.6** or above and a local **webserver** with the **rewrite module** (mod_rewrite) enabled. For data processing you need a **MySQL** database. If you have installed Xampp or something similar lately, you are probably already set up.
+The easiest way to work with **makeUp 2.0**, is with **PHP 7.2** or above, **SASS** and **Composer** installed and a local **webserver** with the **rewrite module** (mod_rewrite) enabled. For data processing you need a **MySQL** database. If you have installed Xampp or something similar lately, you are probably already set up.
 
 # Author 
 Martin J. Wolf
