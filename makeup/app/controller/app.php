@@ -13,7 +13,7 @@ namespace makeup\app\controller;
 
 function autoloader($class)
 {
-    $path = dirname(dirname(dirname(dirname(__FILE__)))) . "/" . strtolower($class) . ".php";
+    $path = dirname(dirname(dirname(dirname(__FILE__)))) . "/" . strtolower(str_replace("\\", "/", $class)) . ".php";
     require $path;
 }
 
