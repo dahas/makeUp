@@ -58,14 +58,20 @@ abstract class Module
 		$task = $debugTask ?: RQ::GET('task');
 		$task = $task ?: "build";
 
-		// With parameter "nowrap" a module is rendered with its own template only.
+		// With parameter app="nowrap" a module is rendered with its own template only.
 		// No other HTML (neither app nor layout) is wrapped around it.
-		if (!RQ::GET('wrap') && (RQ::GET('nowrap') || $task != "build")) {
+		if (RQ::GET('app') != "wrap" && (RQ::GET('app') == "nowrap" || $task != "build")) {
 			$appHtml = Module::create($modName)->$task();
-		} else {
-			// The app will be renderd, if it is NOT protected.
-			// Or if it is protected and the user is signed in.
-			$html = $this->render($modName);
+		} 
+		// The app will be renderd, if it is NOT protected.
+		// Or if it is protected and the user is signed in.
+		else {
+			if (RQ::GET('app') == "wrap" && $task != "build") {
+				$html = $this->render($modName, $task);
+			} 
+			else {
+				$html = $this->render($modName);
+			}
 			$debugPanel = Tools::renderDebugPanel();
 			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
 		}
@@ -126,7 +132,7 @@ abstract class Module
 	 *
 	 * @return mixed|void
 	 */
-	protected function render($modName = "") : string
+	protected function render($modName = "", $task = "") : string
 	{
 		// Deny access to a protected page as long as the user isn´t signed in.
 		if (Config::get("page_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
@@ -135,7 +141,7 @@ abstract class Module
 		if (Config::get('mod_settings', 'protected') == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 			return null;
 		
-		return $this->build($modName);
+		return $this->build($modName, $task);
 	}
 
 

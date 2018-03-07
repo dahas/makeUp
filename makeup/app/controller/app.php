@@ -46,10 +46,14 @@ class App extends Module
      * @param $module The module to be wrapped into the app. (If empty the default one as set in app.ini will be used)
      * @return string HTML
      */
-    protected function build($module = "") : string
+    protected function build($module = "", $task = "") : string
     {
         /**** IMPORTANT: Module with page content must come first! *************/
-        $marker["##MODULES##"] = Module::create($module)->render();
+        if (!$task) {
+            $marker["##MODULES##"] = Module::create($module)->render();
+        } else {
+            $marker["##MODULES##"] = Module::create($module)->$task();
+        }
 
         /**** Parsing the HTML head section ************************************/
 

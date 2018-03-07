@@ -12,15 +12,22 @@ ErrorDocument 404 /
 
 
 ############################### DEFAULT REWRITING: #######################################
-
+# 
+# App:
 # www.domain.tld/index.php?mod=module_name ==> www.domain.tld/module_name.html
 RewriteRule ^([a-z_]*).html$ index.php?mod=$1 [L,QSA]
-
 # www.domain.tld/index.php?mod=module_name ==> www.domain.tld/module_name/
 RewriteRule ^([a-z_]*)/$ index.php?mod=$1 [L,QSA]
-
-# www.domain.tld/index.php?mod=module_name&task=task_name ==> www.domain.tld/module_name/task_name/
-RewriteRule ^([a-z_]*)/([A-Za-z_]*)/$ index.php?mod=$1&task=$2 [L,QSA]
+#
+# Standalone module:
+# www.domain.tld/index.php?app=nowrap&mod=module_name ==> www.domain.tld/nowrap/module_name.html
+RewriteRule ^([a-z_]*)/([a-z_]*).html$ index.php?app=$1&mod=$2 [L,QSA]
+# www.domain.tld/index.php?app=nowrap&mod=module_name ==> www.domain.tld/nowrap/module_name/
+RewriteRule ^([a-z_]*)/([a-z_]*)/$ index.php?app=$1&mod=$2 [L,QSA]
+#
+# Task:
+# www.domain.tld/index.php?app=nowrap&mod=module_name&task=task_name ==> www.domain.tld/nowrap/module_name/task_name/
+RewriteRule ^([a-z_]*)/([a-z_]*)/([A-Za-z_]*)/$ index.php?app=$1&mod=$2&task=$3 [L,QSA]
 
 
 ############################# ADD YOUR RULES BELOW: #######################################
