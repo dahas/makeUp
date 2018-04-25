@@ -26,7 +26,8 @@ abstract class Module
 		Session::start(); // 1st
 		Config::init($this->modName); // 2nd
 		RQ::init(); // 3rd
-		Cookie::read(); // 4th
+		Lang::init($this->modName); // 4th
+		Cookie::read(); // 5th
 	}
 	
 	
@@ -102,7 +103,7 @@ abstract class Module
 
 		$realPath = realpath(null);
 
-		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules/$name/controller/$name.php";
+		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
 			$builder = new ContainerBuilder();

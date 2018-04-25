@@ -4,7 +4,7 @@
 /.sass-cache/
 /makeup/vendor/
 /public/vendor/
-/makeup/app/modules/test/
+/makeup/modules/test/
 
 # Ignore files
 /makeup/composer.lock

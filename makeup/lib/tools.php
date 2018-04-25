@@ -34,13 +34,37 @@ class Tools
 		if (strtolower($modName) == "app")
 			$path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/config/app.ini";
 		else
-			$path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules/$modName/config/$fileName";
+			$path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$modName/config/$fileName";
 		
 		if(file_exists($path))
 			return parse_ini_file($path, true);
 		else
 			return null;
 	}
+
+	/**
+     * Loads an json file. Either the one that belongs to the module,
+     * or a special one.
+     * @param type $modName
+     * @param string $fileName
+     * @return array|null
+     */
+    public static function loadJsonFile($modName = "app", $fileName = "")
+    {
+        if (!$fileName) {
+            $fileName = $modName . ".json";
+        }
+
+        $realPath = realpath(null);
+
+        $path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang/strings.json";
+
+        if (file_exists($path)) {
+            return json_decode(file_get_contents($path), true);
+        } else {
+            return null;
+        }
+    }
 
 
 	/**

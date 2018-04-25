@@ -1,0 +1,22 @@
+{
+    "app": 
+    {
+        "de": {
+            "head_title":  "makeUp, das einfache Framework"
+        },
+        "en": {
+            "head_title":  "makeUp, the simple Framework"
+        }
+    },
+
+    "test": 
+    {
+        "de": {
+            "test_title":  "Das ist toll!"
+        },
+        "en": {
+            "test_title":  "That´s great!"
+        }
+    }
+
+}

@@ -36,7 +36,7 @@ class Template
 		if ($modName == "app")
 			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/$modName/view/$templateFile";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/app/modules/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$modName/view/$templateFile";
 
 		return new Template($file);
 	}
@@ -206,7 +206,15 @@ class Template
 	public static function createTitleTag()
 	{
 		if (Config::get('page_settings', 'title')) {
-			return '<title>' . Config::get('page_settings', 'title') . '</title>';
+			$title = Config::get('page_settings', 'title');
+			$pos = strpos($title, "*");
+			if ($pos !== false && $pos == 0) {
+				$string = str_replace("*", "", $title);
+            	$modName = RQ::get("mod") && RQ::get("mod") != Config::get('app_settings', 'default_module') ? RQ::get("mod") : "app";
+				$title = Lang::get($modName, $string);
+			}
+
+			return '<title>' . $title . '</title>';
 		}
 		return "";
 	}
