@@ -12,10 +12,12 @@
     "test": 
     {
         "de": {
-            "test_title":  "Das ist toll!"
+            "test_title":  "Das ist toll!",
+            "menu_header": "Überschrift"
         },
         "en": {
-            "test_title":  "That´s great!"
+            "test_title":  "That´s great!",
+            "menu_header": "Headline"
         }
     }
 

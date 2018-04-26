@@ -115,6 +115,11 @@ class Routing
             $ini["text"] = $modIniData["menu"]["text"];
         } else if (isset($modIniData["page_settings"]["title"]) && $modIniData["page_settings"]["title"]) {
             $ini["text"] = $modIniData["page_settings"]["title"];
+            $pos = strpos($ini["text"], "*");
+            if ($pos !== false && $pos == 0) {
+                $string = str_replace("*", "", $ini["text"]);
+                $ini["text"] = Lang::get($module, $string);
+            }
         } else {
             $ini["text"] = $module;
         }
@@ -151,6 +156,11 @@ class Routing
 
         // Show a header?
         $ini["header"] = $modIniData["menu"]["header"] ?? "";
+        $pos = strpos($ini["header"], "*");
+        if ($pos !== false && $pos == 0) {
+            $string = str_replace("*", "", $ini["header"]);
+            $ini["header"] = Lang::get($module, $string);
+        }
 
         // Show a header?
         $ini["icon"] = $modIniData["menu"]["icon"] ?? "";

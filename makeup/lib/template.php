@@ -207,12 +207,6 @@ class Template
 	{
 		if (Config::get('page_settings', 'title')) {
 			$title = Config::get('page_settings', 'title');
-			$pos = strpos($title, "*");
-			if ($pos !== false && $pos == 0) {
-				$string = str_replace("*", "", $title);
-            	$modName = RQ::get("mod") && RQ::get("mod") != Config::get('app_settings', 'default_module') ? RQ::get("mod") : "app";
-				$title = Lang::get($modName, $string);
-			}
 
 			return '<title>' . $title . '</title>';
 		}
