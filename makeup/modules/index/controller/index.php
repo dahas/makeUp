@@ -14,8 +14,6 @@ class Index extends Module
 
     public function build() : string
     {
-        $marker["%MAIN_TITLE%"] = Config::get("page_settings|title");
-
-        return $this->getTemplate()->parse($marker);
+        return $this->getTemplate()->parse();
     }
 }

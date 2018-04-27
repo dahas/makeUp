@@ -1,7 +1,3 @@
-.jumbotron {
-  background-image: url("../img/jumbotron_bg_1920.jpg");
-  background-size: cover; }
-
 /*!
  * Bootstrap v4.0.0 (https://getbootstrap.com)
  * Copyright 2011-2018 The Bootstrap Authors
@@ -6494,5 +6490,9 @@ a.text-dark:hover, a.text-dark:focus {
   .table-bordered th,
   .table-bordered td {
     border: 1px solid #ddd !important; } }
+.jumbotron {
+  background-image: url("../img/jumbotron_bg_1920.jpg");
+  background-size: cover;
+  border-radius: 0px; }
 
 /*# sourceMappingURL=bootstrap-sass-gen.css.map */
