@@ -9174,7 +9174,7 @@ readers do not read off random characters that represent icons */
   width: auto; }
 
 /*----------------------------------------------------------------------+
- |    Put font files into "resources/webfonts"                          |
+ |    Put font files into "resources/fonts"                             |
  +----------------------------------------------------------------------*/
 @font-face {
   font-family: 'Ubuntu';
