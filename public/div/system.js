@@ -9,7 +9,6 @@ $(document).ready(function ()
    * Show/hide the debug panel.
    */
   $("#dbg-handle").click(function () {
-    console.log($("#dbg-frame").is(":hidden"));
     if ($("#dbg-frame").is(":hidden")) {
       $("#dbg-frame").show(300);
       $("#dbg-img").attr("src", "/div/img/close.png");
