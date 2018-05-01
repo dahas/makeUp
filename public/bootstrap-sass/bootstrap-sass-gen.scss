@@ -1,15 +1,27 @@
+/*-----------------------------------------------------------------------+
+ |    DO NOT ADD STYLES IN THIS FILE!!!                                  | 
+ |    Use "_customStyles.scss" and "_customVariables.scss"               |
+ |    to apply modifications.                                            |
+ +-----------------------------------------------------------------------*/
 
-// Do not modify this file!
-// 
-// To change the look of the bootstrap theme use "_customVariables.scss"
-// and/or "_custom.scss". 
+// Apply the SASS watcher by running the following command in the command line from the root directory:
+// $ sass --watch sass/styles-sass.scss:resources/css/styles.css
 
-// 
-// To apply the watcher run this command in the console:
-// $ sass --watch public/bootstrap-sass/bootstrap-sass-gen.scss:public/resources/css/bootstrap-sass-gen.css
-// 
 
-@import '../resources/bootstrap/scss/functions';
-@import "customVariables";
-@import "../resources/bootstrap/scss/bootstrap";
-@import "custom"; 
+// Bootstrap
+@import "customVariables"; // 1st
+@import "../vendor/twbs/bootstrap/scss/bootstrap";  // 2nd
+@import "customMixins"; // 3rd
+@import "customStyles"; // 4th
+
+
+// Font Awesome
+@import "../vendor/components/font-awesome/scss/fa-brands";
+@import "../vendor/components/font-awesome/scss/fa-regular";
+@import "../vendor/components/font-awesome/scss/fa-solid";
+@import "../vendor/components/font-awesome/scss/fontawesome";
+
+
+// Fonts
+@import "customFonts";
+@import url('https://fonts.googleapis.com/css?family=Poppins');
