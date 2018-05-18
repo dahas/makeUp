@@ -10,19 +10,12 @@ class Lang
 {
     private static $strings = array();
 
-    public static function init($moduleFileName = "app")
+    public static function init()
     {
-        $strings = Tools::loadJsonFile($moduleFileName);
         if (empty(self::$strings)) {
-            $appLang = Tools::loadJsonFile();
+            $appLang = Tools::loadJsonLangFile(RQ::get("lang"));
         } else {
             $appLang = self::$strings;
-        }
-
-        if ($moduleFileName != "app") {
-            if ($modLang = Tools::loadJsonFile($moduleFileName)) {
-                $appLang = Tools::arrayMerge($appLang, $modLang);
-            }
         }
 
         self::$strings = $appLang;
@@ -45,8 +38,7 @@ class Lang
             $string = $args[0];
         }
 
-        $lang = RQ::get("lang") && isset(self::$strings[$mod][RQ::get("lang")]) ? RQ::get("lang") : Config::get("app_settings", "default_lang");
-        return self::$strings[$mod][$lang][$string] ?? null;
+        return self::$strings[$mod][$string] ?? null;
     }
 
 }

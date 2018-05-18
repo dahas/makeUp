@@ -43,26 +43,24 @@ class Tools
 	}
 
 	/**
-     * Loads an json file. Either the one that belongs to the module,
-     * or a special one.
-     * @param type $modName
-     * @param string $fileName
+     * Loads the language json file.
+     * @param string $lang
      * @return array|null
      */
-    public static function loadJsonFile($modName = "app", $fileName = "")
+    public static function loadJsonLangFile($lang)
     {
-        if (!$fileName) {
-            $fileName = $modName . ".json";
-        }
-
-        $realPath = realpath(null);
-
-        $path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang/strings.json";
-
+		$fpath = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang/%s.json";
+		
+        $path = sprintf($fpath, strtolower($lang));
         if (file_exists($path)) {
             return json_decode(file_get_contents($path), true);
         } else {
-            return null;
+			$path = sprintf($fpath, Config::get("app_settings", "default_lang"));
+            if (file_exists($path)) {
+				return json_decode(file_get_contents($path), true);
+			} else {
+				return null;
+			}
         }
     }
 
