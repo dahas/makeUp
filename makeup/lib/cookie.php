@@ -15,7 +15,7 @@ class Cookie
 	/**
 	 * Decode the json value.
 	 */
-	public static function read($name = "__sys_makeup__")
+	public static function read($name = "makeup")
 	{
 		if (isset($_COOKIE) && isset($_COOKIE[$name]))
 			self::$value = json_decode($_COOKIE[$name], true);

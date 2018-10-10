@@ -59,9 +59,15 @@ class App extends Module
 
         $marker["##TITLE##"] = Template::createTitleTag();
         $marker["##HTML_LANG##"] = Config::get("page_settings", "html_lang");
+
         $marker["##CONF_METATAGS##"] = Template::createMetaTags();
         $marker["##CONF_CSS_FILES##"] = Template::createStylesheetTags();
         $marker["##CONF_JS_FILES_HEAD##"] = Template::createJsScriptTagsHead();
+        
+        $marker["##COOKIE_NAME##"] = Config::get("cookie", "name") ?: "makeup";
+        $marker["##COOKIE_EXP##"] = Config::get("cookie", "expires_days") ?: 0;
+        $marker["##COOKIE_PATH##"] = Config::get("cookie", "path") ?: "/";
+
         $marker["##CONF_JS_FILES_BODY##"] = Template::createJsScriptTagsBody();
 
         /**** Parsing the HTML body section ************************************/

@@ -27,7 +27,9 @@ abstract class Module
 		Config::init($this->modName); // 2nd
 		RQ::init(); // 3rd
 		Lang::init($this->modName); // 4th
-		Cookie::read(); // 5th
+		
+		if (Config::get("cookie", "name"))
+			Cookie::read(Config::get("cookie", "name")); // 5th
 	}
 	
 	

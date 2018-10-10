@@ -179,6 +179,7 @@ class Tools
 	 */
 	public static function renderDebugPanel()
 	{
+		Cookie::read("__sys_makeup__");
 		if (Cookie::get("panel_open") == true) {
 			$dbgHandleIcon = "/div/img/close.png";
 			$dbgHandleDspl = "block";
