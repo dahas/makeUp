@@ -27,6 +27,7 @@ use makeup\lib\Config;
 use makeup\lib\Tools;
 use makeup\lib\Template;
 use makeup\lib\Module;
+use makeup\lib\Lang;
 
 
 class App extends Module
@@ -69,6 +70,10 @@ class App extends Module
         $marker["##COOKIE_PATH##"] = Config::get("cookie", "path") ?: "/";
 
         $marker["##CONF_JS_FILES_BODY##"] = Template::createJsScriptTagsBody();
+        
+        $marker["##LANG_TITLE##"] = Lang::get("title");
+        $marker["##LANG_SUBTITLE##"] = Lang::get("subtitle");
+        $marker["##LANG_WIKI_BUTTON##"] = Lang::get("wiki_button");
 
         /**** Parsing the HTML body section ************************************/
 
