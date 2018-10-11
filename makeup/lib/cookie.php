@@ -15,10 +15,24 @@ class Cookie
 	/**
 	 * Decode the json value.
 	 */
-	public static function read($name = "makeup")
+	public static function read($name)
 	{
-		if (isset($_COOKIE) && isset($_COOKIE[$name]))
+		if (isset($_COOKIE) && isset($_COOKIE[$name])) {
 			self::$value = json_decode($_COOKIE[$name], true);
+		}
+	}
+
+
+	/**
+	 * Decode the json value.
+	 */
+	public static function create()
+	{
+		$name = Config::get("cookie", "name");
+		$expDays = Config::get("cookie", "expires_days") ?: 0;
+		$expires = $expDays == 0 ? 0 : time()+60*60*24*$expDays;
+		$path = Config::get("cookie", "path") ?: "/";
+		setrawcookie($name, json_encode(self::$value), $expires, $path, null);
 	}
 
 
@@ -40,6 +54,7 @@ class Cookie
 	public static function set($key, $val)
 	{
 		self::$value[$key] = $val;
+		self::create();
 	}
 
 

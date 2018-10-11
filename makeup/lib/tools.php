@@ -66,6 +66,19 @@ class Tools
 
 
 	/**
+	 * @return string
+	 */
+	public static function getUserLanguageCode()
+	{
+		Cookie::read(Config::get("cookie", "name"));
+		if (!$langCode = Cookie::get("lang"))
+			$langCode = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+
+		return $langCode;
+	}
+
+
+	/**
 	 * @param $value
 	 */
 	public static function setBodyOnload($value)

@@ -13,7 +13,7 @@ class Lang
     public static function init()
     {
         if (empty(self::$strings)) {
-            $appLang = Tools::loadJsonLangFile(RQ::get("lang"));
+            $appLang = Tools::loadJsonLangFile(Tools::getUserLanguageCode());
         } else {
             $appLang = self::$strings;
         }
