@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "twbs/bootstrap": "4.0",
+        "twbs/bootstrap": "^4.0",
         "components/font-awesome": "^5.0",
         "dahas/cookie_management": "^1.0"
     }
