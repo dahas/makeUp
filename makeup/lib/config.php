@@ -51,27 +51,29 @@ class Config
 
             if (count($args) == 2) {
                 $arg = self::$config[$args[0]][$args[1]] ?? null;
-                $pos = strpos($arg, "*");
-                if ($pos !== false && $pos == 0) {
-                    $string = str_replace("*", "", $arg);
-                    $modName = RQ::get("mod") && RQ::get("mod") != self::$config['app_settings']['default_module'] ? RQ::get("mod") : "app";
-                    $arg = Lang::get($modName, $string);
-                }
+                $arg = self::translateArgument($arg);
             }
 
             if (count($args) == 3) {
                 $arg = self::$config[$args[0]][$args[1]][$args[2]] ?? null;
-                $pos = strpos($arg, "*");
-                if ($pos !== false && $pos == 0) {
-                    $string = str_replace("*", "", $arg);
-                    $modName = RQ::get("mod") && RQ::get("mod") != self::$config['app_settings']['default_module'] ? RQ::get("mod") : "app";
-                    $arg = Lang::get($modName, $string);
-                }
+                $arg = self::translateArgument($arg);
             }
 
             return $arg;
         }
         return self::$config;
+    }
+
+    private static function translateArgument($arg)
+    {
+        $pos = strpos($arg, "*");
+        if ($pos !== false && $pos == 0) {
+            $string = str_replace("*", "", $arg);
+            $modName = RQ::get("mod") && RQ::get("mod") != self::$config['app_settings']['default_module'] ? RQ::get("mod") : "app";
+            if (!$arg = Lang::get($modName, $string))
+                $arg = Lang::get("app", $string);
+        }
+        return $arg;
     }
 
     /**

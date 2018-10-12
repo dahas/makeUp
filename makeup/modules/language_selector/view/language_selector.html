@@ -1,0 +1,18 @@
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        ##CURRENT_LANGUAGE##
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <!-- {{SUPPORTED_LANGUAGES}} -->
+        <a class="dropdown-item ##ACTIVE##" href="javascript:setLanguage('##LANG_CODE##', '##LANG_NAME##');">##LANG_NAME##</a>
+        <!-- {{SUPPORTED_LANGUAGES}} -->
+    </div>
+</div>
+<script>
+    function setLanguage(code, name) {
+        cookie.set("lang_code", code);
+        cookie.set("lang_name", name);
+        location.href = location.href;
+    }
+</script>

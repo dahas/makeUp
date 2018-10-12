@@ -71,10 +71,33 @@ class Tools
 	public static function getUserLanguageCode()
 	{
 		Cookie::read(Config::get("cookie", "name"));
-		if (!$langCode = Cookie::get("lang"))
+		if (!$langCode = Cookie::get("lang_code"))
 			$langCode = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 
 		return $langCode;
+	}
+
+
+	public static function getSupportedLanguages()
+	{
+		if (Session::get("supported_languages")) {
+			$languages = Session::get("supported_languages");
+		} else {
+			$path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang";
+			$isoLangs = json_decode(file_get_contents($path . "/_iso.json"), true);
+			$langFiles = scandir($path);
+
+			$languages = [];
+			foreach ($langFiles as $file) {
+				if ($file != "." && $file != ".." && $file != "_iso.json") {
+					$lang = str_replace(".json", "", $file);
+					$languages[$lang] = $isoLangs[$lang]["nativeName"] ?? null;
+				}
+			}
+			Session::set("supported_languages", $languages);
+		}
+		
+		return $languages;
 	}
 
 
