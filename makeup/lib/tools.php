@@ -47,8 +47,9 @@ class Tools
      * @param string $lang
      * @return array|null
      */
-    public static function loadJsonLangFile($lang)
+    public static function loadJsonLangFile()
     {
+		$lang = self::getUserLanguageCode();
 		$fpath = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang/%s.json";
 		
         $path = sprintf($fpath, strtolower($lang));
@@ -65,9 +66,28 @@ class Tools
     }
 
 
-	/**
-	 * @return string
-	 */
+	public static function getTranslation()
+	{
+		if (Session::get("translation")) {
+			$translation = Session::get("translation");
+		} else {
+			$translation = self::loadJsonLangFile();
+			Session::set("translation", $translation);
+		}
+		
+		return $translation;
+	}
+
+
+	public static function changeTranslation()
+	{
+		Session::clear("translation");
+		$referer = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$redirect = str_replace(['?change_lang=1','&change_lang=1'],['',''],$referer);
+		header("Location: $redirect");
+	}
+
+
 	public static function getUserLanguageCode()
 	{
 		Cookie::read(Config::get("cookie", "name"));

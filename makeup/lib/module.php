@@ -30,6 +30,10 @@ abstract class Module
 		
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name")); // 5th
+
+		// Renew translated strings in session when language has changed:
+		if (RQ::get("change_lang"))
+			Tools::changeTranslation();
 	}
 	
 	

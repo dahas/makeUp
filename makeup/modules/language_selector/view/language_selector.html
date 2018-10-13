@@ -13,6 +13,6 @@
     function setLanguage(code, name) {
         cookie.set("lang_code", code);
         cookie.set("lang_name", name);
-        location.href = location.href;
+        location.href = location.href.indexOf('?') >= 0 ? location.href + '&change_lang=1' : location.href + '?change_lang=1';
     }
 </script>
