@@ -51,7 +51,7 @@ class App extends Module
     {
         /**** IMPORTANT: Module with page content must come first! *************/
         if (!$task) {
-            $marker["##MODULES##"] = Module::create($module)->render();
+            $marker["##MODULES##"] = Module::create($module)->build();
         } else {
             $marker["##MODULES##"] = Module::create($module)->$task();
         }
@@ -77,8 +77,8 @@ class App extends Module
 
         /**** Parsing the HTML body section ************************************/
 
-        $marker["##NAVIGATION##"] = Module::create("navigation")->render(); // Connecting the menu to the navbar
-        $marker["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->render(); // Connecting the language selector
+        $marker["##NAVIGATION##"] = Module::create("navigation")->build(); // Connecting the menu to the navbar
+        $marker["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->build(); // Connecting the language selector
         $marker["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
 
         return $this->getTemplate()->parse($marker);

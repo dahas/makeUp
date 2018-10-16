@@ -65,19 +65,18 @@ abstract class Module
 		$task = $debugTask ?: RQ::GET('task');
 		$task = $task ?: "build";
 
-		// With parameter app="nowrap" a module is rendered with its own template only.
-		// No other HTML (neither app nor layout) is wrapped around it.
+		// With parameter app="nowrap" a module is rendered with its own slice template only.
 		if (RQ::GET('app') != "wrap" && (RQ::GET('app') == "nowrap" || $task != "build")) {
+			Config::init($modName);
+			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
+				die("Access denied!");
 			$appHtml = Module::create($modName)->$task();
-		} 
-		// The app will be renderd, if it is NOT protected.
-		// Or if it is protected and the user is signed in.
-		else {
+		} else {
 			if (RQ::GET('app') == "wrap" && $task != "build") {
-				$html = $this->render($modName, $task);
+				$html = $this->build($modName, $task);
 			} 
 			else {
-				$html = $this->render($modName);
+				$html = $this->build($modName);
 			}
 			$debugPanel = Tools::renderDebugPanel();
 			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
@@ -88,6 +87,8 @@ abstract class Module
 
 
 	/**
+	 * Creates an object as long the user has permission to access the module.
+	 * 
 	 * @return ErrorMod|mixed
 	 * @throws \Exception
 	 */
@@ -112,6 +113,10 @@ abstract class Module
 		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
+			$modConfig = Tools::loadIniFile($name);
+			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
+			if ($protected && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
+				return new AccessDeniedMod($className);
 			$builder = new ContainerBuilder();
 			$builder->useAutowiring(false);
 			$builder->useAnnotations(true);
@@ -130,26 +135,6 @@ abstract class Module
 	 * @return mixed
 	 */
 	abstract protected function build() : string;
-	
-	
-	/**
-	 * Takes care of the setting "mod_settings|protected".
-	 * If protected is set to 1 and the user isn´t logged in, 
-	 * the module won´t be rendered.
-	 *
-	 * @return mixed|void
-	 */
-	protected function render($modName = "", $task = "") : string
-	{
-		// Deny access to a protected page as long as the user isn´t signed in.
-		if (Config::get("page_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
-			die("Access denied!");
-		
-		if (Config::get('mod_settings', 'protected') == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
-			return null;
-		
-		return $this->build($modName, $task);
-	}
 
 
 	/**
@@ -194,9 +179,34 @@ class ErrorMod
 	}
 
 
-	public function render()
+	public function build()
 	{
 		return Tools::errorMessage("Module '$this->modName' not found!");
+	}
+
+
+}
+
+
+/**
+ * Class AccessDeniedMod
+ * 
+ * @package makeup\lib
+ */
+class AccessDeniedMod
+{
+	private $modName = "";
+
+
+	public function __construct($modName)
+	{
+		$this->modName = strtolower("$modName");
+	}
+
+
+	public function build()
+	{
+		return null;
 	}
 
 

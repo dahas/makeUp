@@ -15,10 +15,9 @@ class Routing
         $mainConfig = [];
 
         $defaultMod = Config::get("app_settings", "default_module");
-        $devMode = Config::get("app_settings", "dev_mode");
 
         // Create from session:
-        if (!$devMode && Session::get("routing")) {
+        if (!Config::get("app_settings", "dev_mode") && Session::get("routing")) {
             $mainConfig = Session::get("routing");
         } 
         // Create from modules folder:
@@ -29,7 +28,8 @@ class Routing
             while (false !== ($module = readdir($handle))) {
                 if ($module != "." && $module != "..") {
                     $modIniData = Tools::loadIniFile($module);
-                    if (isset($modIniData["menu"]) && isset($modIniData["menu"]["position"])) {
+                    $protected = isset($modIniData["mod_settings"]["protected"]) ? intval($modIniData["mod_settings"]["protected"]) : 0;
+                    if (isset($modIniData["menu"]) && isset($modIniData["menu"]["position"]) && (!$protected || (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]))) {
                         $pos = $modIniData["menu"]["position"];
 
                         // Sub menu

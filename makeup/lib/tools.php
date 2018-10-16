@@ -68,7 +68,7 @@ class Tools
 
 	public static function getTranslation()
 	{
-		if (Session::get("translation")) {
+		if (!Config::get("app_settings", "dev_mode") && Session::get("translation")) {
 			$translation = Session::get("translation");
 		} else {
 			$translation = self::loadJsonLangFile();
@@ -100,7 +100,7 @@ class Tools
 
 	public static function getSupportedLanguages()
 	{
-		if (Session::get("supported_languages")) {
+		if (!Config::get("app_settings", "dev_mode") && Session::get("supported_languages")) {
 			$languages = Session::get("supported_languages");
 		} else {
 			$path = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/lang";

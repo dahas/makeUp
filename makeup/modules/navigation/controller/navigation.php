@@ -96,7 +96,8 @@ class Navigation extends Module
         if ($type == "PAGE") {
             $ss["##SUBMENU_NO_SUB##"] .= $subMenuNoSubSlice->parse([
                 "##LINK##" => $data["route"],
-                "##TEXT##" => "Open",
+                "##ACTIVE##" => $data["module"] == RQ::get("mod") ? "active" : "",
+                "##TEXT##" => $data["text"],
                 "##ICON##" => ""
             ]);
             // With separator
@@ -118,6 +119,7 @@ class Navigation extends Module
 
             $markers = [
                 "##LINK##" => $subData["route"],
+                "##ACTIVE##" => $subData["module"] == RQ::get("mod") ? "active" : "",
                 "##TEXT##" => $subData["text"],
                 "##ICON##" => $subData["icon"] ? $icon->parse([
                     "##NAME##" => $subData["icon"]
