@@ -7,8 +7,9 @@ use makeup\lib\Config;
 use makeup\lib\Tools;
 use makeup\lib\Template;
 
+
 /**
- * This is a systeem module
+ * This is a system module
  */
 class Navigation extends Module
 {

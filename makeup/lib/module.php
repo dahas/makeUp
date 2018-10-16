@@ -15,7 +15,7 @@ abstract class Module
 	private $className = "";
 	private $modName = "";
 
-
+	
 	public function __construct()
 	{
 		$modNsArr = explode("\\", get_class($this));
@@ -172,19 +172,15 @@ class ErrorMod
 {
 	private $modName = "";
 
-
 	public function __construct($modName)
 	{
 		$this->modName = strtolower("$modName");
 	}
 
-
 	public function build()
 	{
 		return Tools::errorMessage("Module '$this->modName' not found!");
 	}
-
-
 }
 
 
@@ -197,18 +193,13 @@ class AccessDeniedMod
 {
 	private $modName = "";
 
-
 	public function __construct($modName)
 	{
 		$this->modName = strtolower("$modName");
 	}
 
-
 	public function build()
 	{
 		return null;
 	}
-
-
 }
-
