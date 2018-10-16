@@ -78,6 +78,7 @@ class App extends Module
         /**** Parsing the HTML body section ************************************/
 
         $marker["##NAVIGATION##"] = Module::create("navigation")->build(); // Connecting the menu to the navbar
+        $marker["##LOGIN##"] = Module::create("login")->build(); // Connecting the login form to the navbar
         $marker["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->build(); // Connecting the language selector
         $marker["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
 
