@@ -3,9 +3,6 @@
 use makeup\lib\Module;
 use makeup\lib\RQ;
 use makeup\lib\Routing;
-use makeup\lib\Config;
-use makeup\lib\Tools;
-use makeup\lib\Template;
 
 
 /**

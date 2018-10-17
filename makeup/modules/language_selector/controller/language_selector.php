@@ -2,7 +2,6 @@
 
 use makeup\lib\Module;
 use makeup\lib\RQ;
-use makeup\lib\Config;
 use makeup\lib\Tools;
 use makeup\lib\Template;
 use makeup\lib\Cookie;

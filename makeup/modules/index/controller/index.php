@@ -1,7 +1,6 @@
 <?php
 
 use makeup\lib\Module;
-use makeup\lib\Config;
 
 
 class Index extends Module
