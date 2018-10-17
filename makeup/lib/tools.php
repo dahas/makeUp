@@ -83,7 +83,7 @@ class Tools
 	{
 		Cookie::read(Config::get("cookie", "name"));
 		if (!$langCode = Cookie::get("lang_code"))
-			$langCode = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+			$langCode = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : Config::get("app_settings", "default_lang");
 
 		return $langCode;
 	}
@@ -114,7 +114,10 @@ class Tools
 
 	public static function linkBuilder($mod = "", $task = "", $query = [])
 	{
-		$host = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+		if (isset($_SERVER['HTTP_HOST']))
+			$host = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+		else
+			$host = "http://127.0.0.1";
 
 		if (Config::get("app_settings", "url_rewriting")) {
 			$link = $task ? "/nowrap/$mod/$task/" : "/$mod.html";
