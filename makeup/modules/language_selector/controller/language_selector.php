@@ -20,7 +20,7 @@ class LanguageSelector extends Module
     }
 
     
-    protected function build($modName = "") : string
+    protected function build() : string
     {
         $m = [];
         $s = [];

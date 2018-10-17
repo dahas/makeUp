@@ -24,7 +24,7 @@ class Navigation extends Module
      * @param string $modName
      * @return string
      */
-    public function build($modName = "") : string
+    public function build() : string
     {
         $mainTmpl = $this->getTemplate();
 
