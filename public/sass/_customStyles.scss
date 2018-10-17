@@ -1,5 +1,37 @@
+/**** Begin: App header ****/
 .jumbotron {
   background-image: url("../img/jumbotron_bg_1920.jpg");
   background-size: cover;
   border-radius: 0px;
 }
+/**** End: App header ****/
+
+/**** Begin: Login page variant ****/
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+/**** End: Login page variant ****/

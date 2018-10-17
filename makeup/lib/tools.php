@@ -79,15 +79,6 @@ class Tools
 	}
 
 
-	public static function changeTranslation()
-	{
-		Session::clear("translation");
-		$referer = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		$redirect = str_replace(['?change_lang=1','&change_lang=1'],['',''],$referer);
-		header("Location: $redirect");
-	}
-
-
 	public static function getUserLanguageCode()
 	{
 		Cookie::read(Config::get("cookie", "name"));
@@ -118,6 +109,21 @@ class Tools
 		}
 		
 		return $languages;
+	}
+
+
+	public static function linkBuilder($mod = "", $task = "", $query = [])
+	{
+		$host = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+
+		if (Config::get("app_settings", "url_rewriting")) {
+			$link = $task ? "/nowrap/$mod/$task/" : "/$mod.html";
+			$link .= !empty($query) ? "?" . http_build_query($query) : "";
+		} else {
+			$link = $task ? "?nowrap&mod=$mod&task=$task" : "?mod=$mod";
+			$link .= !empty($query) ? "&" . http_build_query($query) : "";
+		}
+		return $host . $link;
 	}
 
 

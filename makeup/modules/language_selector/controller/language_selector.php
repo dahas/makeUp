@@ -6,6 +6,7 @@ use makeup\lib\Config;
 use makeup\lib\Tools;
 use makeup\lib\Template;
 use makeup\lib\Cookie;
+use makeup\lib\Session;
 
 
 /**
@@ -18,6 +19,7 @@ class LanguageSelector extends Module
         parent::__construct();
     }
 
+    
     protected function build($modName = "") : string
     {
         $m = [];
@@ -35,12 +37,20 @@ class LanguageSelector extends Module
         foreach ($suppLangs as $code => $name) {
             $sm = [];
             $sm["##ACTIVE##"] = $code == $current ? "active" : "";
-            $sm["##LANG_CODE##"] = $code;
+            $sm["##LINK##"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
             $sm["##LANG_NAME##"] = $name;
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 
         return $this->getTemplate()->parse($m, $s);
+    }
+
+
+    public function change_language()
+    {
+        Cookie::set("lang_code", RQ::get("lang_code"));
+        Session::clear("translation"); // String resources must be renewed in the session
+        header("Location: " . Tools::linkBuilder(RQ::get("referer")));
     }
 
 }
