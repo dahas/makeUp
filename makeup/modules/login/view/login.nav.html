@@ -1,5 +1,6 @@
 <!-- {{SIGNIN}} -->
 <form class="form-inline mr-4" action="##FORM_ACTION##" method="POST">
+    <input type="hidden" name="token" value="##TOKEN##" />
     <input type="hidden" name="referer" value="##REFERER##" />
     <input class="form-control mr-2" style="width:110px;" placeholder="Username" aria-label="Username">
     <input class="form-control mr-2" style="width:110px;" placeholder="Password" aria-label="Password">
@@ -8,6 +9,7 @@
 <!-- {{SIGNIN}} -->
 <!-- {{SIGNOUT}} -->
 <form class="form-inline mr-4" action="##FORM_ACTION##" method="POST">
+    <input type="hidden" name="token" value="##TOKEN##" />
     <input type="hidden" name="referer" value="##REFERER##" />
     <button class="btn btn-danger" type="submit">Sign out</button>
 </form>

@@ -15,6 +15,7 @@ class Tools
 	private static $bodyOnload = '';
 	
 	private static $debugArr = [];
+	private static $tokenArr = [];
 	
 	
 	/**
@@ -112,7 +113,7 @@ class Tools
 	}
 
 
-	public static function linkBuilder($mod = "", $task = "", $query = [])
+	public static function linkBuilder($mod = "", $task = "", $query = []) : string
 	{
 		if (isset($_SERVER['HTTP_HOST']))
 			$host = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
@@ -127,6 +128,26 @@ class Tools
 			$link .= !empty($query) ? "&" . http_build_query($query) : "";
 		}
 		return $host . $link;
+	}
+
+
+	/**
+	 * Secure forms to avoid CSRF (cross site request forgery)
+	 */
+	public static function createFormToken() : string
+	{
+		$token = sha1(microtime() . random_int(1000, 9999));
+		self::$tokenArr[] = $token;
+		Session::set("form_token", self::$tokenArr);
+		return $token;
+	}
+
+
+	public static function checkFormToken($token) : bool
+	{
+		$valid = in_array($token, Session::get("form_token"));
+		Session::clear("form_token");
+		return $valid;
 	}
 
 

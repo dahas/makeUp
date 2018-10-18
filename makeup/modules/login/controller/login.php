@@ -20,30 +20,20 @@ class Login extends Module
 
     protected function build($formVariant = "") : string
     {
-        switch ($formVariant)
-        {
-            case "page":
-                return $this->formPage();
-            case "nav":
-                return $this->formNav();
+        if ($formVariant) {
+            return $this->formVariant($formVariant);
+        } else {
+            return $this->getTemplate()->parse([
+                "##FORM##" => $this->formVariant("page")
+            ]);
         }
-
-        return $this->getTemplate()->parse([
-            "##FORM##" => $this->formPage()
-        ]);
     }
 
 
-    private function formPage() : string
-    {
-        return $this->getTemplate("login.page.html")->parse();
-    }
-
-
-    private function formNav() : string
+    private function formVariant($formVariant) : string
     {
         $html = "";
-        $template = $this->getTemplate("login.nav.html");
+        $template = $formVariant == "page" ? "login.page.html" : "login.nav.html";
 
         if (Session::get("logged_in")) {
             $formAction = "signout";
@@ -55,8 +45,9 @@ class Login extends Module
             $referer = RQ::get("mod");
         }
 
-        $html = $template->getSlice($loginStateTmpl)->parse([
+        $html = $this->getTemplate($template)->getSlice($loginStateTmpl)->parse([
             "##FORM_ACTION##" => Tools::linkBuilder($this->modName, $formAction),
+            "##TOKEN##" => Tools::createFormToken(),
             "##REFERER##" => $referer
         ]);
 
@@ -70,9 +61,10 @@ class Login extends Module
     public function signin()
     {
         // Simulate login:
-        Session::set("logged_in", true);
-        // Redirect
-        header("Location: " . Tools::linkBuilder(RQ::post("referer")));
+        if (Tools::checkFormToken(RQ::post("token"))) {
+            Session::set("logged_in", true); // Simulate login
+        }
+        header("Location: " . Tools::linkBuilder(RQ::post("referer"))); // Redirect
     }
 
 

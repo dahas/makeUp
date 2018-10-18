@@ -1,5 +1,8 @@
-<form class="form-signin">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+<!-- {{SIGNIN}} -->
+<h3>Sign in please</h3>
+<form class="form-signin" action="##FORM_ACTION##" method="POST">
+    <input type="hidden" name="token" value="##TOKEN##" />
+    <input type="hidden" name="referer" value="##REFERER##" />
     <label for="inputEmail" class="sr-only">Email address</label>
     <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
@@ -11,3 +14,12 @@
     </div>
     <button class="btn btn-lg btn-warning btn-block" type="submit">Sign in</button>
 </form>
+<!-- {{SIGNIN}} -->
+<!-- {{SIGNOUT}} -->
+<p>You are already signed in.</p>
+<form class="form-inline mr-4" action="##FORM_ACTION##" method="POST">
+    <input type="hidden" name="token" value="##TOKEN##" />
+    <input type="hidden" name="referer" value="##REFERER##" />
+    <button class="btn btn-danger" type="submit">Sign out</button>
+</form>
+<!-- {{SIGNOUT}} -->
