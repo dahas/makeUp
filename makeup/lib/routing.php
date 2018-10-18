@@ -121,7 +121,7 @@ class Routing
                 $ini["text"] = Lang::get($module, $string);
             }
         } else {
-            $ini["text"] = $module;
+            $ini["text"] = "";
         }
 
         // Rewriting enabled:

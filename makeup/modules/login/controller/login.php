@@ -42,10 +42,25 @@ class Login extends Module
 
     private function formNav() : string
     {
-        return $this->getTemplate("login.nav.html")->parse([
-            "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
-            "##REFERER##" => RQ::get("mod")
+        $html = "";
+        $template = $this->getTemplate("login.nav.html");
+
+        if (Session::get("logged_in")) {
+            $formAction = "signout";
+            $loginStateTmpl = "{{SIGNOUT}}";
+            $referer = "index";
+        } else {
+            $loginStateTmpl = "{{SIGNIN}}";
+            $formAction = "signin";
+            $referer = RQ::get("mod");
+        }
+
+        $html = $template->getSlice($loginStateTmpl)->parse([
+            "##FORM_ACTION##" => Tools::linkBuilder($this->modName, $formAction),
+            "##REFERER##" => $referer
         ]);
+
+        return $html;
     }
 
 
