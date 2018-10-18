@@ -37,15 +37,15 @@ class Login extends Module
 
         if (Session::get("logged_in")) {
             $formAction = "signout";
-            $loginStateTmpl = "{{SIGNOUT}}";
+            $loginStateSlice = "{{SIGNOUT}}";
             $referer = "index";
         } else {
-            $loginStateTmpl = "{{SIGNIN}}";
+            $loginStateSlice = "{{SIGNIN}}";
             $formAction = "signin";
             $referer = RQ::get("mod");
         }
 
-        $html = $this->getTemplate($template)->getSlice($loginStateTmpl)->parse([
+        $html = $this->getTemplate($template)->getSlice($loginStateSlice)->parse([
             "##FORM_ACTION##" => Tools::linkBuilder($this->modName, $formAction),
             "##TOKEN##" => Tools::createFormToken(),
             "##REFERER##" => $referer
@@ -73,10 +73,8 @@ class Login extends Module
      */
     public function signout()
     {
-        // Simulate logout:
-        Session::set("logged_in", false);
-        // Redirect
-        header("Location: " . Tools::linkBuilder(RQ::post("referer")));
+        Session::set("logged_in", false); // Simulate logout
+        header("Location: " . Tools::linkBuilder(RQ::post("referer"))); // Redirect
     }
 
 }
