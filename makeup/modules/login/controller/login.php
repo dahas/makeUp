@@ -21,16 +21,16 @@ class Login extends Module
     protected function build($formVariant = "") : string
     {
         if ($formVariant) {
-            return $this->formVariant($formVariant);
+            return $this->buildForm($formVariant);
         } else {
             return $this->getTemplate()->parse([
-                "##FORM##" => $this->formVariant("page")
+                "##FORM##" => $this->buildForm("page")
             ]);
         }
     }
 
 
-    private function formVariant($formVariant) : string
+    private function buildForm($formVariant) : string
     {
         $html = "";
         $template = $formVariant == "page" ? "login.page.html" : "login.nav.html";
