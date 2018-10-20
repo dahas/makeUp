@@ -18,7 +18,7 @@ class Cookie
 	public static function read($name)
 	{
 		if (isset($_COOKIE) && isset($_COOKIE[$name])) {
-			self::$value = json_decode($_COOKIE[$name], true);
+			self::$value = json_decode(base64_decode($_COOKIE[$name]), true);
 		}
 	}
 
@@ -32,7 +32,7 @@ class Cookie
 		$expDays = Config::get("cookie", "expires_days") ?: 0;
 		$expires = $expDays == 0 ? 0 : time()+60*60*24*$expDays;
 		$path = Config::get("cookie", "path") ?: "/";
-		setrawcookie($name, json_encode(self::$value), $expires, $path, null);
+		setrawcookie($name, base64_encode(json_encode(self::$value)), $expires, $path, null);
 	}
 
 
