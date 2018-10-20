@@ -81,6 +81,8 @@ class App extends Module
         $m["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->build(); // Connecting the language selector
         $m["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
 
+        Tools::debug($_SESSION);
+
         return $this->getTemplate()->parse($m);
     }
     

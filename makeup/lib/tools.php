@@ -136,17 +136,25 @@ class Tools
 	 */
 	public static function createFormToken() : string
 	{
-		$token = sha1(microtime() . random_int(1000, 9999));
-		self::$tokenArr[] = $token;
-		Session::set("form_token", self::$tokenArr);
-		return $token;
+		$expSecs = 5; // Token expires after this amount of seconds
+		$timestamp = time();
+		if ($timestamp >= Session::get("form_token_expires")) {
+			$token = sha1($timestamp . random_int(1000, 9999));
+			Session::set("form_token", $token);
+			Session::set("form_token_expires", $timestamp + $expSecs);
+			return $token;
+		} else {
+			return Session::get("form_token");
+		}
 	}
 
 
 	public static function checkFormToken($token) : bool
 	{
-		$valid = in_array($token, Session::get("form_token"));
-		Session::clear("form_token");
+		$valid = $token == Session::get("form_token");
+		if (time() >= Session::get("form_token_expires")) {
+			Session::clear("form_token");
+		}
 		return $valid;
 	}
 

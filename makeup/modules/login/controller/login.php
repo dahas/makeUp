@@ -34,21 +34,22 @@ class Login extends Module
     {
         $html = "";
         $template = $formVariant == "page" ? "login.page.html" : "login.nav.html";
+        $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
             $formAction = "signout";
             $loginStateSlice = "{{SIGNOUT}}";
-            $referer = "index";
+            $redirect = Config::get("signout", "redirect");
         } else {
             $loginStateSlice = "{{SIGNIN}}";
             $formAction = "signin";
-            $referer = RQ::get("mod");
+            $redirect = RQ::get("mod");
         }
 
         $html = $this->getTemplate($template)->getSlice($loginStateSlice)->parse([
             "##FORM_ACTION##" => Tools::linkBuilder($this->modName, $formAction),
-            "##TOKEN##" => Tools::createFormToken(),
-            "##REFERER##" => $referer
+            "##TOKEN##" => $token,
+            "##REDIRECT##" => $redirect
         ]);
 
         return $html;
@@ -64,7 +65,7 @@ class Login extends Module
         if (Tools::checkFormToken(RQ::post("token"))) {
             Session::set("logged_in", true); // Simulate login
         }
-        header("Location: " . Tools::linkBuilder(RQ::post("referer"))); // Redirect
+        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
     }
 
 
@@ -74,7 +75,7 @@ class Login extends Module
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        header("Location: " . Tools::linkBuilder(RQ::post("referer"))); // Redirect
+        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
     }
 
 }
