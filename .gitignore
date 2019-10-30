@@ -10,7 +10,5 @@
 # Ignore files
 /makeup/composer.lock
 /makeup/composer.json
-/makeup/package-lock.json
-/public/composer.lock
 /public/package-lock.json
 /makeup/services/
