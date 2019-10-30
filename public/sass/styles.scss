@@ -10,16 +10,16 @@
 
 // Bootstrap
 @import "customVariables"; // 1st
-@import "../vendor/twbs/bootstrap/scss/bootstrap";  // 2nd
+@import "../node_modules/bootstrap/scss/bootstrap";  // 2nd
 @import "customMixins"; // 3rd
 @import "customStyles"; // 4th
 
 
 // Font-Awesome
-@import "../vendor/components/font-awesome/scss/fa-brands";
-@import "../vendor/components/font-awesome/scss/fa-regular";
-@import "../vendor/components/font-awesome/scss/fa-solid";
-@import "../vendor/components/font-awesome/scss/fontawesome";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 
 
 // Fonts

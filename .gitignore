@@ -2,11 +2,15 @@
 /.idea/
 /.vscode/
 /.sass-cache/
-/makeup/vendor/
+/makeup/node_modules/
 /public/vendor/
+/public/node_modules/
 /makeup/modules/test/
 
 # Ignore files
 /makeup/composer.lock
+/makeup/composer.json
+/makeup/package-lock.json
 /public/composer.lock
+/public/package-lock.json
 /makeup/services/
