@@ -10,7 +10,7 @@ use makeup\lib\Session;
 /**
  * This is a system module
  */
-class Login extends Module
+class Authentication extends Module
 {
     public function __construct()
     {
@@ -33,24 +33,23 @@ class Login extends Module
     private function buildForm($formVariant) : string
     {
         $html = "";
-        $template = $formVariant == "page" ? "login.page.html" : "login.nav.html";
+        $template = $formVariant == "page" ? "authentication.page.html" : "authentication.nav.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
-            $formAction = "signout";
-            $loginStateSlice = "{{SIGNOUT}}";
-            $redirect = Config::get("signout", "redirect");
+            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
+                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signout"),
+                "##TOKEN##" => $token,
+                "##REDIRECT##" => Config::get("signout", "redirect") ?: RQ::get("mod")
+            ]);
         } else {
-            $loginStateSlice = "{{SIGNIN}}";
-            $formAction = "signin";
-            $redirect = RQ::get("mod");
+            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
+                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
+                "##REGISTER_LINK##" => Tools::linkBuilder("registration"),
+                "##TOKEN##" => $token,
+                "##REDIRECT##" => Config::get("signin", "redirect") ?: RQ::get("mod")
+            ]);
         }
-
-        $html = $this->getTemplate($template)->getSlice($loginStateSlice)->parse([
-            "##FORM_ACTION##" => Tools::linkBuilder($this->modName, $formAction),
-            "##TOKEN##" => $token,
-            "##REDIRECT##" => $redirect
-        ]);
 
         return $html;
     }

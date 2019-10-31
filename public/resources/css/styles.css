@@ -9696,13 +9696,19 @@ h3 {
   z-index: 2;
 }
 
-.form-signin input[type=email] {
+.form-signin > input[class="form-control first"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type=password] {
+.form-signin > input[class=form-control] {
+  margin-top: -1px;
+  margin-bottom: -1px;
+  border-radius: 0;
+}
+
+.form-signin input[class="form-control last"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
