@@ -1,6 +1,5 @@
 # Ignore folders
 /.idea/
-/.vscode/
 /.sass-cache/
 /makeup/node_modules/
 /public/vendor/

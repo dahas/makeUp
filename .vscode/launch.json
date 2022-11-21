@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "makeUp xdebug",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceRoot}\\public\\index.php",
+            "externalConsole": false,
+            "port": 9003
+        }
+    ]
+}
