@@ -1,12 +1,10 @@
 # Ignore folders
 /.idea/
 /.sass-cache/
-/makeup/node_modules/
-/public/vendor/
-/public/node_modules/
+
+/makeup/vendor/
+/makeup/composer.lock
 /makeup/modules/test/
 
-# Ignore files
-/makeup/composer.lock
-/makeup/composer.json
+/public/node_modules/
 /public/package-lock.json
