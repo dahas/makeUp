@@ -4,10 +4,6 @@
  |    to apply modifications.                                            |
  +-----------------------------------------------------------------------*/
 
-// Apply the SASS watcher by running the following command in the command line from the root directory:
-// $ sass --watch public/sass/styles.scss:public/resources/css/styles.css
-
-
 // Bootstrap
 @import "customVariables"; // 1st
 @import "../node_modules/bootstrap/scss/bootstrap";  // 2nd
