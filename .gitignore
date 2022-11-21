@@ -2,8 +2,6 @@
 /.idea/
 /.sass-cache/
 
-/makeup/vendor/
-/makeup/composer.lock
 /makeup/modules/test/
 
 /public/node_modules/
