@@ -55,7 +55,7 @@ class RQ
 	 */
 	private static function filterInput($input)
 	{
-		return filter_var(rawurldecode($input), FILTER_SANITIZE_STRING);
+		return filter_var(rawurldecode($input), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	}
 
 }

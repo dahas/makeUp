@@ -6,6 +6,7 @@
             "type": "php",
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
+            "args": ["--mod", "index", "--task", "doit", "--app", "nowrap"],
             "externalConsole": false,
             "port": 9003
         }

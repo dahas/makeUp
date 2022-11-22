@@ -15,7 +15,7 @@ abstract class Module
 	private $className = "";
 	protected $modName = "";
 
-	
+
 	public function __construct()
 	{
 		$modNsArr = explode("\\", get_class($this));
@@ -27,51 +27,59 @@ abstract class Module
 		Config::init($this->modName); // 2nd
 		RQ::init(); // 3rd
 		Lang::init($this->modName); // 4th
-		
+
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name")); // 5th
 	}
-	
-	
+
+
 	/**
 	 * Run and output the app.
 	 * 
 	 * @return string
 	 */
-	public function execute() : string
+	public function execute(): string
 	{
 		// Debugging:
 		$debugMod = "";
 		$debugTask = "";
+		$debugApp = "";
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			$idxMod = array_search('--mod', $_SERVER['argv']);
 			if ($idxMod > 0)
-				$debugMod = $_SERVER['argv'][$idxMod+1];
+				$debugMod = $_SERVER['argv'][$idxMod + 1];
 
 			$idxTask = array_search('--task', $_SERVER['argv']);
 			if ($idxTask > 0)
-				$debugTask = $_SERVER['argv'][$idxTask+1];
+				$debugTask = $_SERVER['argv'][$idxTask + 1];
+
+			$idxApp = array_search('--app', $_SERVER['argv']);
+			if ($idxApp > 0)
+				$debugApp = $_SERVER['argv'][$idxApp + 1];
 		}
 
-		// Parameter "mod" is the mandatory module name.
+		// Parameter "mod" is the mandatory module name
 		$modName = $debugMod ?: RQ::GET('mod');
 		$modName = $modName ?: Config::get("app_settings", "default_module");
 
-		// Parameter "task" is mandatory, so the module knows which task to execute.
+		// Parameter "task" is mandatory, so the module knows which task to execute
 		$task = $debugTask ?: RQ::GET('task');
 		$task = $task ?: "build";
 
+		// Parameter "app" is optional
+		$app = $debugApp ?: RQ::GET('app');
+		$app = $app ?: "wrap";
+
 		// With parameter app="nowrap" a module is rendered with its own slice template only.
-		if (RQ::GET('app') != "wrap" && (RQ::GET('app') == "nowrap" || $task != "build")) {
+		if ($app != "wrap" && ($app == "nowrap" || $task != "build")) {
 			Config::init($modName);
 			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 				die("Access denied!");
 			$appHtml = Module::create($modName)->$task();
 		} else {
-			if (RQ::GET('app') == "wrap" && $task != "build") {
+			if ($app == "wrap" && $task != "build") {
 				$html = $this->build($modName, $task);
-			} 
-			else {
+			} else {
 				$html = $this->build($modName);
 			}
 			$debugPanel = Tools::renderDebugPanel();
@@ -130,7 +138,7 @@ abstract class Module
 	 *
 	 * @return mixed
 	 */
-	abstract protected function build() : string;
+	abstract protected function build(): string;
 
 
 	/**
@@ -138,7 +146,7 @@ abstract class Module
 	 *
 	 * @return Template
 	 */
-	protected function getTemplate($fileName = "") : Template
+	protected function getTemplate($fileName = ""): Template
 	{
 		$fname = $fileName ? $fileName : $this->modName . ".html";
 		return Template::load($this->className, $fname);
@@ -154,8 +162,6 @@ abstract class Module
 	{
 		return Tools::errorMessage("Task $method() not defined!");
 	}
-
-
 }
 
 
