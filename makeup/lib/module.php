@@ -112,9 +112,9 @@ abstract class Module
 			$className = Tools::upperCamelCase($name);
 		}
 
-		$realPath = realpath(null);
+		$realPath = realpath('');
 
-		$modFile = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$name/controller/$name.php";
+		$modFile = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Tools::loadIniFile($name);

@@ -1,55 +1,55 @@
 <!doctype html>
 <html lang="##HTML_LANG##">
-  <head>
-    ##TITLE##
-    ##CONF_METATAGS##
-    ##CONF_CSS_FILES##
-    ##CONF_JS_FILES_HEAD##
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Cookie manager -->
-    <script src="/div/cookie_mgmt.js"></script>
-    <script>
-      var cookie = new Cookie("##COOKIE_NAME##", ##COOKIE_EXP##, "##COOKIE_PATH##");
-    </script>
-  </head>
+    <head>
+        ##TITLE##
+        ##CONF_METATAGS##
+        ##CONF_CSS_FILES##
+        ##CONF_JS_FILES_HEAD##
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
+        <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Cookie manager -->
+        <script src="/div/cookie_mgmt.js"></script>
+        <script>
+            var cookie = new Cookie("##COOKIE_NAME##", ##COOKIE_EXP##, "##COOKIE_PATH##");
+        </script>
+    </head>
 
-  <body>
+    <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#"><img src="/resources/img/logo.svg" height="16" /> makeUp</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#"><img src="/resources/img/logo.svg" height="16" /> makeUp</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        ##NAVIGATION##
-        ##AUTHENTICATION##
-        ##LANGUAGE_SELECTOR##
-      </div>
-    </nav>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                ##NAVIGATION##
+                ##AUTHENTICATION##
+                ##LANGUAGE_SELECTOR##
+            </div>
+        </nav>
 
-    <main role="main">
+        <main role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <div class="container" style="color: white;">
-          <h1 class="display-4">##LANG_TITLE##</h1>
-          <p>##LANG_SUBTITLE##</p>
-          <p><a class="btn btn-primary btn-lg" href="https://github.com/dahas/makeup2/wiki" target="_blank" role="button">##LANG_WIKI_BUTTON##</a></p>
-        </div>
-      </div>
+            <!-- Main jumbotron for a primary marketing message or call to action -->
+            <div class="jumbotron">
+                <div class="container" style="color: white;">
+                    <h1 class="display-4">##LANG_TITLE##</h1>
+                    <p>##LANG_SUBTITLE##</p>
+                    <p><a class="btn btn-primary btn-lg" href="https://github.com/dahas/makeup2/wiki" target="_blank" role="button">##LANG_WIKI_BUTTON##</a></p>
+                </div>
+            </div>
 
-      ##MODULES##
+            ##MODULES##
 
-    </main>
+        </main>
 
-    <footer class="container">
-      <p>&copy; Martin J. Wolf 2016-2018</p>
-    </footer>
+        <footer class="container">
+            <p>&copy; Martin J. Wolf 2016-2018</p>
+        </footer>
 
-    ##CONF_JS_FILES_BODY##
-  </body>
+        ##CONF_JS_FILES_BODY##
+    </body>
 </html

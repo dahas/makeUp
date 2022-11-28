@@ -31,12 +31,12 @@ class Template
 
 		$modName = Tools::camelCaseToUnderscore($className);
 
-		$realPath = realpath(null);
+		$realPath = realpath('');
 
 		if ($modName == "app")
-			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/$modName/view/$templateFile";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/modules/$modName/view/$templateFile";
 
 		return new Template($file);
 	}

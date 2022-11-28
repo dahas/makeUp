@@ -24,7 +24,7 @@ class Routing
         else {
             $subConfig = [];
             
-            $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(null))) . "/makeup/modules");
+            $handle = opendir(str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/modules");
             while (false !== ($module = readdir($handle))) {
                 if ($module != "." && $module != "..") {
                     $modIniData = Tools::loadIniFile($module);
