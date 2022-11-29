@@ -39,7 +39,7 @@ class Config
 
     /**
      * @param $entry
-     * @return mixedy
+     * @return mixed
      */
     public static function get()
     {
@@ -66,6 +66,7 @@ class Config
 
     private static function translateArgument($arg)
     {
+        $arg = $arg ?: "";
         $pos = strpos($arg, "*");
         if ($pos !== false && $pos == 0) {
             $string = str_replace("*", "", $arg);
