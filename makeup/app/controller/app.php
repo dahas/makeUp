@@ -22,9 +22,7 @@ spl_autoload_register(__NAMESPACE__ . "\autoloader");
 require dirname(dirname(dirname(dirname(__FILE__)))) . "/makeup/vendor/autoload.php";
 
 
-use makeup\lib\Session;
 use makeup\lib\Config;
-use makeup\lib\Tools;
 use makeup\lib\Template;
 use makeup\lib\Module;
 use makeup\lib\Lang;
