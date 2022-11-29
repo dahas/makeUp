@@ -6,7 +6,7 @@
             "type": "php",
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
-            "args": ["--mod", "registration", "--task", "", "--app", ""],
+            "args": ["--mod", "", "--task", "", "--app", ""],
             "externalConsole": false,
             "port": 9003
         }
