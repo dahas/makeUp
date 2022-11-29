@@ -6,7 +6,11 @@
             "type": "php",
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
-            "args": ["--mod", "", "--task", "", "--app", ""],
+            "args": [
+                "--mod", "", // module name
+                "--task", "", // task name
+                "--app", "" // wrap or nowrap
+            ],
             "externalConsole": false,
             "port": 9003
         }
