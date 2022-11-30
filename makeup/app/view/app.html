@@ -11,6 +11,8 @@
         <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- Cookie manager -->
         <script src="/div/cookie_mgmt.js"></script>
+        <!-- Custom JS -->
+        <script src="/resources/js/scripts.js"></script>
         <script>
             var cookie = new Cookie("##COOKIE_NAME##", ##COOKIE_EXP##, "##COOKIE_PATH##");
         </script>
@@ -42,12 +44,15 @@
                 </div>
             </div>
 
-            ##MODULES##
+            <div id="content" class="container">
+                ##MODULES##
+            </div>
 
         </main>
 
         <footer class="container">
-            <p>&copy; Martin J. Wolf 2016-2018</p>
+            <hr>
+            <p>&copy; <a href="//www.martinwolf.info" target="_blank">Martin J. Wolf</a></p>
         </footer>
 
         ##CONF_JS_FILES_BODY##

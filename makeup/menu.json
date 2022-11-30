@@ -1,0 +1,24 @@
+[
+    {
+        "text": "Home",
+        "module": "index",
+        "icon": "home"
+    },
+    {
+        "text": "Dropdown",
+        "submenu": [
+            {
+                "text": "Sub Item 1",
+                "module": "",
+                "task": ""
+            },
+            {
+                "text": "Sub item 2",
+                "module": "",
+                "task": "",
+                "header": "Header",
+                "separate": true
+            }
+        ]
+    }
+]

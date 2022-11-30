@@ -18,22 +18,13 @@ class Session
 	}
 
 
-	/**
-	 * Get a session value
-	 * @param type $key
-	 */
-	public static function get($key)
+	public static function get(mixed $key) : mixed
 	{
 		return $_SESSION[$key] ?? null;
 	}
 
 
-	/**
-	 * Set a session value
-	 * @param type $key
-	 * @param type $val
-	 */
-	public static function set($key, $val)
+	public static function set(string $key, mixed $val) : void
 	{
 		$_SESSION[$key] = $val;
 	}
