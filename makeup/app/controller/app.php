@@ -38,11 +38,11 @@ class App extends Module
 
 
     /**
-     * Build the complete HTML.
-     * @param $module The module to be wrapped into the app. (If empty the default one as set in app.ini will be used)
+     * @param string $module
+     * @param string $task
      * @return string HTML
      */
-    protected function build($module = "", $task = "") : string
+    protected function build(string $module = "", string $task = "") : string
     {
         $m = [];
         
@@ -78,8 +78,6 @@ class App extends Module
         $m["##AUTHENTICATION##"] = Module::create("authentication")->build("nav"); // Connecting the login form to the navbar
         $m["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->build(); // Connecting the language selector
         $m["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
-
-        // Tools::debug($_SESSION);
 
         return $this->getTemplate()->parse($m);
     }

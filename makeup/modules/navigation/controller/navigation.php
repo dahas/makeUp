@@ -3,8 +3,6 @@
 use makeup\lib\Module;
 use makeup\lib\RQ;
 use makeup\lib\Routing;
-use makeup\lib\Tools;
-use function DI\string;
 
 
 /**
@@ -74,7 +72,7 @@ class Navigation extends Module
 	 *
 	 * @return string HTML
 	 */
-	private function submenu($data, $showHeader = true)
+	private function submenu($data)
 	{
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
@@ -131,7 +129,7 @@ class Navigation extends Module
             } 
             // With submenu:
             else {
-                $markers["##SUBMENU##"] = $this->submenu($subData, true);
+                $markers["##SUBMENU##"] = $this->submenu($subData);
                 $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
             }
         }
