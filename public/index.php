@@ -8,6 +8,6 @@ if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === "localhost:2400") 
     error_reporting(0);
 }
 
-$App = new makeup\App();
+$App = new makeUp\App();
 
 $App->execute();

@@ -6,8 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'makeup\\lib\\' => array($baseDir . '/lib'),
-    'makeup\\' => array($baseDir . '/app/controller'),
+    'makeUp\\lib\\' => array($baseDir . '/lib'),
+    'makeUp\\' => array($baseDir . '/app/controller'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),

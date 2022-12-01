@@ -1,13 +1,13 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 /**
  * This class contains several useful and necessary functions.
  * Some of them are only used by the framework itself.
  *
  * Class Tools
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class Tools {
 

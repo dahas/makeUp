@@ -11,10 +11,10 @@ namespace makeUp;
  *
  *******************************************************************************/
 
-use makeup\lib\Config;
-use makeup\lib\Template;
-use makeup\lib\Module;
-use makeup\lib\Lang;
+use makeUp\lib\Config;
+use makeUp\lib\Template;
+use makeUp\lib\Module;
+use makeUp\lib\Lang;
 
 class App extends Module
 {

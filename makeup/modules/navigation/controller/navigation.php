@@ -1,8 +1,8 @@
 <?php
 
-use makeup\lib\Module;
-use makeup\lib\RQ;
-use makeup\lib\Routing;
+use makeUp\lib\Module;
+use makeUp\lib\RQ;
+use makeUp\lib\Routing;
 
 
 /**

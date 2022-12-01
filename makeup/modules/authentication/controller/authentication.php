@@ -1,10 +1,10 @@
 <?php
 
-use makeup\lib\Module;
-use makeup\lib\RQ;
-use makeup\lib\Config;
-use makeup\lib\Tools;
-use makeup\lib\Session;
+use makeUp\lib\Module;
+use makeUp\lib\RQ;
+use makeUp\lib\Config;
+use makeUp\lib\Tools;
+use makeUp\lib\Session;
 
 
 /**

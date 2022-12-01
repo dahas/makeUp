@@ -1,10 +1,10 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 /**
  * Class DB
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class DB
 {
@@ -222,7 +222,7 @@ class Recordset
 
 /**
  * Class Record
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class Record
 {

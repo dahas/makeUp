@@ -1,12 +1,12 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
-use makeup\lib\Session;
+use makeUp\lib\Session;
 
 /**
  * Class Routing
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class Routing {
     public static function getConfig() {

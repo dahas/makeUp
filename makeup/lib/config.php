@@ -1,10 +1,10 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 /**
  * Class Config
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class Config
 {

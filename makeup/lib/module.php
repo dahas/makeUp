@@ -1,13 +1,13 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 use DI\ContainerBuilder;
 
 
 /**
  * Abstract Class Module
- * @package makeup\lib\interfaces
+ * @package makeUp\lib\interfaces
  */
 abstract class Module
 {
@@ -168,7 +168,7 @@ abstract class Module
 /**
  * Class ErrorMod
  * 
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class ErrorMod
 {
@@ -189,7 +189,7 @@ class ErrorMod
 /**
  * Class AccessDeniedMod
  * 
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class AccessDeniedMod
 {

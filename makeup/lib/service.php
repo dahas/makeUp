@@ -1,11 +1,11 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 
 /**
  * Class Service
- * @package makeup\lib
+ * @package makeUp\lib
  */
 abstract class Service
 {
@@ -178,7 +178,7 @@ abstract class Service
 
 /**
  * Class ServiceItem
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class ServiceItem
 {

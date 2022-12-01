@@ -1,11 +1,11 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 
 /**
  * Class Cookie
- * @package makeup\lib
+ * @package makeUp\lib
  */
 class Cookie
 {

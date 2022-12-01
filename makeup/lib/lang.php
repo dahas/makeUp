@@ -1,10 +1,10 @@
 <?php
 
-namespace makeup\lib;
+namespace makeUp\lib;
 
 /**
  * Class Lang
- * @package makeup\lang
+ * @package makeUp\lang
  */
 class Lang
 {
