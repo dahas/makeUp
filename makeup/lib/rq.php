@@ -1,7 +1,6 @@
 <?php
 
 namespace makeUp\lib;
-use PHPUnit\phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 /**
  * Class RQ
