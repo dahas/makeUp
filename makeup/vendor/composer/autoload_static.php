@@ -14,6 +14,7 @@ class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
         'm' => 
         array (
             'makeup\\lib\\' => 11,
+            'makeup\\' => 7,
         ),
         'P' => 
         array (
@@ -38,6 +39,10 @@ class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
         'makeup\\lib\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
+        ),
+        'makeup\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/controller',
         ),
         'Psr\\Container\\' => 
         array (

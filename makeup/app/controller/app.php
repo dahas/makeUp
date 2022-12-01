@@ -11,14 +11,10 @@ namespace makeUp;
  *
  *******************************************************************************/
 
-require dirname(dirname(dirname(dirname(__FILE__)))) . "/makeup/vendor/autoload.php";
-
-
 use makeup\lib\Config;
 use makeup\lib\Template;
 use makeup\lib\Module;
 use makeup\lib\Lang;
-
 
 class App extends Module
 {
