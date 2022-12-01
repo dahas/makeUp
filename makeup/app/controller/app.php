@@ -3,12 +3,15 @@
 namespace makeUp;
 
 /*******************************************************************************
- *
- * The app
- * 
- * This class is the main module. It creates the HTML skeleton, in which 
- * the modules are wrapped as subsets.
- *
+ *                    _        _   _                                           *
+ *    _ __ ___   __ _| | _____| | | |_ __                                      *
+ *   | '_ ` _ \ / _` | |/ / _ \ | | | '_ \                                     *
+ *   | | | | | | (_| |   <  __/ |_| | |_) |                                    *
+ *   |_| |_| |_|\__,_|_|\_\___|\___/| .__/                                     *
+ *                                  |_|                                        *
+ *                                                                             *
+ *   makeUp is a PHP framework to build a single page bootstrap application.   *
+ *                                                                             * 
  *******************************************************************************/
 
 use makeUp\lib\Config;
