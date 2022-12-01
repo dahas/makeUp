@@ -1,6 +1,7 @@
 <?php
 
 namespace makeUp\lib;
+use PHPUnit\phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 /**
  * Class RQ
@@ -55,7 +56,7 @@ class RQ
 	 */
 	private static function filterInput($input)
 	{
-		return filter_var(rawurldecode($input), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		return filter_var(strip_tags(rawurldecode($input)), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	}
 
 }
