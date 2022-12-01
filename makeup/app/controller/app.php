@@ -1,6 +1,6 @@
 <?php
 
-namespace makeup\app\controller;
+namespace makeUp;
 
 /*******************************************************************************
  *
@@ -10,14 +10,6 @@ namespace makeup\app\controller;
  * the modules are wrapped as subsets.
  *
  *******************************************************************************/
-
-function autoloader($class)
-{
-    $path = dirname(dirname(dirname(dirname(__FILE__)))) . "/" . strtolower(str_replace("\\", "/", $class)) . ".php";
-    require $path;
-}
-
-spl_autoload_register(__NAMESPACE__ . "\autoloader");
 
 require dirname(dirname(dirname(dirname(__FILE__)))) . "/makeup/vendor/autoload.php";
 

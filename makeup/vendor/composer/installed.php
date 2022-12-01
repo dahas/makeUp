@@ -3,7 +3,7 @@
         'name' => 'dahas/makeup',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'bbd65f33f45fc4c3449cc0a63586b6ff60809928',
+        'reference' => 'd5684a429773c11afe1b985440031690c6f2551e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -28,7 +28,7 @@
         'dahas/makeup' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'bbd65f33f45fc4c3449cc0a63586b6ff60809928',
+            'reference' => 'd5684a429773c11afe1b985440031690c6f2551e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

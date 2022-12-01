@@ -9,6 +9,11 @@
             "email": "dahas@gmx.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "makeup\\lib\\": "lib/"
+        }
+    },
     "require": {
         "doctrine/annotations": "^1.3",
         "php-di/php-di": "^5.4"
