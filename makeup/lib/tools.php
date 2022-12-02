@@ -2,27 +2,15 @@
 
 namespace makeUp\lib;
 
-/**
- * This class contains several useful and necessary functions.
- * Some of them are only used by the framework itself.
- *
- * Class Tools
- * @package makeUp\lib
- */
-class Tools {
 
+class Tools
+{
     private static $bodyOnload = '';
     private static $debugArr = [];
     private static $tokenArr = [];
 
-    /**
-     * Loads an ini file. Either the one that belongs to the module, 
-     * or a special one.
-     * @param type $modName
-     * @param string $fileName
-     * @return type
-     */
-    public static function loadIniFile($modName = "app", $fileName = "") {
+    public static function loadIniFile(string $modName = "app", string $fileName = ""): array |false
+    {
         if (!$fileName)
             $fileName = $modName . ".ini";
 
@@ -36,15 +24,11 @@ class Tools {
         if (file_exists($path))
             return parse_ini_file($path, true);
         else
-            return null;
+            return false;
     }
 
-    /**
-     * Loads the language json file.
-     * @param string $lang
-     * @return array|null
-     */
-    public static function loadJsonLangFile() {
+    public static function loadJsonLangFile(): mixed
+    {
         $lang = self::getUserLanguageCode();
         $fpath = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/lang/%s.json";
 
@@ -61,7 +45,8 @@ class Tools {
         }
     }
 
-    public static function getTranslation() {
+    public static function getTranslation(): array
+    {
         if (!Config::get("app_settings", "dev_mode") && Session::get("translation")) {
             $translation = Session::get("translation");
         } else {
@@ -72,7 +57,8 @@ class Tools {
         return $translation;
     }
 
-    public static function getUserLanguageCode() {
+    public static function getUserLanguageCode(): string
+    {
         Cookie::read(Config::get("cookie", "name"));
         if (!$langCode = Cookie::get("lang_code"))
             $langCode = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : Config::get("app_settings", "default_lang");
@@ -80,7 +66,8 @@ class Tools {
         return $langCode;
     }
 
-    public static function getSupportedLanguages() {
+    public static function getSupportedLanguages(): array
+    {
         if (!Config::get("app_settings", "dev_mode") && Session::get("supported_languages")) {
             $languages = Session::get("supported_languages");
         } else {
@@ -101,7 +88,8 @@ class Tools {
         return $languages;
     }
 
-    public static function linkBuilder($mod = "", $task = "", $query = []): string {
+    public static function linkBuilder(string $mod = "", string $task = "", array $query = []): string
+    {
         if (!$mod)
             $mod = RQ::get("mod");
 
@@ -120,10 +108,8 @@ class Tools {
         return $host . $link;
     }
 
-    /**
-     * Secure forms to avoid CSRF (cross site request forgery)
-     */
-    public static function createFormToken(): string {
+    public static function createFormToken(): string
+    {
         $expSecs = 5; // Token expires after this amount of seconds
         $timestamp = time();
         if ($timestamp >= Session::get("form_token_expires")) {
@@ -136,7 +122,8 @@ class Tools {
         }
     }
 
-    public static function checkFormToken($token): bool {
+    public static function checkFormToken(string $token): bool
+    {
         $valid = $token == Session::get("form_token");
         if (time() >= Session::get("form_token_expires")) {
             Session::clear("form_token");
@@ -144,62 +131,38 @@ class Tools {
         return $valid;
     }
 
-    /**
-     * @param $value
-     */
-    public static function setBodyOnload($value) {
+    public static function setBodyOnload($value) : void
+    {
         self::$bodyOnload .= $value;
     }
 
-    /**
-     * @return string
-     */
-    public static function getBodyOnload() {
+    public static function getBodyOnload() : string
+    {
         return self::$bodyOnload;
     }
 
-    /**
-     * @param $msg
-     * @return string
-     */
-    public static function errorMessage($msg) {
+    public static function errorMessage(string $msg) : string
+    {
         return '<span style="font-size: 12px; font-weight: bold; color: red;">' . $msg . '</span>';
     }
 
-    /**
-     * @param $input
-     * @param string $separator
-     * @return mixed
-     */
-    public static function upperCamelCase($input, $separator = '_') {
+    public static function upperCamelCase(string $input, string $separator = '_') : string
+    {
         return str_replace($separator, '', ucwords($input, $separator));
     }
 
-    /**
-     * @param $input
-     * @param string $separator
-     * @return mixed
-     */
-    public static function lowerCamelCase($input, $separator = '_') {
+    public static function lowerCamelCase(string $input, string $separator = '_') : string
+    {
         return str_replace($separator, '', lcfirst(ucwords($input, $separator)));
     }
 
-    /**
-     * @param $input
-     * @return string
-     */
-    public static function camelCaseToUnderscore($input) {
+    public static function camelCaseToUnderscore(string $input) : string
+    {
         return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $input));
     }
 
-    /**
-     * Merge 2 arrays
-     *
-     * @param $array1 appConfig
-     * @param $array2 modConfig
-     * @return mixed
-     */
-    public static function arrayMerge($array1, $array2) {
+    public static function arrayMerge(array $array1, array $array2): mixed
+    {
         foreach ($array2 as $key => $val) {
             if (!is_array($val) && $val) {
                 if (is_numeric($key))
@@ -218,11 +181,8 @@ class Tools {
         return $array1;
     }
 
-    /**
-     * Debug output in an iframe
-     * @param type $val
-     */
-    public static function debug($val = "") {
+    public static function debug(string $val = "") : void
+    {
         if (Config::get("app_settings", "dev_mode")) {
             $bt = debug_backtrace();
             $caller = array_shift($bt);
@@ -236,11 +196,9 @@ class Tools {
         }
     }
 
-    /**
-     * Debug output in an iframe
-     * @param type $val
-     */
-    public static function renderDebugPanel() {
+    public static function renderDebugPanel() : string
+    {
+        $html = "";
         Cookie::read("__sys_makeup__");
         if (Cookie::get("panel_open") == true) {
             $dbgHandleIcon = "/div/img/close.png";
@@ -258,8 +216,9 @@ class Tools {
     <iframe src="/div/debug.php" style="width: 100%; height: ' . $height . 'px; border:none;"></iframe>
   </div>
 </div>';
-            return $html;
         }
+
+        return $html;
     }
 
 }
