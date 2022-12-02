@@ -11,18 +11,15 @@ class Session
 			session_start();
 	}
 
-
 	public static function get(string $key) : mixed
 	{
 		return $_SESSION[$key] ?? null;
 	}
 
-
 	public static function set(string $key, mixed $val) : void
 	{
 		$_SESSION[$key] = $val;
 	}
-
 
 	public static function clear(string $key) : void
 	{

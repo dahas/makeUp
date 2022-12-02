@@ -3,26 +3,14 @@
 namespace makeUp\lib;
 
 
-/**
- * Class Service
- * @package makeUp\lib
- */
 abstract class Service
 {
 	protected $DB = null;
 	protected $recordset = null;
-
 	protected $table = "";
 	protected $uniqueId = "";
 	protected $columns = "*";
 
-
-	/**
-	 * 
-	 * @param string $table Name of the table
-	 * @param string $uniqueId The unique column that increases automatically.
-	 * @param string $columns Comma-separated list of columns (optional, default is *)
-	 */
 	public function __construct($config)
 	{
 		// Get the database instance
@@ -36,17 +24,7 @@ abstract class Service
 			$this->columns = $config["columns"];
 	}
 
-
-	/**
-	 * READ table from the database. 
-	 * 
-	 * @param string $where MySQL WHERE clause (optional)
-	 * @param string $groupBy MySQL GROUP BY clause (optional)
-	 * @param string $orderBy MySQL ORDER BY clause (optional)
-	 * @param string $limit MySQL LIMIT clause (optional)
-	 * @return int $count
-	 */
-	public function read($where = "", $groupBy = "", $orderBy = "", $limit = "") : int
+	public function read(string $where = "", string $groupBy = "", string $orderBy = "", string $limit = "") : int
 	{
 		$statement = [
 			"columns" => $this->columns,
@@ -69,12 +47,6 @@ abstract class Service
 		return $this->count();
 	}
 
-
-	/**
-	 * CREATE a new record
-	 * 
-	 * @return boolean $inserted
-	 */
 	public function create() : ?ServiceItem
 	{
 		$values = func_get_args();
@@ -103,25 +75,12 @@ abstract class Service
 		return $this->getByUniqueId($insertId);
 	}
 
-
-	/**
-	 * Returns the records count.
-	 * 
-	 * @return int $count
-	 */
 	public function count() : int
 	{
 		return $this->recordset->getRecordCount();
 	}
 	
-	
-	/**
-	 * Get a single record by the given column and its value.
-	 * 
-	 * @param string|int $value Value
-	 * @return object $serviceItem
-	 */
-	public function getByUniqueId($value) : ?ServiceItem
+	public function getByUniqueId(string|int $value) : ?ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
@@ -132,15 +91,7 @@ abstract class Service
 		return $this->next($this->uniqueId, $value);
 	}
 	
-	
-	/**
-	 * Get a single record by the given column and its value.
-	 * 
-	 * @param string $key Column
-	 * @param string|int $value Value
-	 * @return object $serviceItem
-	 */
-	public function getByKey($key, $value) : ?ServiceItem
+	public function getByKey(string $key, string $value) : ?ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
@@ -151,13 +102,7 @@ abstract class Service
 		return $this->next($key, $value);
 	}
 	
-	/**
-	 * Creates the model of the data provided by the service.
-	 * Cannot be executed before useService() has been run.
-	 * @return object|null $serviceItem
-	 * @throws \Exception
-	 */
-	public function next($key = "", $value = "") : ?ServiceItem
+	public function next(string $key = "", string $value = "") : ?ServiceItem
 	{
 		if (!$this->recordset) {
 			throw new \Exception('No collection found! Create a recordset first.');
@@ -171,15 +116,9 @@ abstract class Service
 			return null;
 		}
 	}
-
-
 }
 
 
-/**
- * Class ServiceItem
- * @package makeUp\lib
- */
 class ServiceItem
 {
     private $DB = null;
@@ -188,17 +127,7 @@ class ServiceItem
     private $key = "";
     private $value = "";
 
-
-    /**
-     * ServiceItem constructor.
-     * 
-     * @param object $db Database
-     * @param object $record Single record
-     * @param object $table Table name
-     * @param object $key Column name
-     * @param object $value Column value
-     */
-    public function __construct($db, $record, $table, $key, $value)
+    public function __construct(DB $db, ?object $record, string $table, string $key, string $value)
     {
         $this->DB = $db;
         $this->record = $record;
@@ -207,36 +136,16 @@ class ServiceItem
         $this->value = $value;
     }
 
-
-    /**
-     * Access a property.
-     * 
-     * @param string $item
-     * @return string $value
-     */
-    public function getProperty($item)
+    public function getProperty(string $item) : mixed
     {
         return isset($this->record->$item) ? $this->record->$item : null;
     }
 
-
-    /**
-     * Change the value of a property.
-     * 
-     * @param string $item
-     * @param string $value
-     */
-    public function setProperty($item, $value) : void
+    public function setProperty(string $item, string|int $value) : void
     {
         $this->record->$item = $value;
     }
 
-
-    /**
-     * Update the record.
-     * 
-     * @return boolean $updated
-     */
     public function update() : bool
     {
         $set = [];
@@ -256,12 +165,6 @@ class ServiceItem
         return false;
     }
 
-
-    /**
-     * Delete a record.
-     * 
-     * @return boolean $deleted
-     */
     public function delete() : bool
     {
         return $this->DB->delete([

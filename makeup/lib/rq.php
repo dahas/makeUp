@@ -2,13 +2,10 @@
 
 namespace makeUp\lib;
 
-/**
- * Class RQ
- * @package makeUp\lib
- */
+
 class RQ
 {
-	public static function init()
+	public static function init() : void
 	{
 		if (!isset($_GET["mod"])) 
 			$_GET["mod"] = Config::get("app_settings", "default_module");
@@ -17,43 +14,27 @@ class RQ
 		$_POST = self::parseFormData();
 	}
 
-	/**
-	 * Value of a query parameter
-	 * 
-	 * @param string $key
-	 * @return string $value
-	 */
-	public static function GET($key)
+	public static function GET(string $key) : mixed
 	{
 		return $_GET[$key] ?? null;
 	}
 
-	/**
-	 * Value of a formular
-	 * 
-	 * @param string $key
-	 * @return string $value
-	 */
-	public static function POST($key)
+	public static function POST(string $key) : mixed
 	{
 		return $_POST[$key] ?? null;
 	}
 
-	public static function parseQueryString()
+	public static function parseQueryString() : array
 	{
 		return array_map('self::filterInput', $_GET);
 	}
 
-	public static function parseFormData()
+	public static function parseFormData() : array
 	{
 		return array_map('self::filterInput', $_POST);
 	}
 
-	/**
-	 * @param $input
-	 * @return mixed
-	 */
-	private static function filterInput($input)
+	private static function filterInput($input) : string
 	{
 		return filter_var(strip_tags(rawurldecode($input)), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	}
