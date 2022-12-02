@@ -2,23 +2,17 @@
 
 namespace makeUp\lib;
 
-/**
- * Class Session
- * @package makeUp\lib
- */
+
 class Session
 {
-	/**
-	 * Start the session if it isn´t already.
-	 */
-	public static function start()
+	public static function start() : void
 	{
 		if (!isset($_SESSION))
 			session_start();
 	}
 
 
-	public static function get(mixed $key) : mixed
+	public static function get(string $key) : mixed
 	{
 		return $_SESSION[$key] ?? null;
 	}
@@ -30,26 +24,17 @@ class Session
 	}
 
 
-	/**
-	 * Delete a session value
-	 * @param type $key
-	 */
-	public static function clear($key)
+	public static function clear(string $key) : void
 	{
 		$_SESSION[$key] = null;
 		unset($_SESSION[$key]);
 	}
 
-
-	/**
-	 * Destroy the session
-	 */
-	public static function destroy()
+	public static function destroy() : void
 	{
 		$_SESSION = null;
 		unset($_SESSION);
 	}
-
 
 }
 
