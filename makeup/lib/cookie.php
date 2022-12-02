@@ -3,30 +3,18 @@
 namespace makeUp\lib;
 
 
-/**
- * Class Cookie
- * @package makeUp\lib
- */
 class Cookie
 {
 	private static $value = [];
 
-
-	/**
-	 * Decode the json value.
-	 */
-	public static function read($name)
+	public static function read(string $name) : void
 	{
 		if (isset($_COOKIE) && isset($_COOKIE[$name])) {
 			self::$value = json_decode(base64_decode($_COOKIE[$name]), true);
 		}
 	}
 
-
-	/**
-	 * Decode the json value.
-	 */
-	public static function create()
+	public static function create() : void
 	{
 		$name = Config::get("cookie", "name");
 		$expDays = Config::get("cookie", "expires_days") ?: 0;
@@ -35,44 +23,24 @@ class Cookie
 		setrawcookie($name, base64_encode(json_encode(self::$value)), $expires, $path, null);
 	}
 
-
-	/**
-	 * Get a cookie value
-	 * @param type $key
-	 */
-	public static function get($key)
+	public static function get(string $key) : mixed
 	{
 		return self::$value[$key] ?? null;
 	}
 
-
-	/**
-	 * Set a cookie value
-	 * @param type $key
-	 * @param type $val
-	 */
-	public static function set($key, $val)
+	public static function set(string $key, mixed $val) : void
 	{
 		self::$value[$key] = $val;
 		self::create();
 	}
 
-
-	/**
-	 * Delete a cookie value
-	 * @param type $key
-	 */
-	public static function clear($key)
+	public static function clear(string $key) : void
 	{
 		self::$value[$key] = null;
 		unset(self::$value[$key]);
 	}
 
-
-	/**
-	 * Destroy the cookie
-	 */
-	public static function destroy()
+	public static function destroy() : void
 	{
 		self::$value = [];
 		unset($_COOKIE);
