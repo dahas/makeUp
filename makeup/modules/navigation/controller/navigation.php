@@ -5,9 +5,6 @@ use makeUp\lib\RQ;
 use makeUp\lib\Routing;
 
 
-/**
- * This is a system module
- */
 class Navigation extends Module
 {
     public function __construct()
@@ -15,13 +12,7 @@ class Navigation extends Module
         parent::__construct();
     }
 
-    /**
-     * Build before rendering
-     *
-     * @param string $modName
-     * @return string
-     */
-    public function build() : string
+    public function build(): string
     {
         $mainTmpl = $this->getTemplate();
 
@@ -37,9 +28,8 @@ class Navigation extends Module
         $m["##MENU_ITEMS##"] = "";
 
         $routing = Routing::getConfig();
-        
-        foreach ($routing as $data)
-        {
+
+        foreach ($routing as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
                 $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
@@ -50,7 +40,7 @@ class Navigation extends Module
                         "##NAME##" => @$data->icon
                     ]) : ""
                 ]);
-            } 
+            }
             // With submenu:
             else {
                 $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
@@ -67,13 +57,8 @@ class Navigation extends Module
         return $mainTmpl->parse($m, $s);
     }
 
-    /**
-	 * Create the submenu items
-	 *
-	 * @return string HTML
-	 */
-	private function submenu($data)
-	{
+    private function submenu($data): string
+    {
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
         // Init slices:
@@ -126,7 +111,7 @@ class Navigation extends Module
             // Main menu:
             if (!isset($subData->submenu)) {
                 $ss[$sliceMarker] .= $subMenuNoSubSlice->parse($markers);
-            } 
+            }
             // With submenu:
             else {
                 $markers["##SUBMENU##"] = $this->submenu($subData);
@@ -135,15 +120,18 @@ class Navigation extends Module
         }
 
         return $subMenuTmpl->parse([], $ss);
-	}
+    }
 
-    private function setContentPath(string $module="", string|null $task="", string $query="") : string
+    private function setContentPath(string $module = "", string|null $task = "", string $query = ""): string
     {
         $parts = [];
 
-        if ($module) $parts[] = "mod={$module}";
-        if ($task) $parts[] = "task={$task}";
-        if ($query) $parts[] = $query;
+        if ($module)
+            $parts[] = "mod={$module}";
+        if ($task)
+            $parts[] = "task={$task}";
+        if ($query)
+            $parts[] = $query;
 
         $qs = "?" . join("&", $parts);
 

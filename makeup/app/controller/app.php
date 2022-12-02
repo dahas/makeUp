@@ -8,7 +8,7 @@
  *        |_| |_| |_|\__,_|_|\_\___|\___/| .__/                                *
  *                                       |_|                                   *
  *                                                                             *
- *   makeUp is a PHP framework to build a single page Bootstrap application.   *
+ *   makeUp is a PHP framework to build a Bootstrap single page application.   *
  *                                                                             * 
  *******************************************************************************/
 
