@@ -18,6 +18,7 @@ use makeUp\lib\Config;
 use makeUp\lib\Template;
 use makeUp\lib\Module;
 use makeUp\lib\Lang;
+use makeUp\lib\RQ;
 
 class App extends Module
 {
@@ -33,9 +34,12 @@ class App extends Module
      * @param string $task
      * @return string HTML
      */
-    protected function build(string $module = "", string $task = "") : string
+    protected function build() : string
     {
         $m = [];
+
+        $module = RQ::GET('mod');
+        $task = RQ::GET('task');
         
         /**** IMPORTANT: Module with page content must come first! *************/
         if (!$task) {

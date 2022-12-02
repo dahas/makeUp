@@ -5,16 +5,11 @@ namespace makeUp\lib;
 use DI\ContainerBuilder;
 
 
-/**
- * Abstract Class Module
- * @package makeUp\lib\interfaces
- */
 abstract class Module
 {
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
-
 
 	public function __construct()
 	{
@@ -26,19 +21,16 @@ abstract class Module
 		Session::start(); // 1st
 		Config::init($this->modName); // 2nd
 		RQ::init(); // 3rd
-		Lang::init($this->modName); // 4th
+		Lang::init(); // 4th
 
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name")); // 5th
 	}
 
-
 	/**
 	 * Run and output the app.
-	 * 
-	 * @return string
 	 */
-	public function execute(): string
+	public function execute() : void
 	{
 		// Debugging:
 		$debugMod = "";
@@ -77,11 +69,7 @@ abstract class Module
 				die("Access denied!");
 			$appHtml = Module::create($modName)->$task();
 		} else {
-			if ($app == "wrap" && $task != "build") {
-				$html = $this->build($modName, $task);
-			} else {
-				$html = $this->build($modName);
-			}
+			$html = $this->build();
 			$debugPanel = Tools::renderDebugPanel();
 			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
 		}
@@ -89,14 +77,10 @@ abstract class Module
 		die($appHtml);
 	}
 
-
 	/**
 	 * Creates an object as long the user has permission to access the module.
-	 * 
-	 * @return ErrorMod|mixed
-	 * @throws \Exception
 	 */
-	public static function create()
+	public static function create() : mixed
 	{
 		$args = func_get_args();
 		$types = array();
@@ -132,44 +116,21 @@ abstract class Module
 		}
 	}
 
-
-	/**
-	 * Build the HTML content.
-	 *
-	 * @return mixed
-	 */
 	abstract protected function build(): string;
 
-
-	/**
-	 * Returns the template object
-	 *
-	 * @return Template
-	 */
-	protected function getTemplate($fileName = ""): Template
+	protected function getTemplate($fileName = "") : Template
 	{
 		$fname = $fileName ? $fileName : $this->modName . ".html";
 		return Template::load($this->className, $fname);
 	}
 
-
-	/**
-	 * @param $method
-	 * @param $args
-	 * @return string
-	 */
-	public function __call($method, $args)
+	public function __call(string $method, mixed $args) : string
 	{
 		return Tools::errorMessage("Task $method() not defined!");
 	}
 }
 
 
-/**
- * Class ErrorMod
- * 
- * @package makeUp\lib
- */
 class ErrorMod
 {
 	private $modName = "";
@@ -179,18 +140,13 @@ class ErrorMod
 		$this->modName = strtolower("$modName");
 	}
 
-	public function build()
+	public function build() : string
 	{
 		return Tools::errorMessage("Module '$this->modName' not found!");
 	}
 }
 
 
-/**
- * Class AccessDeniedMod
- * 
- * @package makeUp\lib
- */
 class AccessDeniedMod
 {
 	private $modName = "";
