@@ -2,10 +2,7 @@
 
 namespace makeUp\lib;
 
-/**
- * Class Config
- * @package makeUp\lib
- */
+
 class Config
 {
     private static $config = array();
@@ -14,20 +11,20 @@ class Config
     {
         if (empty(self::$config)) {
             $appConfig = Tools::loadIniFile();
-            $appConfig['additional_css_files']['screen'] = self::setCssScreenFilesPath($appConfig);
-            $appConfig['additional_css_files']['print'] = self::setCssPrintFilesPath($appConfig);
-            $appConfig['additional_js_files_head']['js'] = self::setJsFilesHeadPath($appConfig);
-            $appConfig['additional_js_files_body']['js'] = self::setJsFilesBodyPath($appConfig);
+            $appConfig['additional_css_files']['screen'] = self::setCssFilesPath($appConfig, 'screen');
+            $appConfig['additional_css_files']['print'] = self::setCssFilesPath($appConfig, 'print');
+            $appConfig['additional_js_files_head']['js'] = self::setJsFilesPath($appConfig, 'head');
+            $appConfig['additional_js_files_body']['js'] = self::setJsFilesPath($appConfig, 'body');
         } else {
             $appConfig = self::$config;
         }
 
         if ($moduleFileName != "app") {
             if ($modConfig = Tools::loadIniFile($moduleFileName)) {
-                $modConfig['additional_css_files']['screen'] = self::setCssScreenFilesPath($modConfig, $moduleFileName);
-                $modConfig['additional_css_files']['print'] = self::setCssPrintFilesPath($modConfig, $moduleFileName);
-                $modConfig['additional_js_files_head']['js'] = self::setJsFilesHeadPath($modConfig, $moduleFileName);
-                $modConfig['additional_js_files_body']['js'] = self::setJsFilesBodyPath($modConfig, $moduleFileName);
+                $modConfig['additional_css_files']['screen'] = self::setCssFilesPath($modConfig, 'screen');
+                $modConfig['additional_css_files']['print'] = self::setCssFilesPath($modConfig, 'print');
+                $modConfig['additional_js_files_head']['js'] = self::setJsFilesPath($modConfig, 'head');
+                $modConfig['additional_js_files_body']['js'] = self::setJsFilesPath($modConfig, 'body');
                 $appConfig = Tools::arrayMerge($appConfig, $modConfig);
             }
         } 
@@ -37,11 +34,7 @@ class Config
         $_SESSION['_config'] = $appConfig;
     }
 
-    /**
-     * @param $entry
-     * @return mixed
-     */
-    public static function get()
+    public static function get() : mixed
     {
         $args = func_get_args();
         if ($args) {
@@ -64,7 +57,7 @@ class Config
         return self::$config;
     }
 
-    private static function translateArgument($arg)
+    private static function translateArgument($arg) : string
     {
         $arg = $arg ?: "";
         $pos = strpos($arg, "*");
@@ -77,125 +70,65 @@ class Config
         return $arg;
     }
 
-    /**
-     * @return array
-     */
-    public static function getAdditionalCssFiles()
+    public static function getAdditionalCssFiles() : array
     {
         return self::removeDuplicateFiles(self::$config['additional_css_files']);
     }
 
-    /**
-     * @return array
-     */
-    public static function getAdditionalJsFilesHead()
+    public static function getAdditionalJsFilesHead() : array
     {
         return self::removeDuplicateFiles(self::$config['additional_js_files_head']);
     }
 
-    /**
-     * @return array
-     */
-    public static function getAdditionalJsFilesBody()
+    public static function getAdditionalJsFilesBody() : array
     {
         return self::removeDuplicateFiles(self::$config['additional_js_files_body']);
     }
 
-    /**
-     * @param array $files
-     */
-    public static function setAdditionalCssFiles($files = array())
+    public static function setAdditionalCssFiles(array $files = array()) : void
     {
         if (isset($files['css'])) {
             self::$config['additional_css_files'] = array_merge_recursive(self::$config['additional_css_files'], $files);
         }
     }
 
-    /**
-     * @param array $files
-     */
-    public static function setAdditionalJsFilesHead($files = array())
+    public static function setAdditionalJsFilesHead(array $files = array()) : void
     {
         if (isset($files['js'])) {
             self::$config['additional_js_files_head'] = array_merge_recursive(self::$config['additional_js_files_head'], $files);
         }
     }
 
-    /**
-     * @param array $files
-     */
-    public static function setAdditionalJsFilesBody($files = array())
+    public static function setAdditionalJsFilesBody(array $files = array()) : void
     {
         if (isset($files['js'])) {
             self::$config['additional_js_files_body'] = array_merge_recursive(self::$config['additional_js_files_body'], $files);
         }
     }
 
-    /**
-     * @param $config
-     * @return array
-     */
-    private static function setCssScreenFilesPath($config)
+    private static function setCssFilesPath(array|bool $config, string $type) : array
     {
-        if (isset($config['additional_css_files']['screen'][0]) && $config['additional_css_files']['screen'][0]) {
-            $newPath = [];
-            foreach ($config['additional_css_files']['screen'] as $file) {
+        $newPath = [];
+        if ($config && isset($config['additional_css_files'][strtolower($type)][0]) && $config['additional_css_files'][strtolower($type)][0]) {
+            foreach ($config['additional_css_files'][strtolower($type)] as $file) {
                 $newPath[] = $file;
             }
-            return $newPath;
         }
+        return $newPath;
     }
 
-    /**
-     * @param $config
-     * @return array
-     */
-    private static function setCssPrintFilesPath($config)
+    private static function setJsFilesPath(array|bool $config, string $type) : array
     {
-        if (isset($config['additional_css_files']['print'][0]) && $config['additional_css_files']['print'][0]) {
-            $newPath = [];
-            foreach ($config['additional_css_files']['print'] as $file) {
+        $newPath = [];
+        if (isset($config['additional_js_files_'.strtolower($type)]['js'][0]) && $config['additional_js_files_'.strtolower($type)]['js'][0]) {
+            foreach ($config['additional_js_files_'.strtolower($type)]['js'] as $file) {
                 $newPath[] = $file;
             }
-            return $newPath;
         }
+        return $newPath;
     }
 
-    /**
-     * @param $config
-     * @return array
-     */
-    private static function setJsFilesHeadPath($config)
-    {
-        if (isset($config['additional_js_files_head']['js'][0]) && $config['additional_js_files_head']['js'][0]) {
-            $newPath = [];
-            foreach ($config['additional_js_files_head']['js'] as $file) {
-                $newPath[] = $file;
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $config
-     * @return array
-     */
-    private static function setJsFilesBodyPath($config)
-    {
-        if (isset($config['additional_js_files_body']['js'][0]) && $config['additional_js_files_body']['js'][0]) {
-            $newPath = [];
-            foreach ($config['additional_js_files_body']['js'] as $file) {
-                $newPath[] = $file;
-            }
-            return $newPath;
-        }
-    }
-
-    /**
-     * @param $array
-     * @return array
-     */
-    private static function removeDuplicateFiles($array)
+    private static function removeDuplicateFiles(array $array) : array
     {
         $fixedArr = array();
         if (isset($array['css'])) {
