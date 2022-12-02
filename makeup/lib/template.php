@@ -3,14 +3,9 @@
 namespace makeUp\lib;
 
 
-/**
- * Class Template
- * @package makeUp\lib
- */
 class Template
 {
 	private $html = "";
-
 
 	public function __construct($file = '')
 	{
@@ -18,18 +13,9 @@ class Template
 			$this->loadFile($file);
 	}
 
-
-	/**
-	 * @param $modName
-	 * @param $templateFile
-	 * @return Template
-	 */
-	public static function load($modName, $templateFile)
+	public static function load(string $modName, string $templateFile): Template
 	{
-		$modNsArr = explode("\\", $modName);
-		$className = array_pop($modNsArr);
-
-		$modName = Tools::camelCaseToUnderscore($className);
+		$modName = Tools::camelCaseToUnderscore($modName);
 
 		$realPath = realpath('');
 
@@ -41,20 +27,14 @@ class Template
 		return new Template($file);
 	}
 
-
-	/**
-	 * @param $html
-	 * @return Template
-	 */
-	public static function html($html)
+	public static function html(string $html): Template
 	{
 		$tmpl = new Template();
 		$tmpl->html = $html;
 		return $tmpl;
 	}
 
-
-	private function loadFile($file = '')
+	private function loadFile(string $file = ''): void
 	{
 		if (is_file($file))
 			$this->html = file_get_contents($file);
@@ -62,8 +42,7 @@ class Template
 			$this->html = Tools::errorMessage("No valid template file: $file");
 	}
 
-
-	public function getSlice($marker)
+	public function getSlice(string $marker): mixed
 	{
 		$start = strpos($this->html, $marker);
 		if ($start === false) {
@@ -87,8 +66,7 @@ class Template
 		return self::html($html);
 	}
 
-
-	private function replaceMarker($html, $markerArr)
+	private function replaceMarker(string $html, array $markerArr): string
 	{
 		foreach ($markerArr as $key => $val) {
 			$html = str_replace($key, $val, $html);
@@ -96,8 +74,7 @@ class Template
 		return $html;
 	}
 
-
-	private function replaceSlice($html, $slicesArr)
+	private function replaceSlice(string $html, array $slicesArr): string
 	{
 		foreach ($slicesArr as $key => $val) {
 			$html = self::trimSlice($html, $key, $val);
@@ -105,8 +82,7 @@ class Template
 		return $html;
 	}
 
-
-	private static function trimSlice($html, $marker, $slice, $recursive = 1)
+	private static function trimSlice(string $html, string $marker, string $slice, int $recursive = 1): string
 	{
 		$start = strpos($html, $marker);
 		if ($start === false) {
@@ -150,8 +126,7 @@ class Template
 		return $before . $between . $after;
 	}
 
-
-	public function parse($markerArr = array(), $slicesArr = array())
+	public function parse(array $markerArr = array(), array $slicesArr = array()) : string
 	{
 		$html = $this->html;
 		if (!empty($markerArr)) {
@@ -163,19 +138,12 @@ class Template
 		return $html;
 	}
 
-
-	public static function replaceBodyTag($bt, $tmpl)
+	public static function replaceBodyTag(string $bt, string $tmpl) : string
 	{
 		return $tmpl = str_replace("<body>", $bt, $tmpl);
 	}
 
-
-	/**
-	 * Creates meta tags
-	 * 
-	 * @return string
-	 */
-	public static function createMetaTags()
+	public static function createMetaTags() : string
 	{
 		$tags = [];
 		$strHttpEquiv = '<meta http-equiv="%s" content="%s">';
@@ -197,13 +165,7 @@ class Template
 		return implode("\n", $tags);
 	}
 
-
-	/**
-	 * Creates the title tag
-	 * 
-	 * @return string
-	 */
-	public static function createTitleTag()
+	public static function createTitleTag() : string
 	{
 		if (Config::get('page_settings', 'title')) {
 			$title = Config::get('page_settings', 'title');
@@ -213,13 +175,7 @@ class Template
 		return "";
 	}
 
-
-	/**
-	 * Creates stylesheet tags
-	 * 
-	 * @return string
-	 */
-	public static function createStylesheetTags()
+	public static function createStylesheetTags() : string
 	{
 		$tags = [];
 		$str = '<link rel="stylesheet" href="%s" media="%s">';
@@ -238,13 +194,7 @@ class Template
 		return implode("\n", $tags);
 	}
 
-
-	/**
-	 * Creates JavaScript files tags in the head section
-	 * 
-	 * @return string
-	 */
-	public static function createJsScriptTagsHead()
+	public static function createJsScriptTagsHead() : string
 	{
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
@@ -258,13 +208,7 @@ class Template
 		return implode("\n", $tags);
 	}
 
-
-	/**
-	 * Creates JavaScript files tags in the body section before the closing tag. 
-	 * 
-	 * @return string
-	 */
-	public static function createJsScriptTagsBody()
+	public static function createJsScriptTagsBody() : string
 	{
 		$tags = [];
 		$str = '<script type="text/javascript" src="%s"></script>';
@@ -277,7 +221,4 @@ class Template
 		}
 		return implode("\n", $tags);
 	}
-
-
 }
-
