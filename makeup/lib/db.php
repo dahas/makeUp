@@ -2,10 +2,7 @@
 
 namespace makeUp\lib;
 
-/**
- * Class DB
- * @package makeUp\lib
- */
+
 class DB
 {
     private static $instance = null;
@@ -16,9 +13,6 @@ class DB
     private $pass = "";
     private $charset = "utf8";
 
-    /**
-     * Protected constructor, because we use a singleton.
-     */
     protected function __construct()
     {
         $this->db = Config::get('database', 'db_name');
@@ -32,11 +26,7 @@ class DB
         mysqli_set_charset($this->conn, $this->charset);
     }
 
-    /**
-     * Singleton
-     * @return null|DB
-     */
-    public static function getInstance()
+    public static function getInstance() : DB
     {
         if (self::$instance == null) {
             self::$instance = new DB();
@@ -45,11 +35,7 @@ class DB
         return self::$instance;
     }
 
-    /**
-     * @param array $conf
-     * @return Recordset
-     */
-    public function select($conf)
+    public function select(array $conf) : Recordset
     {
         $sql = "SELECT";
         if (isset($conf['columns'])) {
@@ -80,11 +66,7 @@ class DB
         return new Recordset($rs);
     }
 
-    /**
-     * @param array $conf
-     * @return int
-     */
-    public function insert($conf)
+    public function insert(array $conf) : int
     {
         $sql = "INSERT INTO";
         if (isset($conf['into'])) {
@@ -112,11 +94,7 @@ class DB
         return 0;
     }
 
-    /**
-     * @param array $conf
-     * @return bool|mysqli_result
-     */
-    public function update($conf)
+    public function update(array $conf) : mixed
     {
         $sql = "UPDATE";
         if (isset($conf['table'])) {
@@ -134,11 +112,7 @@ class DB
         return mysqli_query($this->conn, $sql);
     }
 
-    /**
-     * @param array $conf
-     * @return bool|mysqli_result
-     */
-    public function delete($conf)
+    public function delete(array $conf) : mixed
     {
         $sql = "DELETE FROM";
         if (isset($conf['from'])) {
@@ -152,9 +126,6 @@ class DB
         return mysqli_query($this->conn, $sql);
     }
 
-    /**
-     * Destructor
-     */
     public function __destruct()
     {
         if ($this->conn && mysqli_close($this->conn)) {
@@ -168,37 +139,22 @@ class Recordset
 {
     private $recordset = null;
 
-    /**
-     * Recordset constructor.
-     * @param $rs
-     */
-    public function __construct($rs)
+    public function __construct(mixed $rs)
     {
         $this->recordset = $rs;
     }
 
-    /**
-     * @return int
-     */
-    public function getRecordCount()
+    public function getRecordCount() : int
     {
         return $this->recordset ? mysqli_num_rows($this->recordset) : 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function reset()
+    public function reset() : bool
     {
-        return $this->recordset ? mysqli_data_seek($this->recordset, 0) : null;
+        return $this->recordset ? mysqli_data_seek($this->recordset, 0) : false;
     }
 
-    /**
-     * Iterate through collection
-     * 
-     * @return array|null|object
-     */
-    public function next()
+    public function next() : mixed
     {
         $record = $this->recordset ? mysqli_fetch_object($this->recordset) : null;
         if ($record) {
@@ -208,9 +164,6 @@ class Recordset
         }
     }
 
-    /**
-     * Destructor
-     */
     public function __destruct()
     {
         if ($this->recordset)
