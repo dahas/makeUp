@@ -22,18 +22,12 @@ use makeUp\lib\RQ;
 
 class App extends Module
 {
-    // Calling the parent constructor is required!
     public function __construct()
     {
         parent::__construct();
     }
 
 
-    /**
-     * @param string $module
-     * @param string $task
-     * @return string HTML
-     */
     protected function build() : string
     {
         $m = [];
@@ -76,5 +70,4 @@ class App extends Module
 
         return $this->getTemplate()->parse($m);
     }
-    
 }      
