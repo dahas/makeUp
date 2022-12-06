@@ -20,5 +20,10 @@
                 "separate": true
             }
         ]
+    },
+    {
+        "text": "Users",
+        "module": "users",
+        "icon": "user"
     }
 ]

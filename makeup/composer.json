@@ -12,11 +12,10 @@
     "autoload": {
         "psr-4": {
             "makeUp\\": "app/controller/",
-            "makeUp\\lib\\": "lib/"
+            "makeUp\\lib\\": "lib/",
+            "makeUp\\services\\": "services/"
         }
     },
     "require": {
-        "doctrine/annotations": "^1.3",
-        "php-di/php-di": "^5.4"
     }
 }

@@ -2,7 +2,7 @@
 
 namespace makeUp\lib;
 
-use DI\ContainerBuilder;
+use ReflectionClass;
 
 
 abstract class Module
@@ -98,23 +98,36 @@ abstract class Module
 
 		$realPath = realpath('');
 
-		$modFile = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/modules/$name/controller/$name.php";
+		$modFile = dirname(__DIR__, 1). "/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Tools::loadIniFile($name);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
 			if ($protected && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 				return new AccessDeniedMod($className);
-			$builder = new ContainerBuilder();
-			$builder->useAutowiring(false);
-			$builder->useAnnotations(true);
-			$container = $builder->build();
+
 			require_once $modFile;
-			return $container->get($className);
+			$module = new $className();
+			$module->injectServices('makeUp\\services\\');
+			return $module;
 		} else {
 			return new ErrorMod($className);
 		}
 	}
+
+	protected function injectServices($namespace)
+    {
+        $rc = new ReflectionClass(get_class($this));
+        $properties = $rc->getProperties();
+        foreach($properties as $property) {
+            $pName = $property->name;
+            foreach($property->getAttributes() as $attribute) {
+                $service = $attribute->newInstance()->service;
+                $sName = $namespace . $service;
+                $this->$pName = new $sName();
+            }
+        }
+    }
 
 	abstract protected function build(): string;
 

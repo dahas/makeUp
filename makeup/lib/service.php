@@ -2,26 +2,28 @@
 
 namespace makeUp\lib;
 
+use ReflectionClass;
+
 
 abstract class Service
 {
 	protected $DB = null;
 	protected $recordset = null;
 	protected $table = "";
-	protected $uniqueId = "";
+	protected $key = "";
 	protected $columns = "*";
 
-	public function __construct($config)
+	public function __construct()
 	{
 		// Get the database instance
 		$this->DB = DB::getInstance();
 
-		if (isset($config["table"]))
-			$this->table = $config["table"];
-		if (isset($config["uniqueID"]))
-			$this->uniqueId = $config["uniqueID"];
-		if (isset($config["columns"]))
-			$this->columns = $config["columns"];
+		$rc = new ReflectionClass(get_class($this));
+        foreach($rc->getAttributes() as $attribute) {
+            foreach($attribute->newInstance() as $name => $property) {
+                $this->$name = $property;
+            }
+        }
 	}
 
 	public function read(string $where = "", string $groupBy = "", string $orderBy = "", string $limit = "") : int
@@ -53,7 +55,7 @@ abstract class Service
 		$colsArr = explode(",", $this->columns);
 		$columns = array_map('trim', $colsArr);
 
-		if (($key = array_search($this->uniqueId, $columns)) !== false) {
+		if (($key = array_search($this->key, $columns)) !== false) {
 			unset($columns[$key]);
 		}
 
@@ -85,10 +87,10 @@ abstract class Service
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
 			"from" => $this->table,
-			"where" => "{$this->uniqueId}='$value'"
+			"where" => "{$this->key}='$value'"
 		]);
 		
-		return $this->next($this->uniqueId, $value);
+		return $this->next($this->key, $value);
 	}
 	
 	public function getByKey(string $key, string $value) : ?ServiceItem

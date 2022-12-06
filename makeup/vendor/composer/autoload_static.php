@@ -6,36 +6,20 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
 {
-    public static $files = array (
-        'bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'm' => 
         array (
+            'makeUp\\services\\' => 16,
             'makeUp\\lib\\' => 11,
             'makeUp\\' => 7,
-        ),
-        'P' => 
-        array (
-            'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
-            'PhpDocReader\\' => 13,
-        ),
-        'I' => 
-        array (
-            'Invoker\\' => 8,
-            'Interop\\Container\\' => 18,
-        ),
-        'D' => 
-        array (
-            'Doctrine\\Common\\Lexer\\' => 22,
-            'Doctrine\\Common\\Annotations\\' => 28,
-            'DI\\' => 3,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'makeUp\\services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/services',
+        ),
         'makeUp\\lib\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
@@ -43,38 +27,6 @@ class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
         'makeUp\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/controller',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
-        ),
-        'PhpDocReader\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
-        ),
-        'Invoker\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-di/invoker/src',
-        ),
-        'Interop\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
-        'Doctrine\\Common\\Lexer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
-        ),
-        'Doctrine\\Common\\Annotations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
-        ),
-        'DI\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-di/php-di/src/DI',
         ),
     );
 
