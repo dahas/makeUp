@@ -108,14 +108,14 @@ abstract class Module
 
 			require_once $modFile;
 			$module = new $className();
-			$module->injectServices('makeUp\\services\\');
+			$module->injectServices();
 			return $module;
 		} else {
 			return new ErrorMod($className);
 		}
 	}
 
-	protected function injectServices($namespace)
+	protected function injectServices()
     {
         $rc = new ReflectionClass(get_class($this));
         $properties = $rc->getProperties();
@@ -123,7 +123,7 @@ abstract class Module
             $pName = $property->name;
             foreach($property->getAttributes() as $attribute) {
                 $service = $attribute->newInstance()->service;
-                $sName = $namespace . $service;
+                $sName = 'makeUp\\services\\' . $service;
                 $this->$pName = new $sName();
             }
         }

@@ -25,5 +25,10 @@
         "text": "Users",
         "module": "users",
         "icon": "user"
+    },
+    {
+        "text": "Test",
+        "module": "test",
+        "icon": "check"
     }
 ]

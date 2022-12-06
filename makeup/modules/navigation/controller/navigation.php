@@ -133,9 +133,9 @@ class Navigation extends Module
         if ($query)
             $parts[] = $query;
 
-        $qs = "?" . join("&", $parts);
+        $route = "?" . implode("&", $parts);
 
-        return "loadContent('{$qs}');";
+        return "setRoute('$module', '$route');";
     }
 
 }
