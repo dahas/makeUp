@@ -7,9 +7,6 @@ use makeUp\lib\Tools;
 use makeUp\lib\Session;
 
 
-/**
- * This is a system module
- */
 class Authentication extends Module
 {
     public function __construct()
@@ -23,7 +20,7 @@ class Authentication extends Module
         if ($formVariant) {
             return $this->buildForm($formVariant);
         } else {
-            return $this->getTemplate()->parse([
+            return $this->render([
                 "##FORM##" => $this->buildForm("page")
             ]);
         }
@@ -55,9 +52,6 @@ class Authentication extends Module
     }
 
 
-    /**
-     * Authenticate user whenn signing in
-     */
     public function signin()
     {
         // Simulate login:
@@ -68,9 +62,6 @@ class Authentication extends Module
     }
 
 
-    /**
-     * Logout user
-     */
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout

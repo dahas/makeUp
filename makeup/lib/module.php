@@ -5,8 +5,7 @@ namespace makeUp\lib;
 use ReflectionClass;
 
 
-abstract class Module
-{
+abstract class Module {
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
@@ -30,7 +29,7 @@ abstract class Module
 	/**
 	 * Run and output the app.
 	 */
-	public function execute() : void
+	public function execute(): void
 	{
 		// Debugging:
 		$debugMod = "";
@@ -80,7 +79,7 @@ abstract class Module
 	/**
 	 * Creates an object as long the user has permission to access the module.
 	 */
-	public static function create() : mixed
+	public static function create(): mixed
 	{
 		$args = func_get_args();
 		$types = array();
@@ -98,7 +97,7 @@ abstract class Module
 
 		$realPath = realpath('');
 
-		$modFile = dirname(__DIR__, 1). "/modules/$name/controller/$name.php";
+		$modFile = dirname(__DIR__, 1) . "/modules/$name/controller/$name.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Tools::loadIniFile($name);
@@ -116,36 +115,50 @@ abstract class Module
 	}
 
 	protected function injectServices()
-    {
-        $rc = new ReflectionClass(get_class($this));
-        $properties = $rc->getProperties();
-        foreach($properties as $property) {
-            $pName = $property->name;
-            foreach($property->getAttributes() as $attribute) {
-                $service = $attribute->newInstance()->service;
-                $sName = 'makeUp\\services\\' . $service;
-                $this->$pName = new $sName();
-            }
-        }
-    }
+	{
+		$rc = new ReflectionClass(get_class($this));
+		$properties = $rc->getProperties();
+		foreach ($properties as $property) {
+			$pName = $property->name;
+			foreach ($property->getAttributes() as $attribute) {
+				$service = $attribute->newInstance()->service;
+				$sName = 'makeUp\\services\\' . $service;
+				$this->$pName = new $sName();
+			}
+		}
+	}
 
 	abstract protected function build(): string;
 
-	protected function getTemplate($fileName = "") : Template
+	protected function getTemplate($fileName = ""): Template
 	{
 		$fname = $fileName ? $fileName : $this->modName . ".html";
 		return Template::load($this->className, $fname);
 	}
 
-	public function __call(string $method, mixed $args) : string
+	protected function render(array $m = [], array $s = []): string
+	{
+		$html = $this->getTemplate()->parse($m, $s);
+
+		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
+			return $html;
+
+		$result = [
+			"title" => $this->modName,
+			"html" => $html
+		];
+
+		return json_encode($result);
+	}
+
+	public function __call(string $method, mixed $args): string
 	{
 		return Tools::errorMessage("Task $method() not defined!");
 	}
 }
 
 
-class ErrorMod
-{
+class ErrorMod {
 	private $modName = "";
 
 	public function __construct($modName)
@@ -153,15 +166,14 @@ class ErrorMod
 		$this->modName = strtolower("$modName");
 	}
 
-	public function build() : string
+	public function build(): string
 	{
 		return Tools::errorMessage("Module '$this->modName' not found!");
 	}
 }
 
 
-class AccessDeniedMod
-{
+class AccessDeniedMod {
 	private $modName = "";
 
 	public function __construct($modName)

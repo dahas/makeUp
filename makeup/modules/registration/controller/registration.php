@@ -16,12 +16,7 @@ class Registration extends Module
         parent::__construct();
     }
 
-    /**
-     * This function prepares the module for rendering.
-     *
-     * @param string $modName
-     * @return string
-     */
+
     protected function build() : string
     {
         $token = Tools::createFormToken();
@@ -33,13 +28,10 @@ class Registration extends Module
         $m['##TOKEN##'] = $token;
         $m['##REDIRECT##'] = $this->modName;
 
-        return $this->getTemplate()->parse($m, $s);
+        return $this->render($m, $s);
     }
 
 
-    /**
-     * Registration process
-	 */
 	public function register()
 	{
         // ToDo: Registration process

@@ -16,7 +16,11 @@ $(document).ready(() => {
         }).fail(() => {
             $('#content').html("Sorry! Something has gone wrong :(");
         }).done(data => {
-            $('#content').html(data);
+            let json = jQuery.parseJSON(data);
+            
+            $(document).prop('title', json.title);
+            $('#content').html(json.html);
+
             $("#content").animate({ opacity: 1 }, 200);
         });
     }

@@ -8,9 +8,6 @@ use makeUp\lib\Cookie;
 use makeUp\lib\Session;
 
 
-/**
- * This is a system module
- */
 class LanguageSelector extends Module
 {
     public function __construct()
@@ -41,7 +38,7 @@ class LanguageSelector extends Module
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 
-        return $this->getTemplate()->parse($m, $s);
+        return $this->render($m, $s);
     }
 
 
