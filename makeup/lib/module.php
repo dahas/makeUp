@@ -144,7 +144,8 @@ abstract class Module {
 			return $html;
 
 		$result = [
-			"title" => $this->modName,
+			"title" => Config::get("page_settings", "title"),
+			"module" => $this->modName,
 			"html" => $html
 		];
 
