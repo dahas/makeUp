@@ -1,6 +1,8 @@
 
 $(document).ready(() => {
 
+    let fadeDurMS = 200;
+
     setRoute = (mod, uri) => {
         $(this).blur();
         $('nav li a.active').removeClass('active');
@@ -9,18 +11,23 @@ $(document).ready(() => {
         history.pushState(state, mod, uri);
     }
 
-    loadContent = state => {
+    loadContent = async state => {
         if (!state) {
-            requestData('?mod=index');
+            let content = await requestData('?mod=index');
+            $('#content').html(content);
         } else if (state.html == '') {
-            requestData(state.path);
+            let content = await requestData(state.path);
+            $('#content').html(content);
         } else {
-            $('#content').html(state.html);
+            $("#content").animate({ opacity: 0 }, fadeDurMS, () => {
+                $('#content').html(state.html);
+                $("#content").animate({ opacity: 1 }, fadeDurMS);
+            });
         }
     }
 
     requestData = async path => {
-        $("#content").animate({ opacity: 0 }, 200);
+        $("#content").animate({ opacity: 0 }, fadeDurMS);
         let content = '';
         await $.ajax({
             type: 'GET',
@@ -32,9 +39,9 @@ $(document).ready(() => {
             $(document).prop('title', json.title);
             content = json.html;
             history.replaceState({path: path, html: json.html}, json.module, path);
-            $("#content").animate({ opacity: 1 }, 200);
+            $("#content").animate({ opacity: 1 }, fadeDurMS);
         });
-        $('#content').html(content);
+        return content;
     }
 
     window.onpopstate = event => {
