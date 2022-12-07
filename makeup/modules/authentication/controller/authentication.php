@@ -36,15 +36,13 @@ class Authentication extends Module
         if (Session::get("logged_in")) {
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
                 "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signout"),
-                "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("redirect", "signout") ?: RQ::get("mod")
+                "##TOKEN##" => $token
             ]);
         } else {
             $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
                 "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
                 "##REGISTER_LINK##" => Tools::linkBuilder("registration"),
-                "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("redirect", "signin") ?: RQ::get("mod")
+                "##TOKEN##" => $token
             ]);
         }
 
@@ -58,14 +56,20 @@ class Authentication extends Module
         if (Tools::checkFormToken(RQ::post("token"))) {
             Session::set("logged_in", true); // Simulate login
         }
-        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
+
+        // return "OK das wars!";
+        $redirect = Config::get("redirect", "signin") ?: RQ::get("mod");
+        return $this->build();
+        // header("Location: " . Tools::linkBuilder($redirect));
     }
 
 
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
+        $redirect = Config::get("redirect", "signout") ?: RQ::get("mod");
+        return $this->build();
+        // header("Location: " . Tools::linkBuilder($redirect));
     }
 
 }

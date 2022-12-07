@@ -3,7 +3,7 @@ $(document).ready(() => {
 
     let fadeDurMS = 200;
 
-    getAttachedParameter = (paramter) => {
+    getAttachedParameter = paramter => {
         let params = $('#helper').attr('src').split("?").pop().split("&");
         let paramsArr = [];
         for (let j = 0; j < params.length; j++) {
@@ -51,13 +51,13 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: rewriting == 1 ? '/nowrap/' + path : path + '&app=nowrap'
+            url: rewriting == 1 ? '/nowrap/' + path : path + '&app=nowrap',
+            dataType: 'json'
         }).fail(() => {
             state = { path: path, html: "Sorry! Something has gone wrong :(", title: "Page not found!" };
         }).done(data => {
-            let json = jQuery.parseJSON(data);
-            state = { path: path, html: json.html, title: json.title };
-            history.replaceState(state, json.module, path);
+            state = { path: path, html: data.html, title: data.title };
+            history.replaceState(state, data.module, path);
             $("#content").animate({ opacity: 1 }, fadeDurMS);
         });
         return state;
@@ -65,6 +65,24 @@ $(document).ready(() => {
 
     window.onpopstate = event => {
         loadContent(event.state);
+    }
+
+    $("form").submit((event) => {
+        event.preventDefault();
+        submitForm(event.currentTarget.action, event.currentTarget.name);
+    });
+
+    submitForm = (path, name) => {
+        console.log($('form[name="'+name+'"]').serialize());
+        $.ajax({
+            type: 'POST',
+            url: path,
+            data: $('form[name="'+name+'"]').serialize(),
+            success: data => {
+                $("#content").html(data.html);
+            },
+            dataType: 'json'
+         });
     }
 });
 
