@@ -7,9 +7,9 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "users", // module name
+                "--mod", "", // module name
                 "--task", "", // task name
-                "--app", "nowrap" // wrap or nowrap
+                "--app", "" // wrap or nowrap
             ],
             "externalConsole": false,
             "port": 9003

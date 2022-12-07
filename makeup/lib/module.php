@@ -140,7 +140,7 @@ abstract class Module {
 	{
 		$html = $this->getTemplate()->parse($m, $s);
 
-		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
+		if (!RQ::GET('app') || RQ::GET('app') == 'wrap') 
 			return $html;
 
 		$result = [

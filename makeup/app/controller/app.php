@@ -67,6 +67,7 @@ class App extends Module
         $m["##AUTHENTICATION##"] = Module::create("authentication")->build("nav"); // Connecting the login form to the navbar
         $m["##LANGUAGE_SELECTOR##"] = Module::create("language_selector")->build(); // Connecting the language selector
         $m["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
+        $m["##RW##"] = Config::get("app_settings", "url_rewriting");
 
         return $this->render($m);
     }

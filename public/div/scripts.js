@@ -3,6 +3,23 @@ $(document).ready(() => {
 
     let fadeDurMS = 200;
 
+    getAttachedParameter = (paramter) => {
+        let params = $('#helper').attr('src').split("?").pop().split("&");
+        let paramsArr = [];
+        for (let j = 0; j < params.length; j++) {
+            let keyVal = params[j].split("=");
+            let key = keyVal[0];
+            let val = keyVal[1];
+            if (key == paramter) {
+                return val;
+            }
+            paramsArr[key] = val[1];
+        }
+        return paramsArr;
+    }
+
+    let rewriting = getAttachedParameter("rw");
+
     setRoute = (mod, uri) => {
         $(this).blur();
         $('nav li a.active').removeClass('active');
@@ -13,7 +30,7 @@ $(document).ready(() => {
 
     loadContent = async state => {
         if (!state) {
-            let data = await requestData('?mod=index');
+            let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
             $('#content').html(data.html);
             $(document).prop('title', data.title);
         } else if (state.html == '') {
@@ -34,12 +51,12 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: path + '&app=nowrap'
+            url: rewriting == 1 ? '/nowrap/' + path : path + '&app=nowrap'
         }).fail(() => {
-            state = {path: path, html: "Sorry! Something has gone wrong :(", title: "Page not found!"};
+            state = { path: path, html: "Sorry! Something has gone wrong :(", title: "Page not found!" };
         }).done(data => {
             let json = jQuery.parseJSON(data);
-            state = {path: path, html: json.html, title: json.title};
+            state = { path: path, html: json.html, title: json.title };
             history.replaceState(state, json.module, path);
             $("#content").animate({ opacity: 1 }, fadeDurMS);
         });

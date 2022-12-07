@@ -3,6 +3,7 @@
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
 use makeUp\lib\Routing;
+use makeUp\lib\Tools;
 
 
 class Navigation extends Module
@@ -124,17 +125,7 @@ class Navigation extends Module
 
     private function setContentPath(string $module = "", string|null $task = "", string $query = ""): string
     {
-        $parts = [];
-
-        if ($module)
-            $parts[] = "mod={$module}";
-        if ($task)
-            $parts[] = "task={$task}";
-        if ($query)
-            $parts[] = $query;
-
-        $route = "?" . implode("&", $parts);
-
+        $route = Tools::linkBuilder($module, $task);
         return "setRoute('$module', '$route');";
     }
 

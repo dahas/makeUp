@@ -41,17 +41,14 @@ class Config
             if (count($args) == 1) {
                 $arg = self::$config[$args[0]] ?? null;
             }
-
             if (count($args) == 2) {
                 $arg = self::$config[$args[0]][$args[1]] ?? null;
                 $arg = self::translateArgument($arg);
             }
-
             if (count($args) == 3) {
                 $arg = self::$config[$args[0]][$args[1]][$args[2]] ?? null;
                 $arg = self::translateArgument($arg);
             }
-
             return $arg;
         }
         return self::$config;

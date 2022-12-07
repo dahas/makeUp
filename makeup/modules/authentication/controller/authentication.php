@@ -37,14 +37,14 @@ class Authentication extends Module
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
                 "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signout"),
                 "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("signout", "redirect") ?: RQ::get("mod")
+                "##REDIRECT##" => Config::get("redirect", "signout") ?: RQ::get("mod")
             ]);
         } else {
             $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
                 "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
                 "##REGISTER_LINK##" => Tools::linkBuilder("registration"),
                 "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("signin", "redirect") ?: RQ::get("mod")
+                "##REDIRECT##" => Config::get("redirect", "signin") ?: RQ::get("mod")
             ]);
         }
 
