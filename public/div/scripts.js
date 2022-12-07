@@ -6,21 +6,24 @@ $(document).ready(() => {
     setRoute = (mod, uri) => {
         $(this).blur();
         $('nav li a.active').removeClass('active');
-        let state = { path: uri, html: '' };
+        let state = { path: uri, html: '', title: '' };
         loadContent(state)
         history.pushState(state, mod, uri);
     }
 
     loadContent = async state => {
         if (!state) {
-            let content = await requestData('?mod=index');
-            $('#content').html(content);
+            let data = await requestData('?mod=index');
+            $('#content').html(data.html);
+            $(document).prop('title', data.title);
         } else if (state.html == '') {
-            let content = await requestData(state.path);
-            $('#content').html(content);
+            let data = await requestData(state.path);
+            $('#content').html(data.html);
+            $(document).prop('title', data.title);
         } else {
             $("#content").animate({ opacity: 0 }, fadeDurMS, () => {
                 $('#content').html(state.html);
+                $(document).prop('title', state.title);
                 $("#content").animate({ opacity: 1 }, fadeDurMS);
             });
         }
@@ -28,20 +31,19 @@ $(document).ready(() => {
 
     requestData = async path => {
         $("#content").animate({ opacity: 0 }, fadeDurMS);
-        let content = '';
+        let state = {};
         await $.ajax({
             type: 'GET',
             url: path + '&app=nowrap'
         }).fail(() => {
-            content = "Sorry! Something has gone wrong :(";
+            state = {path: path, html: "Sorry! Something has gone wrong :(", title: "Page not found!"};
         }).done(data => {
             let json = jQuery.parseJSON(data);
-            $(document).prop('title', json.title);
-            content = json.html;
-            history.replaceState({path: path, html: json.html}, json.module, path);
+            state = {path: path, html: json.html, title: json.title};
+            history.replaceState(state, json.module, path);
             $("#content").animate({ opacity: 1 }, fadeDurMS);
         });
-        return content;
+        return state;
     }
 
     window.onpopstate = event => {
