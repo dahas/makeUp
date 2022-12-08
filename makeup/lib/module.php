@@ -136,10 +136,8 @@ abstract class Module {
 		return Template::load($this->className, $fname);
 	}
 
-	protected function render(array $m = [], array $s = []): string
+	protected function render(string $html = ""): string
 	{
-		$html = $this->getTemplate()->parse($m, $s);
-
 		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
 			return $html;
 

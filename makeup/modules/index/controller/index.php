@@ -13,6 +13,7 @@ class Index extends Module
 
     public function build() : string
     {
-        return $this->render();
+        $html = $this->getTemplate()->parse();
+        return $this->render($html);
     }
 }

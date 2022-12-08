@@ -17,17 +17,18 @@ class Authentication extends Module
 
     protected function build(string $variant = "") : string
     {
+        $response = $this->getTemplate()->parse(["##FORM##" => $this->buildResponse()]);
+        $fail = $this->getTemplate()->parse(["##FORM##" => $this->buildFail()]);
+        
         return match ($variant) {
             default => $this->buildForm(),
-            "response" => $this->render(["##FORM##" => $this->buildResponse()]),
-            "fail" => $this->render(["##FORM##" => $this->buildFail()])
+            "response" => $this->render($response),
+            "fail" => $this->render($fail)
         };
     }
 
-    function render(array $m = [], array $s = []): string
+    function render(string $html = ""): string
 	{
-		$html = $this->getTemplate()->parse($m, $s);
-
 		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
 			return $html;
 
@@ -35,8 +36,8 @@ class Authentication extends Module
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
 			"segments" => [
-                ["html" => $html, "target" => 'content'],
-                ["html" => $this->buildForm(), "target" => 'authentication']
+                ["target" => 'content', "html" => $html],
+                ["target" => 'authentication', "html" => $this->buildForm()]
             ]
 		]);
 

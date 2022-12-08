@@ -38,7 +38,7 @@ class LanguageSelector extends Module
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 
-        return $this->render($m, $s);
+        return $this->getTemplate()->parse($m, $s);
     }
 
 

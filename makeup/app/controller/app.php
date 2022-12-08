@@ -69,6 +69,6 @@ class App extends Module
         $m["##SUBTITLE##"] = Config::get("page_settings", "subtitle");
         $m["##RW##"] = Config::get("app_settings", "url_rewriting");
 
-        return $this->render($m);
+        return $this->getTemplate()->parse($m);
     }
 }      
