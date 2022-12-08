@@ -140,16 +140,21 @@ abstract class Module {
 	{
 		$html = $this->getTemplate()->parse($m, $s);
 
-		if (!RQ::GET('app') || RQ::GET('app') == 'wrap') 
+		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
 			return $html;
 
-		$result = [
+		$json = json_encode([
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
-			"html" => $html
-		];
+			"segments" => [
+				[
+					"html" => $html,
+					"target" => 'content'
+				]
+			]
+		]);
 
-		return json_encode($result);
+		return $json;
 	}
 
 	public function __call(string $method, mixed $args): string

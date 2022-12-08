@@ -26,11 +26,36 @@ class Authentication extends Module
         }
     }
 
+    function render(array $m = [], array $s = []): string
+	{
+		$html = $this->getTemplate()->parse($m, $s);
+
+		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
+			return $html;
+
+		$json = json_encode([
+			"title" => Config::get("page_settings", "title"),
+			"module" => $this->modName,
+			"segments" => [
+				[
+					"html" => $html,
+					"target" => 'content'
+				],
+				[
+					"html" => $this->buildForm('nav'),
+					"target" => 'authentication'
+				]
+			]
+		]);
+
+		return $json;
+	}
+
 
     private function buildForm($variant) : string
     {
         $html = "";
-        $template = $variant == "page" ? "authentication.page.html" : "authentication.nav.html";
+        $template = $variant == "page" ? "authentication.response.html" : "authentication.form.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
@@ -54,22 +79,22 @@ class Authentication extends Module
     {
         // Simulate login:
         if (Tools::checkFormToken(RQ::post("token"))) {
-            Session::set("logged_in", true); // Simulate login
+            if (RQ::POST('username') !== 'user' || RQ::POST('password') !== 'pass') {
+
+            }
+                
+            Session::set("logged_in", true);
+
         }
 
-        // return "OK das wars!";
-        $redirect = Config::get("redirect", "signin") ?: RQ::get("mod");
         return $this->build();
-        // header("Location: " . Tools::linkBuilder($redirect));
     }
 
 
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        $redirect = Config::get("redirect", "signout") ?: RQ::get("mod");
         return $this->build();
-        // header("Location: " . Tools::linkBuilder($redirect));
     }
 
 }

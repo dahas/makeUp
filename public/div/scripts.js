@@ -23,7 +23,7 @@ $(document).ready(() => {
     setRoute = (mod, uri) => {
         $(this).blur();
         $('nav li a.active').removeClass('active');
-        let state = { path: uri, html: '', title: '' };
+        let state = { path: uri, segments: [{ html: '', target: 'content' }], title: '' };
         loadContent(state)
         history.pushState(state, mod, uri);
     }
@@ -31,15 +31,21 @@ $(document).ready(() => {
     loadContent = async state => {
         if (!state) {
             let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
-            $('*[data-mod="content"]').html(data.html);
+            data.segments.forEach(segment => {
+                $('*[data-mod="' + segment.target + '"]').html(segment.html);
+            });
             $(document).prop('title', data.title);
-        } else if (state.html == '') {
+        } else if (state.segments[0].html == '') {
             let data = await requestData(state.path);
-            $('*[data-mod="content"]').html(data.html);
+            data.segments.forEach(segment => {
+                $('*[data-mod="' + segment.target + '"]').html(segment.html);
+            });
             $(document).prop('title', data.title);
         } else {
             $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS, () => {
-                $('*[data-mod="content"]').html(state.html);
+                state.segments.forEach(segment => {
+                    $('*[data-mod="' + segment.target + '"]').html(segment.html);
+                });
                 $(document).prop('title', state.title);
                 $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             });
@@ -54,9 +60,16 @@ $(document).ready(() => {
             url: rewriting == 1 ? '/nowrap/' + path : path + '&app=nowrap',
             dataType: 'json'
         }).fail(() => {
-            state = { path: path, html: "Sorry! Something has gone wrong :(", title: "Page not found!" };
+            state = { 
+                path: path, 
+                segments: [{ 
+                    html: 'Sorry! Something has gone wrong :(', 
+                    target: 'content'
+                }], 
+                title: "Page not found!" 
+            };
         }).done(data => {
-            state = { path: path, html: data.html, title: data.title };
+            state = { path: path, segments: data.segments, title: data.title };
             history.replaceState(state, data.module, path);
             $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
         });
@@ -68,21 +81,21 @@ $(document).ready(() => {
     }
 
     $("form").submit((event) => {
-        event.preventDefault();
         submitForm(event.currentTarget.action, event.currentTarget.name);
     });
 
     submitForm = (path, name) => {
-        console.log($('form[name="'+name+'"]').serialize());
         $.ajax({
             type: 'POST',
             url: path,
-            data: $('form[name="'+name+'"]').serialize(),
+            data: $('form[name="' + name + '"]').serialize(),
             success: data => {
-                $('*[data-mod="content"]').html(data.html);
+                data.segments.forEach(segment => {
+                    $('*[data-mod="'+segment.target+'"]').html(segment.html);
+                });
             },
             dataType: 'json'
-         });
+        });
     }
 });
 
