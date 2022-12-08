@@ -85,6 +85,7 @@ $(document).ready(() => {
     });
 
     submitForm = (path, name) => {
+        $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS);
         $.ajax({
             type: 'POST',
             url: path,
@@ -93,6 +94,7 @@ $(document).ready(() => {
                 data.segments.forEach(segment => {
                     $('*[data-mod="'+segment.target+'"]').html(segment.html);
                 });
+                $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             },
             dataType: 'json'
         });

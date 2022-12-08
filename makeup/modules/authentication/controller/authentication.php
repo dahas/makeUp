@@ -15,15 +15,13 @@ class Authentication extends Module
     }
 
 
-    protected function build($variant = "") : string
+    protected function build(string $variant = "") : string
     {
-        if ($variant) {
-            return $this->buildForm($variant);
-        } else {
-            return $this->render([
-                "##FORM##" => $this->buildForm("page")
-            ]);
-        }
+        return match ($variant) {
+            default => $this->buildForm(),
+            "response" => $this->render(["##FORM##" => $this->buildResponse()]),
+            "fail" => $this->render(["##FORM##" => $this->buildFail()])
+        };
     }
 
     function render(array $m = [], array $s = []): string
@@ -37,25 +35,45 @@ class Authentication extends Module
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
 			"segments" => [
-				[
-					"html" => $html,
-					"target" => 'content'
-				],
-				[
-					"html" => $this->buildForm('nav'),
-					"target" => 'authentication'
-				]
-			]
+                ["html" => $html, "target" => 'content'],
+                ["html" => $this->buildForm(), "target" => 'authentication']
+            ]
 		]);
 
 		return $json;
 	}
 
 
-    private function buildForm($variant) : string
+    private function buildResponse() : string
     {
         $html = "";
-        $template = $variant == "page" ? "authentication.response.html" : "authentication.form.html";
+        $template = "authentication.response.html";
+        $token = Tools::createFormToken();
+
+        if (Session::get("logged_in")) {
+            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse();
+        } else {
+            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse();
+        }
+
+        return $html;
+    }
+
+
+    private function buildFail() : string
+    {
+        $html = "";
+        $template = "authentication.fail.html";
+        $token = Tools::createFormToken();
+
+        return $this->getTemplate($template)->parse();
+    }
+
+
+    private function buildForm() : string
+    {
+        $html = "";
+        $template = "authentication.form.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
@@ -78,23 +96,18 @@ class Authentication extends Module
     public function signin()
     {
         // Simulate login:
-        if (Tools::checkFormToken(RQ::post("token"))) {
-            if (RQ::POST('username') !== 'user' || RQ::POST('password') !== 'pass') {
-
-            }
-                
+        if (Tools::checkFormToken(RQ::post("token")) && RQ::POST('username') === 'user' && RQ::POST('password') === 'pass') {
             Session::set("logged_in", true);
-
+            return $this->build("response");
         }
-
-        return $this->build();
+        return $this->build("fail");
     }
 
 
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        return $this->build();
+        return $this->build("response");
     }
 
 }
