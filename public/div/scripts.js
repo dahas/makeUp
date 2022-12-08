@@ -31,23 +31,23 @@ $(document).ready(() => {
     loadContent = async state => {
         if (!state) {
             let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
-            $('#content').html(data.html);
+            $('*[data-mod="content"]').html(data.html);
             $(document).prop('title', data.title);
         } else if (state.html == '') {
             let data = await requestData(state.path);
-            $('#content').html(data.html);
+            $('*[data-mod="content"]').html(data.html);
             $(document).prop('title', data.title);
         } else {
-            $("#content").animate({ opacity: 0 }, fadeDurMS, () => {
-                $('#content').html(state.html);
+            $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS, () => {
+                $('*[data-mod="content"]').html(state.html);
                 $(document).prop('title', state.title);
-                $("#content").animate({ opacity: 1 }, fadeDurMS);
+                $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             });
         }
     }
 
     requestData = async path => {
-        $("#content").animate({ opacity: 0 }, fadeDurMS);
+        $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS);
         let state = {};
         await $.ajax({
             type: 'GET',
@@ -58,7 +58,7 @@ $(document).ready(() => {
         }).done(data => {
             state = { path: path, html: data.html, title: data.title };
             history.replaceState(state, data.module, path);
-            $("#content").animate({ opacity: 1 }, fadeDurMS);
+            $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
         });
         return state;
     }
@@ -79,7 +79,7 @@ $(document).ready(() => {
             url: path,
             data: $('form[name="'+name+'"]').serialize(),
             success: data => {
-                $("#content").html(data.html);
+                $('*[data-mod="content"]').html(data.html);
             },
             dataType: 'json'
          });

@@ -15,10 +15,10 @@ class Authentication extends Module
     }
 
 
-    protected function build($formVariant = "") : string
+    protected function build($variant = "") : string
     {
-        if ($formVariant) {
-            return $this->buildForm($formVariant);
+        if ($variant) {
+            return $this->buildForm($variant);
         } else {
             return $this->render([
                 "##FORM##" => $this->buildForm("page")
@@ -27,10 +27,10 @@ class Authentication extends Module
     }
 
 
-    private function buildForm($formVariant) : string
+    private function buildForm($variant) : string
     {
         $html = "";
-        $template = $formVariant == "page" ? "authentication.page.html" : "authentication.nav.html";
+        $template = $variant == "page" ? "authentication.page.html" : "authentication.nav.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
