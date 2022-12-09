@@ -18,12 +18,12 @@ class Navigation extends Module
         $mainTmpl = $this->getTemplate();
 
         // Init slices:
-        $menuNoSubSlice = $mainTmpl->getSlice("##MENU_NO_SUB##");
-        $s["##MENU_NO_SUB##"] = "";
-        $menuHasSubSlice = $mainTmpl->getSlice("##MENU_HAS_SUB##");
-        $s["##MENU_HAS_SUB##"] = "";
-        $icon = $mainTmpl->getSlice("##OI_ICON##");
-        $s["##OI_ICON##"] = "";
+        $menuNoSubSlice = $mainTmpl->getSlice("{{MENU_NO_SUB}}");
+        $s["{{MENU_NO_SUB}}"] = "";
+        $menuHasSubSlice = $mainTmpl->getSlice("{{MENU_HAS_SUB}}");
+        $s["{{MENU_HAS_SUB}}"] = "";
+        $icon = $mainTmpl->getSlice("{{OI_ICON}}");
+        $s["{{OI_ICON}}"] = "";
 
         $m = [];
         $m["##MENU_ITEMS##"] = "";
@@ -63,32 +63,32 @@ class Navigation extends Module
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
         // Init slices:
-        $subMenuNoSubSlice = $subMenuTmpl->getSlice("##SUBMENU_NO_SUB##");
-        $ss["##SUBMENU_NO_SUB##"] = "";
-        $subMenuHasSubSlice = $subMenuTmpl->getSlice("##SUBMENU_HAS_SUB##");
-        $ss["##SUBMENU_HAS_SUB##"] = "";
-        $separator = $subMenuTmpl->getSlice("##SEPARATOR##");
-        $ss["##SEPARATOR##"] = "";
-        $header = $subMenuTmpl->getSlice("##HEADER##");
-        $ss["##HEADER##"] = "";
-        $icon = $subMenuTmpl->getSlice("##OI_ICON##");
-        $ss["##OI_ICON##"] = "";
+        $subMenuNoSubSlice = $subMenuTmpl->getSlice("{{SUBMENU_NO_SUB}}");
+        $ss["{{SUBMENU_NO_SUB}}"] = "";
+        $subMenuHasSubSlice = $subMenuTmpl->getSlice("{{SUBMENU_HAS_SUB}}");
+        $ss["{{SUBMENU_HAS_SUB}}"] = "";
+        $separator = $subMenuTmpl->getSlice("{{SEPARATOR}}");
+        $ss["{{SEPARATOR}}"] = "";
+        $header = $subMenuTmpl->getSlice("{{HEADER}}");
+        $ss["{{HEADER}}"] = "";
+        $icon = $subMenuTmpl->getSlice("{{OI_ICON}}");
+        $ss["{{OI_ICON}}"] = "";
 
         if (@$data->module) {
             // Open item
-            $ss["##SUBMENU_NO_SUB##"] .= $subMenuNoSubSlice->parse([
+            $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
                 "##LINK##" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
                 "##ACTIVE##" => @$data->module == RQ::get("mod") ? "active" : "",
                 "##TEXT##" => $data->text,
                 "##ICON##" => ""
             ]);
             // With separator
-            $ss["##SUBMENU_NO_SUB##"] .= $separator->parse();
+            $ss["{{SUBMENU_NO_SUB}}"] .= $separator->parse();
         }
 
 
         foreach ($data->submenu as $subData) {
-            $sliceMarker = isset($subData->submenu) ? "##SUBMENU_HAS_SUB##" : "##SUBMENU_NO_SUB##";
+            $sliceMarker = isset($subData->submenu) ? "{{SUBMENU_HAS_SUB}}" : "{{SUBMENU_NO_SUB}}";
 
             // Separator and Section header
             if (@$subData->separate) {
