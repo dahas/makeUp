@@ -27,22 +27,22 @@ class Tools
             return false;
     }
 
-    public static function loadJsonLangFile(): mixed
+    public static function loadJsonLangFile(string $default = "_default"): array
     {
+        $strings = [];
         $lang = self::getUserLanguageCode();
         $fpath = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/lang/%s.json";
 
         $path = sprintf($fpath, strtolower($lang));
-        if (file_exists($path)) {
-            return json_decode(file_get_contents($path), true);
-        } else {
-            $path = sprintf($fpath, Config::get("app_settings", "default_lang"));
-            if (file_exists($path)) {
-                return json_decode(file_get_contents($path), true);
-            } else {
-                return null;
-            }
+        $defPath = sprintf($fpath, $default);
+
+        if (file_exists($path) && file_exists($defPath)) { // Translation available
+            $strings['default'] = json_decode(file_get_contents($defPath), true);
+            $strings['translation'] = json_decode(file_get_contents($path), true);
+        } elseif (file_exists($defPath)) {
+            $strings['default'] = json_decode(file_get_contents($defPath), true);
         }
+        return $strings;
     }
 
     public static function getTranslation(): array
@@ -79,6 +79,9 @@ class Tools
             foreach ($langFiles as $file) {
                 if ($file != "." && $file != ".." && $file != "_iso.json") {
                     $lang = str_replace(".json", "", $file);
+                    if ($lang == '_default') {
+                        $lang = Config::get("app_settings", "default_lang");
+                    }
                     $languages[$lang] = $isoLangs[$lang]["nativeName"] ?? null;
                 }
             }

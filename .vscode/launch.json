@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "", // module name
+                "--mod", "test", // module name
                 "--task", "", // task name
                 "--render", "" // html or json
             ],

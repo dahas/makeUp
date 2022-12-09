@@ -32,34 +32,30 @@ abstract class Module {
 	public function execute(): void
 	{
 		// Debugging:
-		$debugMod = "";
-		$debugTask = "";
-		$debugRender = "";
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			$idxMod = array_search('--mod', $_SERVER['argv']);
 			if ($idxMod > 0)
-				$debugMod = $_SERVER['argv'][$idxMod + 1];
+				$_GET['mod'] = $_SERVER['argv'][$idxMod + 1];
 
 			$idxTask = array_search('--task', $_SERVER['argv']);
 			if ($idxTask > 0)
-				$debugTask = $_SERVER['argv'][$idxTask + 1];
+				$_GET['task'] = $_SERVER['argv'][$idxTask + 1];
 
 			$idxRender = array_search('--render', $_SERVER['argv']);
 			if ($idxRender > 0)
-				$debugRender = $_SERVER['argv'][$idxRender + 1];
+				$_GET['render'] = $_SERVER['argv'][$idxRender + 1];
+
+			RQ::init();
 		}
 
 		// Parameter "mod" is the mandatory module name
-		$modName = $debugMod ?: RQ::GET('mod');
-		$modName = $modName ?: Config::get("app_settings", "default_module");
+		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
 
 		// Parameter "task" is mandatory, so the module knows which task to execute
-		$task = $debugTask ?: RQ::GET('task');
-		$task = $task ?: "build";
+		$task = RQ::GET('task') ?: "build";
 
 		// Parameter "render" is optional
-		$render = $debugRender ?: RQ::GET('render');
-		$render = $render ?: "html";
+		$render = RQ::GET('render') ?: "html";
 
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
 		if ($render != "html" && ($render == "json" || $task != "build")) {

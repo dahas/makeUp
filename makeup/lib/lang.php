@@ -2,13 +2,10 @@
 
 namespace makeUp\lib;
 
-/**
- * Class Lang
- * @package makeUp\lang
- */
-class Lang
-{
+
+class Lang {
     private static $strings = array();
+
 
     public static function init()
     {
@@ -21,10 +18,7 @@ class Lang
         self::$strings = $appLang;
     }
 
-    /**
-     * Returns a translated string resource
-     * @return string|null
-     */
+
     public static function get()
     {
         $args = func_get_args();
@@ -38,7 +32,23 @@ class Lang
             $string = $args[0];
         }
 
-        return self::$strings[$mod][$string] ?? null;
+        // Is the translated string for the module available?
+        if (isset(self::$strings['translation'][$mod][$string]))
+            return self::$strings['translation'][$mod][$string];
+
+        // Is the translated string available on a global level?
+        if (isset(self::$strings['translation']['app'][$string]))
+            return self::$strings['translation']['app'][$string];
+
+        // Is a default string for the module available?
+        if (isset(self::$strings['default'][$mod][$string]))
+            return self::$strings['default'][$mod][$string];
+
+        // Is a default string available on a global level?
+        if (isset(self::$strings['default']['app'][$string]))
+            return self::$strings['default']['app'][$string];
+
+        return '';
     }
 
 }
