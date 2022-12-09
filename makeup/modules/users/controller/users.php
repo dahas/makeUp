@@ -24,9 +24,10 @@ class Users extends Module
         $m = [];
         $s = [];
 
-        $m['##MODULE##'] = $Item->getProperty("name");
+        $m["[[MODULE]]"] = $Item->getProperty("name");
 
-        return $this->render($m, $s);
+        $html = $this->getTemplate()->parse($m, $s);
+        return $this->render($html);
     }
 
 

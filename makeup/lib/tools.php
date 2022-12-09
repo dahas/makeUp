@@ -27,22 +27,22 @@ class Tools
             return false;
     }
 
-    public static function loadJsonLangFile(): mixed
+    public static function loadJsonLangFile(string $default = "_default"): array
     {
+        $strings = [];
         $lang = self::getUserLanguageCode();
         $fpath = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/lang/%s.json";
 
         $path = sprintf($fpath, strtolower($lang));
-        if (file_exists($path)) {
-            return json_decode(file_get_contents($path), true);
-        } else {
-            $path = sprintf($fpath, Config::get("app_settings", "default_lang"));
-            if (file_exists($path)) {
-                return json_decode(file_get_contents($path), true);
-            } else {
-                return null;
-            }
+        $defPath = sprintf($fpath, $default);
+
+        if (file_exists($path) && file_exists($defPath)) { // Translation available
+            $strings['default'] = json_decode(file_get_contents($defPath), true);
+            $strings['translation'] = json_decode(file_get_contents($path), true);
+        } elseif (file_exists($defPath)) {
+            $strings['default'] = json_decode(file_get_contents($defPath), true);
         }
+        return $strings;
     }
 
     public static function getTranslation(): array
@@ -79,6 +79,9 @@ class Tools
             foreach ($langFiles as $file) {
                 if ($file != "." && $file != ".." && $file != "_iso.json") {
                     $lang = str_replace(".json", "", $file);
+                    if ($lang == '_default') {
+                        $lang = Config::get("app_settings", "default_lang");
+                    }
                     $languages[$lang] = $isoLangs[$lang]["nativeName"] ?? null;
                 }
             }
@@ -88,7 +91,7 @@ class Tools
         return $languages;
     }
 
-    public static function linkBuilder(string $mod = "", string|null $task = "", array $query = [], string $app = "nowrap"): string
+    public static function linkBuilder(string $mod = "", string|null $task = "", array $query = [], string $render = "json"): string
     {
         if (!$mod)
             $mod = RQ::get("mod");
@@ -99,10 +102,10 @@ class Tools
             $host = "http://127.0.0.1";
 
         if (Config::get("app_settings", "url_rewriting")) {
-            $link = $task ? "/$app/$mod/$task/" : "/$mod.html";
+            $link = $task ? "/$render/$mod/$task/" : "/$mod.html";
             $link .= !empty($query) ? "?" . http_build_query($query) : "";
         } else {
-            $link = $task ? "?app=$app&mod=$mod&task=$task" : "?mod=$mod";
+            $link = $task ? "?render=$render&mod=$mod&task=$task" : "?mod=$mod";
             $link .= !empty($query) ? "&" . http_build_query($query) : "";
         }
         // return $host . $link;

@@ -3,6 +3,8 @@
         "head_title":  "makeUp - makes Bootstrap a doddle!",
         "title":  "Congratulation! :-)",
         "subtitle":  "Your app is up and running. To take a quick look below the surface, check out the app folder and its content.",
-        "wiki_button":  "Visit the documentation wiki &raquo;"
+        "wiki_button":  "Visit the documentation wiki &raquo;",
+
+        "module_created_success": "You successfully created the module"
     }
 }

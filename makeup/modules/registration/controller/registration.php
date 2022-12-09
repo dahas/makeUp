@@ -24,11 +24,11 @@ class Registration extends Module
         $m = [];
         $s = [];
 
-        $m['##FORM_ACTION##'] = Tools::linkBuilder($this->modName, "register");
-        $m['##TOKEN##'] = $token;
-        $m['##REDIRECT##'] = $this->modName;
+        $m["[[FORM_ACTION]]"] = Tools::linkBuilder($this->modName, "register");
+        $m["[[TOKEN]]"] = $token;
+        $m["[[REDIRECT]]"] = $this->modName;
 
-        return $this->render($m, $s);
+        return $this->getTemplate()->parse($m, $s);
     }
 
 

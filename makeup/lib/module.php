@@ -32,37 +32,33 @@ abstract class Module {
 	public function execute(): void
 	{
 		// Debugging:
-		$debugMod = "";
-		$debugTask = "";
-		$debugApp = "";
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			$idxMod = array_search('--mod', $_SERVER['argv']);
 			if ($idxMod > 0)
-				$debugMod = $_SERVER['argv'][$idxMod + 1];
+				$_GET['mod'] = $_SERVER['argv'][$idxMod + 1];
 
 			$idxTask = array_search('--task', $_SERVER['argv']);
 			if ($idxTask > 0)
-				$debugTask = $_SERVER['argv'][$idxTask + 1];
+				$_GET['task'] = $_SERVER['argv'][$idxTask + 1];
 
-			$idxApp = array_search('--app', $_SERVER['argv']);
-			if ($idxApp > 0)
-				$debugApp = $_SERVER['argv'][$idxApp + 1];
+			$idxRender = array_search('--render', $_SERVER['argv']);
+			if ($idxRender > 0)
+				$_GET['render'] = $_SERVER['argv'][$idxRender + 1];
+
+			RQ::init();
 		}
 
 		// Parameter "mod" is the mandatory module name
-		$modName = $debugMod ?: RQ::GET('mod');
-		$modName = $modName ?: Config::get("app_settings", "default_module");
+		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
 
 		// Parameter "task" is mandatory, so the module knows which task to execute
-		$task = $debugTask ?: RQ::GET('task');
-		$task = $task ?: "build";
+		$task = RQ::GET('task') ?: "build";
 
-		// Parameter "app" is optional
-		$app = $debugApp ?: RQ::GET('app');
-		$app = $app ?: "wrap";
+		// Parameter "render" is optional
+		$render = RQ::GET('render') ?: "html";
 
-		// With parameter app="nowrap" a module is rendered with its own slice template only.
-		if ($app != "wrap" && ($app == "nowrap" || $task != "build")) {
+		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
+		if ($render != "html" && ($render == "json" || $task != "build")) {
 			Config::init($modName);
 			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 				die("Access denied!");
@@ -136,20 +132,23 @@ abstract class Module {
 		return Template::load($this->className, $fname);
 	}
 
-	protected function render(array $m = [], array $s = []): string
+	protected function render(string $html = ""): string
 	{
-		$html = $this->getTemplate()->parse($m, $s);
-
-		if (!RQ::GET('app') || RQ::GET('app') == 'wrap') 
+		if (!RQ::GET('render') || RQ::GET('render') == 'html')
 			return $html;
 
-		$result = [
+		$json = json_encode([
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
-			"html" => $html
-		];
+			"segments" => [
+				[
+					"html" => $html,
+					"target" => 'content'
+				]
+			]
+		]);
 
-		return json_encode($result);
+		return $json;
 	}
 
 	public function __call(string $method, mixed $args): string

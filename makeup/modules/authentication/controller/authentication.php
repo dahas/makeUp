@@ -15,36 +15,79 @@ class Authentication extends Module
     }
 
 
-    protected function build($formVariant = "") : string
+    protected function build(string $variant = "") : string
     {
-        if ($formVariant) {
-            return $this->buildForm($formVariant);
+        $formHTML = $this->buildForm();
+        $responseHTML = $this->getTemplate()->parse(["[[FORM]]" => $this->buildResponse()]);
+        $failHTML = $this->getTemplate()->parse(["[[FORM]]" => $this->buildFail()]);
+        
+        return match ($variant) {
+            default => $formHTML,
+            "response" => $this->render($responseHTML),
+            "fail" => $this->render($failHTML)
+        };
+    }
+
+    function render(string $html = ""): string
+	{
+		if (!RQ::GET('render') || RQ::GET('render') == 'html')
+			return $html;
+
+		$json = json_encode([
+			"title" => Config::get("page_settings", "title"),
+			"module" => $this->modName,
+			"segments" => [
+                ["target" => 'content', "html" => $html],
+                ["target" => 'authentication', "html" => $this->buildForm()]
+            ]
+		]);
+
+		return $json;
+	}
+
+
+    private function buildResponse() : string
+    {
+        $html = "";
+        $template = "authentication.response.html";
+        $token = Tools::createFormToken();
+
+        if (Session::get("logged_in")) {
+            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse();
         } else {
-            return $this->render([
-                "##FORM##" => $this->buildForm("page")
-            ]);
+            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse();
         }
+
+        return $html;
     }
 
 
-    private function buildForm($formVariant) : string
+    private function buildFail() : string
     {
         $html = "";
-        $template = $formVariant == "page" ? "authentication.page.html" : "authentication.nav.html";
+        $template = "authentication.fail.html";
+        $token = Tools::createFormToken();
+
+        return $this->getTemplate($template)->parse();
+    }
+
+
+    private function buildForm() : string
+    {
+        $html = "";
+        $template = "authentication.form.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
-                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signout"),
-                "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("redirect", "signout") ?: RQ::get("mod")
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
+                "[[TOKEN]]" => $token
             ]);
         } else {
             $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
-                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
-                "##REGISTER_LINK##" => Tools::linkBuilder("registration"),
-                "##TOKEN##" => $token,
-                "##REDIRECT##" => Config::get("redirect", "signin") ?: RQ::get("mod")
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
+                "[[REGISTER_LINK]]" => Tools::linkBuilder("registration"),
+                "[[TOKEN]]" => $token
             ]);
         }
 
@@ -55,17 +98,18 @@ class Authentication extends Module
     public function signin()
     {
         // Simulate login:
-        if (Tools::checkFormToken(RQ::post("token"))) {
-            Session::set("logged_in", true); // Simulate login
+        if (Tools::checkFormToken(RQ::post("token")) && RQ::POST('username') === 'user' && RQ::POST('password') === 'pass') {
+            Session::set("logged_in", true);
+            return $this->build("response");
         }
-        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
+        return $this->build("fail");
     }
 
 
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        header("Location: " . Tools::linkBuilder(RQ::post("redirect")));
+        return $this->build("response");
     }
 
 }

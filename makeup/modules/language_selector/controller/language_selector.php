@@ -24,7 +24,7 @@ class LanguageSelector extends Module
         $suppLangs = Tools::getSupportedLanguages();
         $current = Cookie::get("lang_code") ?? Tools::getUserLanguageCode();
 
-        $m["##CURRENT_LANGUAGE##"] = $suppLangs[$current];
+        $m["[[CURRENT_LANGUAGE]]"] = $suppLangs[$current];
 
         $slice = $this->getTemplate()->getSlice("{{SUPPORTED_LANGUAGES}}");
 
@@ -32,21 +32,22 @@ class LanguageSelector extends Module
 
         foreach ($suppLangs as $code => $name) {
             $sm = [];
-            $sm["##ACTIVE##"] = $code == $current ? "active" : "";
-            $sm["##LINK##"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
-            $sm["##LANG_NAME##"] = $name;
+            $sm["[[ACTIVE]]"] = $code == $current ? "active" : "";
+            // $sm["[[LINK]]"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
+            $sm["[[CC]]"] = $code;
+            $sm["[[LANG_NAME]]"] = $name;
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 
-        return $this->render($m, $s);
+        return $this->getTemplate()->parse($m, $s);
     }
 
 
-    public function change_language()
+    public function change() : string
     {
-        Cookie::set("lang_code", RQ::get("lang_code"));
+        Cookie::set("lang_code", RQ::GET("cc"));
         Session::clear("translation"); // String resources must be renewed in the session
-        header("Location: " . Tools::linkBuilder(RQ::get("referer")));
+        return json_encode(['result' => 1]);
     }
 
 }

@@ -20,7 +20,7 @@ class Cookie
 		$expDays = Config::get("cookie", "expires_days") ?: 0;
 		$expires = $expDays == 0 ? 0 : time()+60*60*24*$expDays;
 		$path = Config::get("cookie", "path") ?: "/";
-		setrawcookie($name, base64_encode(json_encode(self::$value)), $expires, $path, null);
+		setrawcookie($name, base64_encode(json_encode(self::$value)), $expires, $path);
 	}
 
 	public static function get(string $key) : mixed

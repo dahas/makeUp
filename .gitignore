@@ -11,3 +11,7 @@
 
 /makeup/.phpunit.result.cache
 makeup/.phpunit.result.cache
+
+package.json
+package-lock.json
+node_modules
