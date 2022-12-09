@@ -39,7 +39,7 @@ class App extends Module
         if (!$task) {
             $m["[[MODULES]]"] = Module::create($module)->build();
         } else {
-            $m["[[MODULES]]"] = Module::create($module)->$task();
+            return Module::create($module)->$task();
         }
 
         /**** Parsing the HTML head section ************************************/

@@ -33,7 +33,8 @@ class LanguageSelector extends Module
         foreach ($suppLangs as $code => $name) {
             $sm = [];
             $sm["[[ACTIVE]]"] = $code == $current ? "active" : "";
-            $sm["[[LINK]]"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
+            // $sm["[[LINK]]"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
+            $sm["[[CC]]"] = $code;
             $sm["[[LANG_NAME]]"] = $name;
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
@@ -42,11 +43,11 @@ class LanguageSelector extends Module
     }
 
 
-    public function change_language()
+    public function change() : string
     {
-        Cookie::set("lang_code", RQ::get("lang_code"));
+        Cookie::set("lang_code", RQ::GET("cc"));
         Session::clear("translation"); // String resources must be renewed in the session
-        header("Location: " . Tools::linkBuilder(RQ::get("referer")));
+        return json_encode(['result' => 1]);
     }
 
 }

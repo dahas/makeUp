@@ -7,8 +7,8 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "test", // module name
-                "--task", "", // task name
+                "--mod", "language_selector", // module name
+                "--task", "change", // task name
                 "--render", "" // html or json
             ],
             "externalConsole": false,

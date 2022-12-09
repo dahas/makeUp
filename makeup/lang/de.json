@@ -1,10 +1,11 @@
 {
     "app": {
         "head_title":  "makeUp - macht Bootstrap zum Kinderspiel!",
+        
         "title":  "Herzlichen Glückwunsch! :-)",
         "subtitle":  "Deine App funktioniert. Vielleicht willst Du einen ersten Blick hinter die Kulissen werfen. Schau Dir dazu am besten das 'app' Verzeichnis genauer an.",
         "wiki_button":  "Hier geht´s zum Wiki &raquo;",
 
-        "module_created_success": "Du hast ein Modul erfolgreich erstellt"
+        "module_created_success": "Du hast folgendes Modul erfolgreich erstellt"
     }
 }
