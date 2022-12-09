@@ -18,8 +18,8 @@ class Authentication extends Module
     protected function build(string $variant = "") : string
     {
         $formHTML = $this->buildForm();
-        $responseHTML = $this->getTemplate()->parse(["##FORM##" => $this->buildResponse()]);
-        $failHTML = $this->getTemplate()->parse(["##FORM##" => $this->buildFail()]);
+        $responseHTML = $this->getTemplate()->parse(["[[FORM]]" => $this->buildResponse()]);
+        $failHTML = $this->getTemplate()->parse(["[[FORM]]" => $this->buildFail()]);
         
         return match ($variant) {
             default => $formHTML,
@@ -80,14 +80,14 @@ class Authentication extends Module
 
         if (Session::get("logged_in")) {
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
-                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signout"),
-                "##TOKEN##" => $token
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
+                "[[TOKEN]]" => $token
             ]);
         } else {
             $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
-                "##FORM_ACTION##" => Tools::linkBuilder($this->modName, "signin"),
-                "##REGISTER_LINK##" => Tools::linkBuilder("registration"),
-                "##TOKEN##" => $token
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
+                "[[REGISTER_LINK]]" => Tools::linkBuilder("registration"),
+                "[[TOKEN]]" => $token
             ]);
         }
 

@@ -24,7 +24,7 @@ class LanguageSelector extends Module
         $suppLangs = Tools::getSupportedLanguages();
         $current = Cookie::get("lang_code") ?? Tools::getUserLanguageCode();
 
-        $m["##CURRENT_LANGUAGE##"] = $suppLangs[$current];
+        $m["[[CURRENT_LANGUAGE]]"] = $suppLangs[$current];
 
         $slice = $this->getTemplate()->getSlice("{{SUPPORTED_LANGUAGES}}");
 
@@ -32,9 +32,9 @@ class LanguageSelector extends Module
 
         foreach ($suppLangs as $code => $name) {
             $sm = [];
-            $sm["##ACTIVE##"] = $code == $current ? "active" : "";
-            $sm["##LINK##"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
-            $sm["##LANG_NAME##"] = $name;
+            $sm["[[ACTIVE]]"] = $code == $current ? "active" : "";
+            $sm["[[LINK]]"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
+            $sm["[[LANG_NAME]]"] = $name;
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 

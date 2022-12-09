@@ -26,31 +26,31 @@ class Navigation extends Module
         $s["{{OI_ICON}}"] = "";
 
         $m = [];
-        $m["##MENU_ITEMS##"] = "";
+        $m["[[MENU_ITEMS]]"] = "";
 
         $routing = Routing::getConfig();
 
         foreach ($routing as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
-                $m["##MENU_ITEMS##"] .= $menuNoSubSlice->parse([
-                    "##ACTIVE##" => RQ::GET("mod") == @$data->module ? "active" : "",
-                    "##LINK##" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
-                    "##TEXT##" => $data->text,
-                    "##ICON##" => @$data->icon ? $icon->parse([
-                        "##NAME##" => @$data->icon
+                $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
+                    "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
+                    "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                    "[[TEXT]]" => $data->text,
+                    "[[ICON]]" => @$data->icon ? $icon->parse([
+                        "[[NAME]]" => @$data->icon
                     ]) : ""
                 ]);
             }
             // With submenu:
             else {
-                $m["##MENU_ITEMS##"] .= $menuHasSubSlice->parse([
-                    "##LINK##" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
-                    "##TEXT##" => $data->text,
-                    "##ICON##" => @$data->icon ? $icon->parse([
-                        "##NAME##" => @$data->icon
+                $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
+                    "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                    "[[TEXT]]" => $data->text,
+                    "[[ICON]]" => @$data->icon ? $icon->parse([
+                        "[[NAME]]" => @$data->icon
                     ]) : "",
-                    "##SUBMENU##" => $this->submenu($data)
+                    "[[SUBMENU]]" => $this->submenu($data)
                 ]);
             }
         }
@@ -77,10 +77,10 @@ class Navigation extends Module
         if (@$data->module) {
             // Open item
             $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
-                "##LINK##" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
-                "##ACTIVE##" => @$data->module == RQ::get("mod") ? "active" : "",
-                "##TEXT##" => $data->text,
-                "##ICON##" => ""
+                "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                "[[ACTIVE]]" => @$data->module == RQ::get("mod") ? "active" : "",
+                "[[TEXT]]" => $data->text,
+                "[[ICON]]" => ""
             ]);
             // With separator
             $ss["{{SUBMENU_NO_SUB}}"] .= $separator->parse();
@@ -96,16 +96,16 @@ class Navigation extends Module
             }
             if (@$subData->header) {
                 $ss[$sliceMarker] .= $header->parse([
-                    "##TEXT##" => @$subData->header
+                    "[[TEXT]]" => @$subData->header
                 ]);
             }
 
             $markers = [
-                "##LINK##" => @$subData->module ? $this->setContentPath(@$subData->module, @$subData->task) : "",
-                "##ACTIVE##" => @$subData->module == RQ::get("mod") ? "active" : "",
-                "##TEXT##" => $subData->text,
-                "##ICON##" => @$subData->icon ? $icon->parse([
-                    "##NAME##" => @$subData->icon
+                "[[LINK]]" => @$subData->module ? $this->setContentPath(@$subData->module, @$subData->task) : "",
+                "[[ACTIVE]]" => @$subData->module == RQ::get("mod") ? "active" : "",
+                "[[TEXT]]" => $subData->text,
+                "[[ICON]]" => @$subData->icon ? $icon->parse([
+                    "[[NAME]]" => @$subData->icon
                 ]) : ""
             ];
 
@@ -115,7 +115,7 @@ class Navigation extends Module
             }
             // With submenu:
             else {
-                $markers["##SUBMENU##"] = $this->submenu($subData);
+                $markers["[[SUBMENU]]"] = $this->submenu($subData);
                 $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
             }
         }
