@@ -17,13 +17,14 @@ class Authentication extends Module
 
     protected function build(string $variant = "") : string
     {
-        $response = $this->getTemplate()->parse(["##FORM##" => $this->buildResponse()]);
-        $fail = $this->getTemplate()->parse(["##FORM##" => $this->buildFail()]);
+        $formHTML = $this->buildForm();
+        $responseHTML = $this->getTemplate()->parse(["##FORM##" => $this->buildResponse()]);
+        $failHTML = $this->getTemplate()->parse(["##FORM##" => $this->buildFail()]);
         
         return match ($variant) {
-            default => $this->buildForm(),
-            "response" => $this->render($response),
-            "fail" => $this->render($fail)
+            default => $formHTML,
+            "response" => $this->render($responseHTML),
+            "fail" => $this->render($failHTML)
         };
     }
 
