@@ -4,7 +4,15 @@
         "title": "ขอแสดงความยินดี! :-)",
         "subtitle": "แอปของคุณทำงานได้ดีบางทีคุณอาจต้องการดูเบื้องหลังโปรดดูที่ไดเรกทอรี\" แอป \"สำหรับรายละเอียดเพิ่มเติม",
         "wiki_button": "คลิกที่นี่สำหรับ Wiki &raquo;",
-
-        "module_created_success": "คุณสร้างโมดูลสำเร็จแล้ว"
+        "module_created_success": "คุณสร้างโมดูลสำเร็จแล้ว",
+        "continue_learning": "<b><a href='https://github.com/dahas/makeUp2/wiki/03.-Connecting-the-database' target='_blank'>ดำเนินการต่อด้วยบทแนะนำและเรียนรู้วิธีเชื่อมต่อโมดูลของคุณกับฐานข้อมูล</a></b>"
+    },
+    "index": {
+        "app_created_success": "<b><a href='https://github.com/dahas/makeup2/wiki/02.-Creating-and-using-modules' target='_blank'>จัดทำบทแนะนำและเรียนรู้วิธีขยายแอปของคุณด้วยโมดูลต่อไป</a></b>"
+    },
+    "authentication": {
+        "login_fail": "เข้าสู่ระบบล้มเหลว! กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่านของคุณ",
+        "signed_in": "คุณลงชื่อเข้าใช้สำเร็จแล้ว!",
+        "signed_out": "คุณออกจากระบบสำเร็จแล้ว!"
     }
 }

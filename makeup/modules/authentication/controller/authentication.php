@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Lang;
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
 use makeUp\lib\Config;
@@ -53,9 +54,11 @@ class Authentication extends Module
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
-            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse();
+            $m["[[SIGNED_IN]]"] = Lang::get("signed_in");
+            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse($m);
         } else {
-            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse();
+            $m["[[SIGNED_OUT]]"] = Lang::get("signed_out");
+            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse($m);
         }
 
         return $html;
@@ -68,7 +71,8 @@ class Authentication extends Module
         $template = "authentication.fail.html";
         $token = Tools::createFormToken();
 
-        return $this->getTemplate($template)->parse();
+        $m["[[LOGIN_FAILED]]"] = Lang::get("login_failed");
+        return $this->getTemplate($template)->parse($m);
     }
 
 
@@ -98,7 +102,10 @@ class Authentication extends Module
     public function signin()
     {
         // Simulate login:
-        if (Tools::checkFormToken(RQ::post("token")) && RQ::POST('username') === 'user' && RQ::POST('password') === 'pass') {
+        $username = 'user';
+        $password = 'pass';
+
+        if (Tools::checkFormToken(RQ::post("token")) && RQ::POST('username') === $username && RQ::POST('password') === $password) {
             Session::set("logged_in", true);
             return $this->build("response");
         }
