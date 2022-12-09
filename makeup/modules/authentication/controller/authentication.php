@@ -30,7 +30,7 @@ class Authentication extends Module
 
     function render(string $html = ""): string
 	{
-		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
+		if (!RQ::GET('render') || RQ::GET('render') == 'html')
 			return $html;
 
 		$json = json_encode([

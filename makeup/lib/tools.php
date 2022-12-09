@@ -88,7 +88,7 @@ class Tools
         return $languages;
     }
 
-    public static function linkBuilder(string $mod = "", string|null $task = "", array $query = [], string $app = "nowrap"): string
+    public static function linkBuilder(string $mod = "", string|null $task = "", array $query = [], string $render = "json"): string
     {
         if (!$mod)
             $mod = RQ::get("mod");
@@ -99,10 +99,10 @@ class Tools
             $host = "http://127.0.0.1";
 
         if (Config::get("app_settings", "url_rewriting")) {
-            $link = $task ? "/$app/$mod/$task/" : "/$mod.html";
+            $link = $task ? "/$render/$mod/$task/" : "/$mod.html";
             $link .= !empty($query) ? "?" . http_build_query($query) : "";
         } else {
-            $link = $task ? "?app=$app&mod=$mod&task=$task" : "?mod=$mod";
+            $link = $task ? "?render=$render&mod=$mod&task=$task" : "?mod=$mod";
             $link .= !empty($query) ? "&" . http_build_query($query) : "";
         }
         // return $host . $link;

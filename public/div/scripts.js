@@ -57,7 +57,7 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: rewriting == 1 ? '/nowrap/' + path : path + '&app=nowrap',
+            url: rewriting == 1 ? '/json/' + path : path + '&render=json',
             dataType: 'json'
         }).fail(() => {
             state = { 

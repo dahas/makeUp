@@ -34,7 +34,7 @@ abstract class Module {
 		// Debugging:
 		$debugMod = "";
 		$debugTask = "";
-		$debugApp = "";
+		$debugRender = "";
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			$idxMod = array_search('--mod', $_SERVER['argv']);
 			if ($idxMod > 0)
@@ -44,9 +44,9 @@ abstract class Module {
 			if ($idxTask > 0)
 				$debugTask = $_SERVER['argv'][$idxTask + 1];
 
-			$idxApp = array_search('--app', $_SERVER['argv']);
-			if ($idxApp > 0)
-				$debugApp = $_SERVER['argv'][$idxApp + 1];
+			$idxRender = array_search('--render', $_SERVER['argv']);
+			if ($idxRender > 0)
+				$debugRender = $_SERVER['argv'][$idxRender + 1];
 		}
 
 		// Parameter "mod" is the mandatory module name
@@ -57,12 +57,12 @@ abstract class Module {
 		$task = $debugTask ?: RQ::GET('task');
 		$task = $task ?: "build";
 
-		// Parameter "app" is optional
-		$app = $debugApp ?: RQ::GET('app');
-		$app = $app ?: "wrap";
+		// Parameter "render" is optional
+		$render = $debugRender ?: RQ::GET('render');
+		$render = $render ?: "html";
 
-		// With parameter app="nowrap" a module is rendered with its own slice template only.
-		if ($app != "wrap" && ($app == "nowrap" || $task != "build")) {
+		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
+		if ($render != "html" && ($render == "json" || $task != "build")) {
 			Config::init($modName);
 			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 				die("Access denied!");
@@ -138,7 +138,7 @@ abstract class Module {
 
 	protected function render(string $html = ""): string
 	{
-		if (!RQ::GET('app') || RQ::GET('app') == 'wrap')
+		if (!RQ::GET('render') || RQ::GET('render') == 'html')
 			return $html;
 
 		$json = json_encode([
