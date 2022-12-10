@@ -5,10 +5,11 @@
  +-----------------------------------------------------------------------*/
 
 // Bootstrap
-@import "customVariables"; // 1st
-@import "../node_modules/bootstrap/scss/bootstrap";  // 2nd
-@import "customMixins"; // 3rd
-@import "customStyles"; // 4th
+@import "../node_modules/bootstrap/scss/_functions";  // 1st
+@import "customVariables"; // 2nd
+@import "../node_modules/bootstrap/scss/bootstrap";  // 3rd
+@import "customMixins"; // 4th
+@import "customStyles"; // 5th
 
 
 // Font-Awesome
