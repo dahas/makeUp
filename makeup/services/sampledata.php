@@ -10,7 +10,7 @@ use makeUp\lib\ServiceItem;
 #[Data(
     table: 'sampledata', 
     key: 'uid', 
-    columns: 'name, age, city, country'
+    columns: 'uid, name, age, city, country'
 )]
 class Sampledata extends Service
 {
