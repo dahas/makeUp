@@ -7,9 +7,9 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "language_selector", // module name
-                "--task", "change", // task name
-                "--render", "" // html or json
+                "--mod", "", // module name
+                "--task", "", // task name
+                "--render", "" // html (default) or json
             ],
             "externalConsole": false,
             "port": 9003
