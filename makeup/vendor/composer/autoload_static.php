@@ -10,6 +10,7 @@ class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
         'm' => 
         array (
             'makeUp\\services\\' => 16,
+            'makeUp\\modules\\' => 15,
             'makeUp\\lib\\' => 11,
             'makeUp\\' => 7,
         ),
@@ -19,6 +20,10 @@ class ComposerStaticInit5e0f50ad06d8ea0ea4f5ec470b175012
         'makeUp\\services\\' => 
         array (
             0 => __DIR__ . '/../..' . '/services',
+        ),
+        'makeUp\\modules\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules',
         ),
         'makeUp\\lib\\' => 
         array (

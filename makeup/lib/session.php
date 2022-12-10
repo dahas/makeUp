@@ -8,7 +8,7 @@ class Session
 	public static function start() : void
 	{
 		if (!isset($_SESSION))
-			session_start();
+			@session_start();
 	}
 
 	public static function get(string $key) : mixed

@@ -13,6 +13,7 @@
         "psr-4": {
             "makeUp\\": "app/controller/",
             "makeUp\\lib\\": "lib/",
+            "makeUp\\modules\\": "modules/",
             "makeUp\\services\\": "services/"
         }
     },

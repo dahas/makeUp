@@ -49,9 +49,7 @@ class Authentication extends Module
 
     private function buildResponse() : string
     {
-        $html = "";
         $template = "authentication.response.html";
-        $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
             $m["[[SIGNED_IN]]"] = Lang::get("signed_in");
@@ -67,18 +65,13 @@ class Authentication extends Module
 
     private function buildFail() : string
     {
-        $html = "";
-        $template = "authentication.fail.html";
-        $token = Tools::createFormToken();
-
         $m["[[LOGIN_FAILED]]"] = Lang::get("login_failed");
-        return $this->getTemplate($template)->parse($m);
+        return $this->getTemplate("authentication.fail.html")->parse($m);
     }
 
 
     private function buildForm() : string
     {
-        $html = "";
         $template = "authentication.form.html";
         $token = Tools::createFormToken();
 
@@ -101,11 +94,7 @@ class Authentication extends Module
 
     public function signin()
     {
-        // Simulate login:
-        $username = 'user';
-        $password = 'pass';
-
-        if (Tools::checkFormToken(RQ::post("token")) && RQ::POST('username') === $username && RQ::POST('password') === $password) {
+        if ($this->authenticate(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
             Session::set("logged_in", true);
             return $this->build("response");
         }
@@ -117,6 +106,16 @@ class Authentication extends Module
     {
         Session::set("logged_in", false); // Simulate logout
         return $this->build("response");
+    }
+
+
+    public function authenticate(string $token, string $un, string $pw) : bool
+    {
+        // Simulate login:
+        $username = 'user';
+        $password = 'pass';
+
+        return Tools::checkFormToken($token) &&  $username === $un && $password === $pw;
     }
 
 }
