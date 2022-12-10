@@ -5,20 +5,20 @@
  +-----------------------------------------------------------------------*/
 
 // Bootstrap
-@import "../node_modules/bootstrap/scss/_functions";  // 1st
+@import "../../public/node_modules/bootstrap/scss/_functions";  // 1st
 @import "customVariables"; // 2nd
-@import "../node_modules/bootstrap/scss/bootstrap";  // 3rd
+@import "../../public/node_modules/bootstrap/scss/bootstrap";  // 3rd
 @import "customMixins"; // 4th
 @import "customStyles"; // 5th
 
 
 // Font-Awesome
-@import "../node_modules/@fortawesome/fontawesome-free/scss/brands";
-@import "../node_modules/@fortawesome/fontawesome-free/scss/regular";
-@import "../node_modules/@fortawesome/fontawesome-free/scss/solid"; 
-@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../public/node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../../public/node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../public/node_modules/@fortawesome/fontawesome-free/scss/solid"; 
+@import "../../public/node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 
 
 // Fonts
 @import "customFonts";
-@import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url('https://fonts.googleapis.com/css?family=Poppins'); 

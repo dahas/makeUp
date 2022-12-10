@@ -1,7 +1,7 @@
 {
-  "name": "makeup_view",
+  "name": "makeup",
   "version": "2.1.0",
-  "description": "Frontend resources",
+  "description": "makeUp PHP Framework",
   "main": "index.php",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
