@@ -5,19 +5,21 @@
         "icon": "home"
     },
     {
-        "text": "Dropdown",
+        "text": "Products",
         "submenu": [
             {
-                "text": "Sub Item 1",
-                "module": "",
-                "task": ""
+                "text": "Skincare",
+                "module": ""
             },
             {
-                "text": "Sub item 2",
-                "module": "",
-                "task": "",
-                "header": "Header",
-                "separate": true
+                "separate": true,
+                "header": "Perfume",
+                "text": "Men",
+                "module": "perfume_men"
+            },
+            {
+                "text": "Women",
+                "module": "perfume_women"
             }
         ]
     }
