@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "makeup-cli": "file:../makeup2-cli"
-  }
-}
