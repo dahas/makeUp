@@ -35,7 +35,8 @@ class Navigation extends Module
             if (!isset($data->submenu)) {
                 $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
                     "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
-                    "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
                     "[[TEXT]]" => $data->text,
                     "[[ICON]]" => @$data->icon ? $icon->parse([
                         "[[NAME]]" => @$data->icon
@@ -45,7 +46,8 @@ class Navigation extends Module
             // With submenu:
             else {
                 $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
-                    "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
                     "[[TEXT]]" => $data->text,
                     "[[ICON]]" => @$data->icon ? $icon->parse([
                         "[[NAME]]" => @$data->icon
@@ -77,7 +79,8 @@ class Navigation extends Module
         if (@$data->module) {
             // Open item
             $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
-                "[[LINK]]" => @$data->module ? $this->setContentPath(@$data->module, @$data->task) : "",
+                "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
                 "[[ACTIVE]]" => @$data->module == RQ::get("mod") ? "active" : "",
                 "[[TEXT]]" => $data->text,
                 "[[ICON]]" => ""
@@ -101,7 +104,8 @@ class Navigation extends Module
             }
 
             $markers = [
-                "[[LINK]]" => @$subData->module ? $this->setContentPath(@$subData->module, @$subData->task) : "",
+                "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
+                "[[LINK]]" => @$subData->module ? Tools::linkBuilder(@$subData->module, @$subData->task) : "",
                 "[[ACTIVE]]" => @$subData->module == RQ::get("mod") ? "active" : "",
                 "[[TEXT]]" => $subData->text,
                 "[[ICON]]" => @$subData->icon ? $icon->parse([
@@ -121,12 +125,6 @@ class Navigation extends Module
         }
 
         return $subMenuTmpl->parse([], $ss);
-    }
-
-    private function setContentPath(string $module = "", string|null $task = "", string $query = ""): string
-    {
-        $route = Tools::linkBuilder($module, $task);
-        return "setRoute('$module', '$route');";
     }
 
 }

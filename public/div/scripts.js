@@ -21,11 +21,13 @@ $(document).ready(() => {
     let rewriting = getAttachedParameter("rw");
 
     setRoute = (mod, uri) => {
-        $(this).blur();
-        $('nav li a.active').removeClass('active');
-        let state = { path: uri, segments: [{ html: '', target: 'content' }], title: '' };
-        loadContent(state)
-        history.pushState(state, mod, uri);
+        if (mod) {
+            $(this).blur();
+            $('nav li a.active').removeClass('active');
+            let state = { path: uri, segments: [{ html: '', target: 'content' }], title: '' };
+            loadContent(state)
+            history.pushState(state, mod, uri);
+        }
     }
 
     loadContent = async state => {

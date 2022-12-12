@@ -64,7 +64,7 @@ class App extends Module
         /**** Parsing the HTML body section ************************************/
 
         $m["[[NAVIGATION]]"] = Module::create("navigation")->build(); // Connecting the menu to the navbar
-        $m["[[AUTHENTICATION]]"] = Module::create("authentication")->build(); // Connecting the login form to the navbar
+        $m["[[AUTHENTICATION]]"] = Module::create("authentication")->build("form"); // Connecting the login form to the navbar
         $m["[[LANGUAGE_SELECTOR]]"] = Module::create("language_selector")->build(); // Connecting the language selector
         $m["[[SUBTITLE]]"] = Config::get("page_settings", "subtitle");
         $m["[[RW]]"] = Config::get("app_settings", "url_rewriting");

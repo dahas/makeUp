@@ -136,8 +136,20 @@ abstract class Module {
 	{
 		if (!RQ::GET('render') || RQ::GET('render') == 'html')
 			return $html;
+		else
+			return $this->renderJSON($html);
+	}
 
-		$json = json_encode([
+	/**
+	 * Returns meta data of a page. Use and overwrite it in your module 
+	 * if you request the content asynchronous and/or want to update multiple 
+	 * parts of the page at once.
+	 * @param string $html HTML content
+	 * @return string JSON Object
+	 */
+	protected function renderJSON(string $html = ""): string
+	{
+		return json_encode([
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
 			"segments" => [
@@ -147,8 +159,6 @@ abstract class Module {
 				]
 			]
 		]);
-
-		return $json;
 	}
 
 	public function __call(string $method, mixed $args): string
@@ -168,7 +178,22 @@ class ErrorMod {
 
 	public function build(): string
 	{
-		return Tools::errorMessage("Module '$this->modName' not found!");
+		$html = Tools::errorMessage("Module '$this->modName' not found!");
+
+		if (!RQ::GET('render') || RQ::GET('render') == 'html') {
+			return $html;
+		} else {
+			return json_encode([
+				"title" => "Error",
+				"module" => $this->modName,
+				"segments" => [
+					[
+						"html" => $html,
+						"target" => 'content'
+					]
+				]
+			]);
+		}
 	}
 }
 

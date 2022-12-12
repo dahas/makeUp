@@ -4,7 +4,7 @@
     <input type="text" name="username" value="" class="form-control mr-2" style="width:110px;" placeholder="Username" aria-label="Username">
     <input type="password" name="password" value="" class="form-control mr-2" style="width:110px;" placeholder="Password" aria-label="Password">
     <button class="btn btn-warning mr-2" onclick="submitForm('[[FORM_ACTION]]', 'signin'); return false;">Sign in</button>
-    <a href="[[REGISTER_LINK]]" class="btn btn-primary" type="submit">Register</a>
+    <button class="btn btn-primary"onclick="setRoute('authentication', '[[REGISTER_LINK]]'); return false;">Register</button>
 </form>
 <!-- {{SIGNIN}} -->
 <!-- {{SIGNOUT}} -->
