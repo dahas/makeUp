@@ -28,7 +28,8 @@ class Registration extends Module
         $m["[[TOKEN]]"] = $token;
         $m["[[REDIRECT]]"] = $this->modName;
 
-        return $this->getTemplate()->parse($m, $s);
+        $html = $this->getTemplate()->parse($m, $s);
+        return $this->render($html);
     }
 
 
