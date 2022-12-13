@@ -134,11 +134,18 @@ class Authentication extends Module {
 
     public function authenticate(string $token, string $un, string $pw): bool
     {
-        // Simulate login:
-        $username = 'user';
-        $password = 'pass';
+        $docRoot = dirname(__DIR__, 3);
+        $file = fopen($docRoot . "/users.txt", "r");
+        $userData = $this->userExists($file, $un);
 
-        return Tools::checkFormToken($token) && $username === $un && $password === $pw;
+        if (!$userData)
+            return false;
+        
+        $username = $userData[0];
+        $hash = $userData[1];
+        $validPw = password_verify($pw, $hash);
+        fclose($file);
+        return Tools::checkFormToken($token) && $username === $un && $validPw;
     }
 
 
@@ -154,7 +161,7 @@ class Authentication extends Module {
         $file = fopen($docRoot . "/users.txt", "a+");
 
         if (!$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
-            $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT);
+            $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);
             $response = "success";
@@ -166,13 +173,13 @@ class Authentication extends Module {
     }
 
 
-    private function userExists($file, string $username) : bool
+    private function userExists($file, string $username) : array|false
     {
         if ($file) {
             while (($line = fgets($file, 4096)) !== FALSE) {
                 $dataArr = explode(":", $line);
                 if ($dataArr[0] == $username) {
-                    return true;
+                    return $dataArr;
                 }
             }
         }
