@@ -33,14 +33,9 @@ class App extends Module
         $m = [];
 
         $module = RQ::GET('mod');
-        $task = RQ::GET('task');
         
         /**** IMPORTANT: Module with page content must come first! *************/
-        if (!$task) {
-            $m["[[MODULES]]"] = Module::create($module)->build();
-        } else {
-            return Module::create($module)->$task();
-        }
+        $m["[[MODULES]]"] = Module::create($module)->build();
 
         /**** Parsing the HTML head section ************************************/
 

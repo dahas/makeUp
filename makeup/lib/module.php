@@ -51,18 +51,15 @@ abstract class Module {
 		// Parameter "mod" is the mandatory module name
 		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
 
-		// Parameter "task" is mandatory, so the module knows which task to execute
-		$task = RQ::GET('task') ?: "build";
-
 		// Parameter "render" is optional
 		$render = RQ::GET('render') ?: "html";
 
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
-		if ($render != "html" && ($render == "json" || $task != "build")) {
+		if ($render == "json") {
 			Config::init($modName);
 			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
 				die("Access denied!");
-			$appHtml = Module::create($modName)->$task();
+			$appHtml = Module::create($modName)->build();
 		} else {
 			$html = $this->build();
 			$debugPanel = Tools::renderDebugPanel();
@@ -104,6 +101,10 @@ abstract class Module {
 			require_once $modFile;
 			$module = new $className();
 			$module->injectServices();
+			if (RQ::GET('task')) {
+				$task = RQ::GET('task');
+				die($module->$task());
+			}
 			return $module;
 		} else {
 			return new ErrorMod($className);
@@ -143,7 +144,7 @@ abstract class Module {
 	/**
 	 * Returns meta data of a page. Use and overwrite it in your module 
 	 * if you request the content asynchronous and/or want to update multiple 
-	 * parts of the page at once.
+	 * segments of a page at once.
 	 * @param string $html HTML content
 	 * @return string JSON Object
 	 */
