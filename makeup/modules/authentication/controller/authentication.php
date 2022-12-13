@@ -26,6 +26,7 @@ class Authentication extends Module {
         return $this->render($html);
     }
 
+    
     function renderJSON(string $html = ""): string
     {
         return json_encode([
@@ -41,7 +42,7 @@ class Authentication extends Module {
 
     private function buildForm(): string
     {
-        $template = "authentication.form.html";
+        $template = "authentication.login.html";
         $token = Tools::createFormToken();
 
         if (Session::get("logged_in")) {
