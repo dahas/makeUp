@@ -62,13 +62,13 @@ $(document).ready(() => {
             url: rewriting == 1 ? '/json/' + path : path + '&render=json',
             dataType: 'json'
         }).fail(() => {
-            state = { 
-                path: path, 
-                segments: [{ 
-                    html: 'Sorry! Something has gone wrong :(', 
+            state = {
+                path: path,
+                segments: [{
+                    html: 'Sorry! Something has gone wrong :(',
                     target: 'content'
-                }], 
-                title: "Page not found!" 
+                }],
+                title: "Page not found!"
             };
         }).done(data => {
             state = { path: path, segments: data.segments, title: data.title };
@@ -94,7 +94,7 @@ $(document).ready(() => {
             data: $('form[name="' + name + '"]').serialize(),
             success: data => {
                 data.segments.forEach(segment => {
-                    $('*[data-mod="'+segment.target+'"]').html(segment.html);
+                    $('*[data-mod="' + segment.target + '"]').html(segment.html);
                 });
                 $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             },
@@ -108,12 +108,12 @@ $(document).ready(() => {
             url: '?mod=language_selector&task=change&cc=' + lang,
             dataType: 'json'
         }).fail()
-        .done(data => {
-            console.log(data)
-            if (data.result == 1) {
-                location.href = location.href;
-            }
-        });
+            .done(data => {
+                console.log(data)
+                if (data.result == 1) {
+                    location.href = location.href;
+                }
+            });
     }
 });
 

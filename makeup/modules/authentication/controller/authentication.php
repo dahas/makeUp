@@ -109,6 +109,7 @@ class Authentication extends Module {
         } else {
             $m["[[ERROR_MSG]]"] = Lang::get("error");
             $m["[[BACK_MSG]]"] = Lang::get("back");
+            $m["[[LINK]]"] = Tools::linkBuilder($this->modName);
             ;
             $html = $this->getTemplate($template)->getSlice("{{ERROR}}")->parse($m);
         }
