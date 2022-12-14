@@ -24,7 +24,7 @@ $(document).ready(() => {
         if (mod) {
             $(this).blur();
             $('nav li a.active').removeClass('active');
-            let state = { path: uri, segments: [{ html: '', target: 'content' }], title: '' };
+            let state = { path: uri, segment: { dataMod: 'content', html: '' }, title: '' };
             loadContent(state)
             history.pushState(state, mod, uri);
         }
@@ -33,21 +33,15 @@ $(document).ready(() => {
     loadContent = async state => {
         if (!state) {
             let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
-            data.segments.forEach(segment => {
-                $('*[data-mod="' + segment.target + '"]').html(segment.html);
-            });
+            $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
             $(document).prop('title', data.title);
-        } else if (state.segments[0].html == '') {
+        } else if (state.segment.html == '') {
             let data = await requestData(state.path);
-            data.segments.forEach(segment => {
-                $('*[data-mod="' + segment.target + '"]').html(segment.html);
-            });
+            $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
             $(document).prop('title', data.title);
         } else {
             $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS, () => {
-                state.segments.forEach(segment => {
-                    $('*[data-mod="' + segment.target + '"]').html(segment.html);
-                });
+                $('*[data-mod="' + state.segment.dataMod + '"]').html(state.segment.html);
                 $(document).prop('title', state.title);
                 $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             });
@@ -66,12 +60,12 @@ $(document).ready(() => {
                 path: path,
                 segments: [{
                     html: 'Sorry! Something has gone wrong :(',
-                    target: 'content'
+                    dataMod: 'content'
                 }],
                 title: "Page not found!"
             };
         }).done(data => {
-            state = { path: path, segments: data.segments, title: data.title };
+            state = { path: path, segment: data.segment, title: data.title };
             history.replaceState(state, data.module, path);
             $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
         });
@@ -86,17 +80,26 @@ $(document).ready(() => {
         submitForm(event.currentTarget.action, event.currentTarget.name);
     });
 
-    submitForm = (path, name) => {
-        $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS);
+    submitForm = (path, name, reload) => {
         $.ajax({
             type: 'POST',
             url: path,
             data: $('form[name="' + name + '"]').serialize(),
             success: data => {
-                data.segments.forEach(segment => {
-                    $('*[data-mod="' + segment.target + '"]').html(segment.html);
-                });
-                $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
+                $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
+                if (reload) {
+                    if (data.payload?.toast) {
+                        localStorage.setItem("toast", JSON.stringify(data.payload.toast));
+                    }
+                    location.reload();
+                } else {
+                    if (data.payload?.toast) {
+                        showToast(data.payload.toast[0], data.payload.toast[1]);
+                    }
+                    if (data.content) {
+                        $('*[data-mod="content"]').html(data.content);
+                    }
+                }
             },
             dataType: 'json'
         });
@@ -116,20 +119,18 @@ $(document).ready(() => {
             });
     }
 
-    const toastElList = document.querySelectorAll('.toast')
-    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, { animation: true }))
+    showToast = (tid, msg) => {
+        $('#toast-' + tid + ' span.toast-msg').html(msg);
+        const toast = new bootstrap.Toast($('#toast-' + tid), { animation: true, delay: 3000 });
+        toast.show();
+    }
 
-    // toastList[0].show();
-    const aaa =[...toastList].map(t => t.show())
+    const tempToast = JSON.parse(localStorage.getItem("toast"));
+    if (tempToast) {
+        console.log(tempToast)
+        showToast(tempToast[0], tempToast[1]);
+        localStorage.removeItem("toast")
+    }
 
-    // const toastTrigger = document.getElementById('liveToastBtn')
-    // const toastLiveExample = document.getElementById('liveToast')
-    // if (toastTrigger) {
-    //     toastTrigger.addEventListener('click', () => {
-    //         const toast = new bootstrap.Toast(toastLiveExample)
-    //         toast.show()
-    //     })
-    // }
-    
 });
 

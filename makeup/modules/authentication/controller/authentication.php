@@ -3,7 +3,6 @@
 use makeUp\lib\Lang;
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
-use makeUp\lib\Config;
 use makeUp\lib\Tools;
 use makeUp\lib\Session;
 
@@ -18,29 +17,14 @@ class Authentication extends Module {
     protected function build(string $variant = ""): string
     {
         $html = match ($variant) {
-            default => $this->buildRegister(),
-            "response" => $this->buildResponse(),
-            "fail" => $this->buildFail(),
-            "form" => $this->buildForm()
+            default => $this->buildRegistrationForm(),
+            "form" => $this->buildSignInOutForm()
         };
         return $this->render($html);
     }
 
-    
-    function renderJSON(string $html = ""): string
-    {
-        return json_encode([
-            "title" => Config::get("page_settings", "title"),
-            "module" => $this->modName,
-            "segments" => [
-                ["target" => 'content', "html" => $html],
-                ["target" => 'authentication', "html" => $this->buildForm()]
-            ]
-        ]);
-    }
 
-
-    private function buildForm(): string
+    private function buildSignInOutForm(): string
     {
         $template = "authentication.login.html";
         $token = Tools::createFormToken();
@@ -62,79 +46,45 @@ class Authentication extends Module {
     }
 
 
-    private function buildResponse(): string
+    private function buildRegistrationForm(): string
     {
-        $template = "authentication.response.html";
-
-        if (Session::get("logged_in")) {
-            $m["[[SIGNED_IN]]"] = Lang::get("signed_in");
-            $response = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse($m);
+        if (!Session::get('logged_in')) {
+            $token = Tools::createFormToken();
+    
+            $html = $this->getTemplate("authentication.register.html")->parse([
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "register"),
+                "[[TOKEN]]" => $token
+            ]);
         } else {
-            $m["[[SIGNED_OUT]]"] = Lang::get("signed_out");
-            $response = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse($m);
+            $html = $this->getTemplate("authentication.signup.html")->parse([
+                "[[WELCOME_MSG]]" => sprintf(Lang::get("welcome"), Session::get('user'))
+            ]);
         }
-
-        return $this->getTemplate()->parse(["[[FORM]]" => $response]);
-    }
-
-
-    private function buildFail(): string
-    {
-        $m["[[LOGIN_FAILED]]"] = Lang::get("login_failed");
-        $fail = $this->getTemplate("authentication.fail.html")->parse($m);
-
-        return $this->getTemplate()->parse(["[[FORM]]" => $fail]);
-    }
-
-
-    private function buildRegister(): string
-    {
-        $token = Tools::createFormToken();
-
-        $html = $this->getTemplate("authentication.register.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signup"),
-            "[[TOKEN]]" => $token
-        ]);
         return $html;
-    }
-
-
-    private function buildSignup(string $resp): string
-    {
-        $template = "authentication.signup.html";
-
-        if ($resp == "success") {
-            $m["[[SUCCESS_MSG]]"] = Lang::get("success");
-            $html = $this->getTemplate($template)->getSlice("{{SUCCESS}}")->parse($m);
-        } else {
-            $m["[[ERROR_MSG]]"] = Lang::get("error");
-            $m["[[BACK_MSG]]"] = Lang::get("back");
-            $m["[[LINK]]"] = Tools::linkBuilder($this->modName);
-            ;
-            $html = $this->getTemplate($template)->getSlice("{{ERROR}}")->parse($m);
-        }
-        return $this->render($html);
     }
 
 
     public function signin()
     {
-        if ($this->authenticate(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
+        if ($this->authorized(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
             Session::set("logged_in", true);
-            return $this->build("response");
+            Session::set("user", RQ::POST('username'));
+            $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
+            return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_in')]]);
         }
-        return $this->build("fail");
+        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["error", Lang::get('login_failed')]]);
     }
 
 
     public function signout()
     {
         Session::set("logged_in", false); // Simulate logout
-        return $this->build("response");
+        Session::set("user", null);
+        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_out')]]);
     }
 
 
-    public function authenticate(string $token, string $un, string $pw): bool
+    public function authorized(string $token, string $un, string $pw): bool
     {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "r");
@@ -153,25 +103,23 @@ class Authentication extends Module {
 
     public function register()
     {
-        return $this->build("register");
-    }
-
-
-    public function signup()
-    {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
+        if (!Session::get("logged_in") && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
             $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);
+            Session::set("user", RQ::POST('username'));
             $response = "success";
+            $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
+            $content = $this->getTemplate("authentication.signup.html")->parse($m);
         } else {
             $response = "error";
+            $content = "";
         }
         fclose($file);
-        return $this->buildSignup($response);
+        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => [$response, Lang::get($response)]], $content);
     }
 
 

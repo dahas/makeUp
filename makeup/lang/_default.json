@@ -15,6 +15,7 @@
         "login_failed": "Login failed! Please check your username and password.",
         "signed_in": "You successfully signed in!",
         "signed_out": "You successfully logged out!",
+        "welcome": "Welcome on board, %s!",
         "success": "You successfully registered!",
         "error": "Registration failed! Please try again later."
     }

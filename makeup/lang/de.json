@@ -15,6 +15,7 @@
         "login_failed": "Anmeldung fehlgeschlagen! Bitte überprüfe Deinen Benutzernamen und Dein Passwort.",
         "signed_in": "Du hast Dich erfolgreich angemeldet!",
         "signed_out": "Du wurdest erfolgreich ausgeloggt!",
+        "welcome": "Willkommen an Bord, %s!",
         "success": "Deine Registrierung war erfolgreich!",
         "error": "Registrierung fehlgeschlagen! Versuche es bitte später noch einmal."
     }

@@ -138,28 +138,32 @@ abstract class Module {
 		if (!RQ::GET('render') || RQ::GET('render') == 'html')
 			return $html;
 		else
-			return $this->renderJSON($html);
+			return $this->renderJSON("content", $html);
 	}
 
 	/**
-	 * Returns meta data of a page. Use and overwrite it in your module 
-	 * if you request the content asynchronous and/or want to update multiple 
-	 * segments of a page at once.
-	 * @param string $html HTML content
+	 * Returns meta data of a page as a JSON Object.
+	 * @param string $dataMod Name of the module that should be replaced with $html.
+	 * @param string $html The HTML used by $dataMod.
+	 * @param array  $payload Can be what ever you require. 
+	 * @param string $content HTML you want to appear in the content section.
 	 * @return string JSON Object
 	 */
-	protected function renderJSON(string $html = ""): string
+	protected function renderJSON(string $dataMod = "", string $html = "", array $payload = [], string $content = ""): string
 	{
-		return json_encode([
+		$toJson = [
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
-			"segments" => [
-				[
-					"html" => $html,
-					"target" => 'content'
-				]
-			]
-		]);
+            "payload" => $payload,
+			"segment" => [],
+            "content" => $content
+		];
+
+		if ($dataMod && $html) {
+			$toJson['segment'] = ["dataMod" => $dataMod, "html" => $html];
+		}
+
+		return json_encode($toJson);
 	}
 
 	public function __call(string $method, mixed $args): string
@@ -190,7 +194,7 @@ class ErrorMod {
 				"segments" => [
 					[
 						"html" => $html,
-						"target" => 'content'
+						"dataMod" => 'content'
 					]
 				]
 			]);
