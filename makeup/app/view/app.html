@@ -1,58 +1,93 @@
 <!doctype html>
 <html lang="[[HTML_LANG]]">
-    <head>
-        [[TITLE]] 
-        [[CONF_METATAGS]] 
-        [[CONF_CSS_FILES]] 
-        [[CONF_JS_FILES_HEAD]] 
-        <!-- jQuery first, then Bootstrap JS -->
-        <script src="/node_modules/jquery/dist/jquery.min.js"></script>
-        <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Cookie manager -->
-        <script src="/div/cookie_mgmt.js"></script>
-        <script>
-            var cookie = new Cookie("[[COOKIE_NAME]]", [[COOKIE_EXP]] , "[[COOKIE_PATH]]");
-        </script>
-    </head>
 
-    <body>
+<head>
+    [[TITLE]]
+    [[CONF_METATAGS]]
+    [[CONF_CSS_FILES]]
+    [[CONF_JS_FILES_HEAD]]
+    <!-- jQuery first, then Bootstrap JS -->
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cookie manager -->
+    <script src="/div/cookie_mgmt.js"></script>
+    <script>
+        var cookie = new Cookie("[[COOKIE_NAME]]", [[COOKIE_EXP]], "[[COOKIE_PATH]]");
+    </script>
+</head>
 
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" href="#"><img src="/resources/img/logo.svg" height="16" /> makeUp</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#0"><img src="/resources/img/logo.svg" height="16" /> makeUp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                [[NAVIGATION]] 
-                <div data-mod="authentication">[[AUTHENTICATION]]</div>
-                [[LANGUAGE_SELECTOR]]
-            </div>
-        </nav>
-
-        <main role="main">
-
-            <!-- Main jumbotron for a primary marketing message or call to action -->
-            <div class="jumbotron">
-                <div class="container" style="color: white;">
-                    <h1 class="display-4">[[LANG_TITLE]]</h1>
-                    <p>[[LANG_SUBTITLE]]</p>
-                    <p><a class="btn btn-primary btn-lg" href="https://github.com/dahas/makeup2/wiki" target="_blank" role="button">[[LANG_WIKI_BUTTON]]</a></p>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                [[NAVIGATION]]
+                <div class="d-flex" role="search">
+                    <div data-mod="authentication">[[AUTHENTICATION]]</div>
+                    [[LANGUAGE_SELECTOR]]
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <div data-mod="content" class="container">
-                [[MODULES]]
+    <main role="main">
+
+        <div class="p-0 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5 jumbotron">
+                <div class="container text-white">
+                    <h1 class="display-4">[[LANG_TITLE]]</h1>
+                    <p>[[LANG_SUBTITLE]]</p>
+                    <p><a class="btn btn-primary btn-lg" href="https://github.com/dahas/makeup2/wiki" target="_blank"
+                            role="button">[[LANG_WIKI_BUTTON]]</a></p>
+                </div>
             </div>
+        </div>
 
-        </main>
+        <div data-mod="content" class="container">
+            [[MODULES]]
+        </div>
 
-        <footer class="container">
-            <hr>
-            <p>&copy; <a href="//www.martinwolf.info" target="_blank">Martin J. Wolf</a></p>
-        </footer>
+    </main>
 
-        [[CONF_JS_FILES_BODY]]
-        <script src="/div/scripts.js?rw=[[RW]]" id="helper"></script>
-    </body>
+    <footer class="container">
+        <hr>
+        <p>&copy; <a href="//www.martinwolf.info" target="_blank">Martin J. Wolf</a></p>
+    </footer>
+
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x pt-4">
+
+        <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Hello, world! This is a toast message.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Hello, world! This is a toast message.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+
+    </div>
+
+    [[CONF_JS_FILES_BODY]]
+    <script src="/div/scripts.js?rw=[[RW]]" id="helper"></script>
+</body>
+
 </html>

@@ -102,10 +102,10 @@ class Tools
         //     $host = "http://127.0.0.1";
 
         if (Config::get("app_settings", "url_rewriting")) {
-            $link = $task ? "/$render/$mod/$task/" : "/$mod.html";
+            $link = $task ? "/$render/$task/$mod/" : "/$mod/";
             $link .= !empty($query) ? "?" . http_build_query($query) : "";
         } else {
-            $link = $task ? "?render=$render&mod=$mod&task=$task" : "?mod=$mod";
+            $link = $task ? "?render=$render&task=$task&mod=$mod" : "?mod=$mod";
             $link .= !empty($query) ? "&" . http_build_query($query) : "";
         }
         // return $host . $link;

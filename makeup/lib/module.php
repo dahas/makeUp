@@ -50,7 +50,7 @@ abstract class Module {
 
 		// Parameter "mod" is the mandatory module name
 		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
-
+		
 		// Parameter "render" is optional
 		$render = RQ::GET('render') ?: "html";
 
