@@ -3,6 +3,7 @@
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
 use makeUp\lib\Routing;
+use makeUp\lib\Session;
 use makeUp\lib\Tools;
 
 
@@ -33,27 +34,31 @@ class Navigation extends Module
         foreach ($routing as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
-                $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
-                    "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
-                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
-                    "[[TEXT]]" => $data->text,
-                    "[[ICON]]" => @$data->icon ? $icon->parse([
-                        "[[NAME]]" => @$data->icon
-                    ]) : ""
-                ]);
+                if (@$data->protected != 1 || (@$data->protected == 1 && Session::get("logged_in"))) {
+                    $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
+                        "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
+                        "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                        "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
+                        "[[TEXT]]" => $data->text,
+                        "[[ICON]]" => @$data->icon ? $icon->parse([
+                            "[[NAME]]" => @$data->icon
+                        ]) : ""
+                    ]);
+                }
             }
             // With submenu:
             else {
-                $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
-                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
-                    "[[TEXT]]" => $data->text,
-                    "[[ICON]]" => @$data->icon ? $icon->parse([
-                        "[[NAME]]" => @$data->icon
-                    ]) : "",
-                    "[[SUBMENU]]" => $this->submenu($data)
-                ]);
+                if (@$data->protected != 1 || (@$data->protected == 1 && Session::get("logged_in"))) {
+                    $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
+                        "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                        "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
+                        "[[TEXT]]" => $data->text,
+                        "[[ICON]]" => @$data->icon ? $icon->parse([
+                            "[[NAME]]" => @$data->icon
+                        ]) : "",
+                        "[[SUBMENU]]" => $this->submenu($data)
+                    ]);
+                }
             }
         }
 
@@ -77,50 +82,59 @@ class Navigation extends Module
         $ss["{{OI_ICON}}"] = "";
 
         if (@$data->module) {
-            // Open item
-            $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
-                "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
-                "[[ACTIVE]]" => @$data->module == RQ::get("mod") ? "active" : "",
-                "[[TEXT]]" => $data->text,
-                "[[ICON]]" => ""
-            ]);
-            // With separator
-            $ss["{{SUBMENU_NO_SUB}}"] .= $separator->parse();
+            // Dropdown item
+            if (@$data->protected != 1 || (@$data->protected == 1 && Session::get("logged_in"))) {
+                $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
+                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
+                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
+                    "[[ACTIVE]]" => @$data->module == RQ::get("mod") ? "active" : "",
+                    "[[TEXT]]" => $data->text,
+                    "[[ICON]]" => ""
+                ]);
+                // With separator
+                $ss["{{SUBMENU_NO_SUB}}"] .= $separator->parse();
+            }
         }
 
 
         foreach ($data->submenu as $subData) {
             $sliceMarker = isset($subData->submenu) ? "{{SUBMENU_HAS_SUB}}" : "{{SUBMENU_NO_SUB}}";
 
-            // Separator and Section header
+            // Separator
             if (@$subData->separate) {
                 $ss[$sliceMarker] .= $separator->parse();
             }
+
+            // Header
             if (@$subData->header) {
                 $ss[$sliceMarker] .= $header->parse([
                     "[[TEXT]]" => @$subData->header
                 ]);
             }
 
-            $markers = [
-                "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
-                "[[LINK]]" => @$subData->module ? Tools::linkBuilder(@$subData->module, @$subData->task) : "",
-                "[[ACTIVE]]" => @$subData->module == RQ::get("mod") ? "active" : "",
-                "[[TEXT]]" => $subData->text,
-                "[[ICON]]" => @$subData->icon ? $icon->parse([
-                    "[[NAME]]" => @$subData->icon
-                ]) : ""
-            ];
-
-            // Main menu:
-            if (!isset($subData->submenu)) {
-                $ss[$sliceMarker] .= $subMenuNoSubSlice->parse($markers);
-            }
-            // With submenu:
-            else {
-                $markers["[[SUBMENU]]"] = $this->submenu($subData);
-                $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
+            // Module
+            if (@$subData->module) {
+                if (@$subData->protected != 1 || (@$subData->protected == 1 && Session::get("logged_in"))) {
+                    $markers = [
+                        "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
+                        "[[LINK]]" => @$subData->module ? Tools::linkBuilder(@$subData->module, @$subData->task) : "",
+                        "[[ACTIVE]]" => @$subData->module == RQ::get("mod") ? "active" : "",
+                        "[[TEXT]]" => $subData->text,
+                        "[[ICON]]" => @$subData->icon ? $icon->parse([
+                            "[[NAME]]" => @$subData->icon
+                        ]) : ""
+                    ];
+    
+                    // Main menu:
+                    if (!isset($subData->submenu)) {
+                        $ss[$sliceMarker] .= $subMenuNoSubSlice->parse($markers);
+                    }
+                    // With submenu:
+                    else {
+                        $markers["[[SUBMENU]]"] = $this->submenu($subData);
+                        $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
+                    }
+                }
             }
         }
 

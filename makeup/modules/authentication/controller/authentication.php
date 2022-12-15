@@ -48,7 +48,7 @@ class Authentication extends Module {
 
     private function buildRegistrationForm(): string
     {
-        if (!Session::get('logged_in')) {
+        if (!Session::get("logged_in")) {
             $token = Tools::createFormToken();
     
             $html = $this->getTemplate("authentication.register.html")->parse([

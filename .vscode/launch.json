@@ -7,9 +7,10 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "test", // module name
-                "--task", "age", // task name
-                "--render", "" // html (default) or json
+                "--mod", "index",   // module name
+                "--task", "",       // task name
+                "--render", "",     // Output switch ("html" (default) or "json")
+                "--auth", "0"       // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
             ],
             "externalConsole": false,
             "port": 9003

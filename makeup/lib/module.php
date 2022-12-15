@@ -9,6 +9,7 @@ abstract class Module {
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
+	protected $isLoggedIn = false;
 
 	public function __construct()
 	{
@@ -45,19 +46,25 @@ abstract class Module {
 			if ($idxRender > 0)
 				$_GET['render'] = $_SERVER['argv'][$idxRender + 1];
 
+			$idxAuth = array_search('--auth', $_SERVER['argv']);
+			if ($idxAuth > 0)
+				$this->isLoggedIn = intval($_SERVER['argv'][$idxAuth + 1]) == 1;
+
 			RQ::init();
+		} else {
+			$this->isLoggedIn = Session::get("logged_in");
 		}
 
 		// Parameter "mod" is the mandatory module name
 		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
-		
+
 		// Parameter "render" is optional
 		$render = RQ::GET('render') ?: "html";
 
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
 		if ($render == "json") {
 			Config::init($modName);
-			if (Config::get("mod_settings", "protected") == "1" && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
+			if (Config::get("mod_settings", "protected") == "1" && !$this->isLoggedIn)
 				die("Access denied!");
 			$appHtml = Module::create($modName)->build();
 		} else {
@@ -95,7 +102,7 @@ abstract class Module {
 		if (is_file($modFile)) {
 			$modConfig = Tools::loadIniFile($name);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
-			if ($protected && (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false))
+			if ($protected && !Session::get("logged_in"))
 				return new AccessDeniedMod($className);
 
 			require_once $modFile;
@@ -154,9 +161,9 @@ abstract class Module {
 		$toJson = [
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
-            "payload" => $payload,
+			"payload" => $payload,
 			"segment" => [],
-            "content" => $content
+			"content" => $content
 		];
 
 		if ($dataMod && $html) {
@@ -189,14 +196,11 @@ class ErrorMod {
 			return $html;
 		} else {
 			return json_encode([
-				"title" => "Error",
+				"title" => "Error!",
 				"module" => $this->modName,
-				"segments" => [
-					[
-						"html" => $html,
-						"dataMod" => 'content'
-					]
-				]
+				"payload" => [],
+				"segment" => [],
+				"content" => $html
 			]);
 		}
 	}
@@ -213,6 +217,18 @@ class AccessDeniedMod {
 
 	public function build()
 	{
-		return null;
+		$html = Tools::errorMessage("You are not permitted to view this content! Please log in or sign up.");
+
+		if (!RQ::GET('render') || RQ::GET('render') == 'html') {
+			return $html;
+		} else {
+			return json_encode([
+				"title" => "Access denied!",
+				"module" => $this->modName,
+				"payload" => [],
+				"segment" => [],
+				"content" => $html
+			]);
+		}
 	}
 }

@@ -12,10 +12,15 @@
                 "module": "skincare"
             },
             {
-                "separate": true,
-                "header": "Perfume",
+                "separate": true
+            },
+            {
+                "header": "Perfume"
+            },
+            {
                 "text": "Men",
-                "module": "perfume_men"
+                "module": "perfume_men",
+                "protected": 1
             },
             {
                 "text": "Women",
@@ -25,6 +30,7 @@
     },
     {
         "text": "Test",
-        "module": "test"
+        "module": "test",
+        "protected": 1
     }
 ]
