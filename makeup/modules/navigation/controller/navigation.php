@@ -3,7 +3,6 @@
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
 use makeUp\lib\Routing;
-use makeUp\lib\Session;
 use makeUp\lib\Tools;
 
 

@@ -15,7 +15,14 @@ class Index extends Module
     public function build() : string
     {
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
-        $html = $this->getTemplate()->parse($m);
+
+        if ($this->checkLogin()) {
+            $s["{{TOP_SECRET}}"] = $this->getTemplate()->getSlice("{{TOP_SECRET}}")->parse();
+        } else {
+            $s["{{TOP_SECRET}}"] = "";
+        }
+
+        $html = $this->getTemplate()->parse($m, $s);
         return $this->render($html);
     }
 }

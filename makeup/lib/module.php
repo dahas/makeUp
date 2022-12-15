@@ -25,13 +25,7 @@ abstract class Module {
 
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name")); // 5th
-	}
 
-	/**
-	 * Run and output the app.
-	 */
-	public function execute(): void
-	{
 		// Debugging:
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			$idxMod = array_search('--mod', $_SERVER['argv']);
@@ -52,9 +46,15 @@ abstract class Module {
 
 			RQ::init();
 		} else {
-			$this->isLoggedIn = $this->checkLogin();
+			$this->isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
 		}
+	}
 
+	/**
+	 * Run and output the app.
+	 */
+	public function execute(): void
+	{
 		// Parameter "mod" is the mandatory module name
 		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
 
@@ -64,8 +64,6 @@ abstract class Module {
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
 		if ($render == "json") {
 			Config::init($modName);
-			if (Config::get("mod_settings", "protected") == "1" && !$this->isLoggedIn)
-				die("Access denied!");
 			$appHtml = Module::create($modName)->build();
 		} else {
 			$html = $this->build();
@@ -103,7 +101,7 @@ abstract class Module {
 			$modConfig = Tools::loadIniFile($name);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
 			if ($protected && !Session::get("logged_in"))
-				return new AccessDeniedMod($className);
+				return new AccessDeniedMod($name);
 
 			require_once $modFile;
 			$module = new $className();
@@ -181,7 +179,7 @@ abstract class Module {
 
 	protected function checkLogin() : bool
 	{
-		return Session::get("user") > "" && Session::get("logged_in");
+		return $this->isLoggedIn;
 	}
 
 	protected function setLogout() : void
