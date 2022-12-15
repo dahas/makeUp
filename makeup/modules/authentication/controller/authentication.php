@@ -29,7 +29,7 @@ class Authentication extends Module {
         $template = "authentication.login.html";
         $token = Tools::createFormToken();
 
-        if (Session::get("logged_in")) {
+        if ($this->checkLogin()) {
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
                 "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
                 "[[TOKEN]]" => $token
@@ -48,7 +48,7 @@ class Authentication extends Module {
 
     private function buildRegistrationForm(): string
     {
-        if (!Session::get("logged_in")) {
+        if (!$this->checkLogin()) {
             $token = Tools::createFormToken();
     
             $html = $this->getTemplate("authentication.register.html")->parse([
@@ -67,8 +67,7 @@ class Authentication extends Module {
     public function signin()
     {
         if ($this->authorized(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
-            Session::set("logged_in", true);
-            Session::set("user", RQ::POST('username'));
+            $this->setLogin(RQ::POST('username'));
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
             return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_in')]]);
         }
@@ -78,8 +77,7 @@ class Authentication extends Module {
 
     public function signout()
     {
-        Session::set("logged_in", false); // Simulate logout
-        Session::set("user", null);
+        $this->setLogout();
         return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_out')]]);
     }
 
@@ -106,7 +104,7 @@ class Authentication extends Module {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!Session::get("logged_in") && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
+        if (!$this->checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
             $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);

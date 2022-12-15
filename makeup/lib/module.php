@@ -52,7 +52,7 @@ abstract class Module {
 
 			RQ::init();
 		} else {
-			$this->isLoggedIn = Session::get("logged_in");
+			$this->isLoggedIn = $this->checkLogin();
 		}
 
 		// Parameter "mod" is the mandatory module name
@@ -171,6 +171,23 @@ abstract class Module {
 		}
 
 		return json_encode($toJson);
+	}
+
+	protected function setLogin(string $un) : void
+	{
+		Session::set("logged_in", true);
+        Session::set("user", $un);
+	}
+
+	protected function checkLogin() : bool
+	{
+		return Session::get("user") > "" && Session::get("logged_in");
+	}
+
+	protected function setLogout() : void
+	{
+		Session::set("logged_in", false);
+        Session::set(Session::get("user"), null);
 	}
 
 	public function __call(string $method, mixed $args): string
