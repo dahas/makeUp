@@ -4,7 +4,7 @@ $(document).ready(() => {
     let fadeDurMS = 200;
 
     getAttachedParameter = paramter => {
-        let params = $('#helper').attr('src').split("?").pop().split("&");
+        let params = $('#mup-router').attr('src').split("?").pop().split("&");
         let paramsArr = [];
         for (let j = 0; j < params.length; j++) {
             let keyVal = params[j].split("=");
@@ -84,57 +84,6 @@ $(document).ready(() => {
 
     window.onpopstate = event => {
         loadContent(event.state);
-    }
-
-    submitForm = (path, name, reload) => {
-        $.ajax({
-            type: 'POST',
-            url: path,
-            data: $('form[name="' + name + '"]').serialize(),
-            success: data => {
-                $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-                if (reload) {
-                    if (data.payload?.toast) {
-                        localStorage.setItem("toast", JSON.stringify(data.payload.toast));
-                    }
-                    location.reload();
-                } else {
-                    if (data.payload?.toast) {
-                        showToast(data.payload.toast[0], data.payload.toast[1]);
-                    }
-                    if (data.content) {
-                        $('*[data-mod="content"]').html(data.content);
-                    }
-                }
-            },
-            dataType: 'json'
-        });
-    }
-
-    setLanguage = lang => {
-        $.ajax({
-            type: 'GET',
-            url: '?mod=language_selector&task=change&cc=' + lang,
-            dataType: 'json'
-        }).fail()
-            .done(data => {
-                console.log(data)
-                if (data.result == 1) {
-                    location.href = location.href;
-                }
-            });
-    }
-
-    showToast = (tid, msg) => {
-        $('#toast-' + tid + ' span.toast-msg').html(msg);
-        const toast = new bootstrap.Toast($('#toast-' + tid), { animation: true, delay: 3000 });
-        toast.show();
-    }
-
-    const tempToast = JSON.parse(localStorage.getItem("toast"));
-    if (tempToast) {
-        showToast(tempToast[0], tempToast[1]);
-        localStorage.removeItem("toast")
     }
 
 });
