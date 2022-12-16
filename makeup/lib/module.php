@@ -9,7 +9,8 @@ abstract class Module {
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
-	protected $isLoggedIn = false;
+	protected $render = "";
+	protected static $isLoggedIn = false;
 
 	public function __construct()
 	{
@@ -42,11 +43,11 @@ abstract class Module {
 
 			$idxAuth = array_search('--auth', $_SERVER['argv']);
 			if ($idxAuth > 0)
-				$this->isLoggedIn = intval($_SERVER['argv'][$idxAuth + 1]) == 1;
+				self::$isLoggedIn = intval($_SERVER['argv'][$idxAuth + 1]) == 1;
 
 			RQ::init();
 		} else {
-			$this->isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
+			self::$isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
 		}
 	}
 
@@ -75,44 +76,34 @@ abstract class Module {
 	}
 
 	/**
-	 * Creates an object as long the user has permission to access the module.
+	 * Creates an object as long the user has permission to access the module
+	 * @param mixed $modName
+	 * @param mixed $force
+	 * @return mixed
 	 */
-	public static function create(): mixed
+	public static function create(string $modName, string $force = ""): mixed
 	{
-		$args = func_get_args();
-		$types = array();
-		foreach ($args as $arg) {
-			$types[] = gettype($arg);
-		}
-
-		// First argument must be the module name:
-		if (!isset($args[0]) || $types[0] != "string" || !$args[0]) {
-			throw new \Exception('Not a valid classname!');
-		} else {
-			$name = $args[0];
-			$className = Tools::upperCamelCase($name);
-		}
-
-		$realPath = realpath('');
-
-		$modFile = dirname(__DIR__, 1) . "/modules/$name/controller/$name.php";
+		$modFile = dirname(__DIR__, 1) . "/modules/$modName/controller/$modName.php";
 
 		if (is_file($modFile)) {
-			$modConfig = Tools::loadIniFile($name);
+			$modConfig = Tools::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
-			if ($protected && !Session::get("logged_in"))
-				return new AccessDeniedMod($name);
+			if ($protected && !Module::checkLogin())
+				return new AccessDeniedMod($modName, $force);
+
+			$className = Tools::upperCamelCase($modName);
 
 			require_once $modFile;
 			$module = new $className();
 			$module->injectServices();
+			$module->setRender($force);
 			if (RQ::GET('task')) {
 				$task = RQ::GET('task');
 				die($module->$task());
 			}
 			return $module;
 		} else {
-			return new ErrorMod($className);
+			return new ErrorMod($modName, $force);
 		}
 	}
 
@@ -130,6 +121,16 @@ abstract class Module {
 		}
 	}
 
+	protected function setRender(string $r = "") : void
+	{
+		$this->render = $r;
+	}
+
+	protected function getRender() : string
+	{
+		return $this->render;
+	}
+
 	abstract protected function build(): string;
 
 	protected function getTemplate($fileName = ""): Template
@@ -140,7 +141,7 @@ abstract class Module {
 
 	protected function render(string $html = ""): string
 	{
-		if (!RQ::GET('render') || RQ::GET('render') == 'html')
+		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->getRender() == "html")
 			return $html;
 		else
 			return $this->renderJSON("content", $html);
@@ -177,9 +178,9 @@ abstract class Module {
         Session::set("user", $un);
 	}
 
-	protected function checkLogin() : bool
+	public static function checkLogin() : bool
 	{
-		return $this->isLoggedIn;
+		return self::$isLoggedIn;
 	}
 
 	protected function setLogout() : void
@@ -196,18 +197,17 @@ abstract class Module {
 
 
 class ErrorMod {
-	private $modName = "";
 
-	public function __construct($modName)
-	{
-		$this->modName = strtolower("$modName");
-	}
+	public function __construct(
+		private $modName, 
+		private $force = ""
+	) {}
 
 	public function build(): string
 	{
 		$html = Tools::errorMessage("Module '$this->modName' not found!");
 
-		if (!RQ::GET('render') || RQ::GET('render') == 'html') {
+		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->force == 'html') {
 			return $html;
 		} else {
 			return json_encode([
@@ -223,18 +223,16 @@ class ErrorMod {
 
 
 class AccessDeniedMod {
-	private $modName = "";
-
-	public function __construct($modName)
-	{
-		$this->modName = strtolower("$modName");
-	}
+	public function __construct(
+		private $modName, 
+		private $force = ""
+	) {}
 
 	public function build()
 	{
 		$html = Tools::errorMessage("You are not permitted to view this content! Please log in or sign up.");
 
-		if (!RQ::GET('render') || RQ::GET('render') == 'html') {
+		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->force == 'html') {
 			return $html;
 		} else {
 			return json_encode([

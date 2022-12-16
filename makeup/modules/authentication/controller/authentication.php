@@ -29,7 +29,7 @@ class Authentication extends Module {
         $template = "authentication.login.html";
         $token = Tools::createFormToken();
 
-        if ($this->checkLogin()) {
+        if (Module::checkLogin()) {
             $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
                 "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
                 "[[TOKEN]]" => $token
@@ -48,7 +48,7 @@ class Authentication extends Module {
 
     private function buildRegistrationForm(): string
     {
-        if (!$this->checkLogin()) {
+        if (!Module::checkLogin()) {
             $token = Tools::createFormToken();
     
             $html = $this->getTemplate("authentication.register.html")->parse([
@@ -104,7 +104,7 @@ class Authentication extends Module {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!$this->checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
+        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
             $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);

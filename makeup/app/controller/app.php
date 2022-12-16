@@ -35,7 +35,7 @@ class App extends Module
         $module = RQ::GET('mod');
         
         /**** IMPORTANT: Module with page content must come first! *************/
-        $m["[[MODULES]]"] = Module::create($module)->build();
+        $m["[[CONTENT]]"] = Module::create($module)->build();
 
         /**** Parsing the HTML head section ************************************/
 

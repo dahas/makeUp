@@ -33,7 +33,7 @@ class Navigation extends Module
         foreach ($routing as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
-                if (@$data->protected != 1 || (@$data->protected == 1 && $this->checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                     $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
                         "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
@@ -47,7 +47,7 @@ class Navigation extends Module
             }
             // With submenu:
             else {
-                if (@$data->protected != 1 || (@$data->protected == 1 && $this->checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                     $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
                         "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
@@ -82,7 +82,7 @@ class Navigation extends Module
 
         if (@$data->module) {
             // Dropdown item
-            if (@$data->protected != 1 || (@$data->protected == 1 && $this->checkLogin())) {
+            if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                 $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
                     "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
                     "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
@@ -113,7 +113,7 @@ class Navigation extends Module
 
             // Module
             if (@$subData->module) {
-                if (@$subData->protected != 1 || (@$subData->protected == 1 && $this->checkLogin())) {
+                if (@$subData->protected != 1 || (@$subData->protected == 1 && Module::checkLogin())) {
                     $markers = [
                         "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
                         "[[LINK]]" => @$subData->module ? Tools::linkBuilder(@$subData->module, @$subData->task) : "",
