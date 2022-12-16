@@ -86,10 +86,6 @@ $(document).ready(() => {
         loadContent(event.state);
     }
 
-    $("form").submit((event) => {
-        submitForm(event.currentTarget.action, event.currentTarget.name);
-    });
-
     submitForm = (path, name, reload) => {
         $.ajax({
             type: 'POST',
