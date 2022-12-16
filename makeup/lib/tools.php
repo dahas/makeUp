@@ -96,11 +96,6 @@ class Tools
         if (!$mod)
             $mod = RQ::get("mod");
 
-        // if (isset($_SERVER['HTTP_HOST']))
-        //     $host = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
-        // else
-        //     $host = "http://127.0.0.1";
-
         if (Config::get("app_settings", "url_rewriting")) {
             $link = $task ? "/$render/$task/$mod/" : "/$mod/";
             $link .= !empty($query) ? "?" . http_build_query($query) : "";
@@ -108,7 +103,7 @@ class Tools
             $link = $task ? "?render=$render&task=$task&mod=$mod" : "?mod=$mod";
             $link .= !empty($query) ? "&" . http_build_query($query) : "";
         }
-        // return $host . $link;
+        
         return $link;
     }
 
