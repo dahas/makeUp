@@ -1,79 +1,53 @@
 
-$(document).ready(() => 
-{
-    login = (path, name, reload) => {
+$(document).ready(() => {
+
+    login = (path) => {
         $.ajax({
             type: 'POST',
             url: path,
-            data: $('form[name="' + name + '"]').serialize(),
+            data: $('form[name="signin"]').serialize(),
             success: data => {
                 $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-                if (reload) {
-                    if (data.payload?.toast) {
-                        localStorage.setItem("toast", JSON.stringify(data.payload.toast));
-                    }
-                    location.reload();
-                } else {
-                    if (data.payload?.toast) {
-                        showToast(data.payload.toast[0], data.payload.toast[1]);
-                    }
-                    if (data.content) {
-                        $('*[data-mod="content"]').html(data.content);
-                    }
+                if (data.payload?.toast) {
+                    localStorage.setItem("toast", JSON.stringify(data.payload.toast));
                 }
+                location.reload();
             },
             dataType: 'json'
         });
     }
 
-    logout = (path, name, reload) => {
+    logout = (path) => {
         $.ajax({
             type: 'POST',
             url: path,
-            data: $('form[name="' + name + '"]').serialize(),
+            data: $('form[name="signout"]').serialize(),
             success: data => {
                 $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-                if (reload) {
-                    if (data.payload?.toast) {
-                        localStorage.setItem("toast", JSON.stringify(data.payload.toast));
-                    }
-                    location.reload();
-                } else {
-                    if (data.payload?.toast) {
-                        showToast(data.payload.toast[0], data.payload.toast[1]);
-                    }
-                    if (data.content) {
-                        $('*[data-mod="content"]').html(data.content);
-                    }
+                if (data.payload?.toast) {
+                    localStorage.setItem("toast", JSON.stringify(data.payload.toast));
                 }
+                location.reload();
             },
             dataType: 'json'
         });
     }
 
-    signup = (path, name, reload) => {
+    signup = (path) => {
         $.ajax({
             type: 'POST',
             url: path,
-            data: $('form[name="' + name + '"]').serialize(),
+            data: $('form[name="register"]').serialize(),
             success: data => {
                 $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-                if (reload) {
-                    if (data.payload?.toast) {
-                        localStorage.setItem("toast", JSON.stringify(data.payload.toast));
-                    }
-                    location.reload();
-                } else {
-                    if (data.payload?.toast) {
-                        showToast(data.payload.toast[0], data.payload.toast[1]);
-                    }
-                    if (data.content) {
-                        $('*[data-mod="content"]').html(data.content);
-                    }
+                if (data.payload?.toast) {
+                    localStorage.setItem("toast", JSON.stringify(data.payload.toast));
                 }
+                location.reload();
             },
             dataType: 'json'
         });
     }
+
 });
 
