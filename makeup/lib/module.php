@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace makeUp\lib;
 
@@ -76,7 +76,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Creates an object as long the user has permission to access the module
+	 * Creates an object of a module.
 	 * @param mixed $modName
 	 * @param mixed $force
 	 * @return mixed
@@ -121,9 +121,9 @@ abstract class Module {
 		}
 	}
 
-	protected function setRender(string $r = "") : void
+	protected function setRender(string $render = "") : void
 	{
-		$this->render = $r;
+		$this->render = $render;
 	}
 
 	protected function getRender() : string
