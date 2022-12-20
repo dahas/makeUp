@@ -3,6 +3,7 @@
 /.sass-cache/
 
 /makeup/modules/test/
+/makeup/users.txt
 
 /public/node_modules/
 /node_modules/
