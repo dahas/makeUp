@@ -14,3 +14,4 @@
 makeup/.phpunit.result.cache
 
 node_modules
+makeup/users.txt
