@@ -92,7 +92,7 @@ class Authentication extends Module {
         $navigation = Module::create("navigation", "html")->build();
         $route = Session::get("route");
         $routeMod = Module::create($route, "html");
-        $content = !$routeMod->accessDenied ? $routeMod->build() : Module::create("index", "html")->build();
+        $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("index", "html")->build();
         array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLoginForm()]);
         array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
         array_push($segments, ["dataMod" => "content", "html" => $content]);

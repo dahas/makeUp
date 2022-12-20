@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "index",   // module name
+                "--mod", "skincare",   // module name
                 "--task", "",       // task name
                 "--render", "",     // Output switch ("html" (default) or "json")
                 "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)

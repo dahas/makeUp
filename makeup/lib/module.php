@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace makeUp\lib;
 
@@ -10,7 +10,8 @@ abstract class Module {
 	private $className = "";
 	protected $modName = "";
 	protected $render = "";
-	public $accessDenied = false;
+	protected $protected = 0;
+	protected $history_caching = true;
 	protected static $isLoggedIn = false;
 
 	public function __construct()
@@ -55,7 +56,7 @@ abstract class Module {
 		// Parameter "render" is optional
 		$render = RQ::GET('render') ?: "html";
 
-		if(RQ::GET('mod') && !RQ::GET('task')) {
+		if (RQ::GET('mod') && !RQ::GET('task')) {
 			Session::set("route", RQ::GET("mod"));
 		}
 
@@ -94,6 +95,9 @@ abstract class Module {
 			$module = new $className();
 			$module->injectServices();
 			$module->setRender($render);
+			$module->setProtected($protected);
+			if ($protected)
+				$module->setHistCaching(false);
 			if (RQ::GET('task') && $render != "html") {
 				$task = RQ::GET('task');
 				die($module->$task());
@@ -118,14 +122,34 @@ abstract class Module {
 		}
 	}
 
-	protected function setRender(string $render = "") : void
+	protected function setRender(string $render = ""): void
 	{
 		$this->render = $render;
 	}
 
-	protected function getRender() : string
+	protected function getRender(): string
 	{
 		return $this->render;
+	}
+
+	protected function setProtected(int $protected = 0): void
+	{
+		$this->protected = $protected;
+	}
+
+	protected function isProtected(): int
+	{
+		return $this->protected;
+	}
+
+	protected function setHistCaching(bool $caching): void
+	{
+		$this->history_caching = $caching;
+	}
+
+	protected function getHistoryCaching(): bool
+	{
+		return $this->history_caching;
 	}
 
 	abstract protected function build(): string;
@@ -141,43 +165,39 @@ abstract class Module {
 		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->getRender() == "html")
 			return $html;
 		else
-			return $this->renderJSON($html, "content");
+			return $this->renderJSON($html);
 	}
 
 	/**
 	 * Returns meta data of a page as a JSON Object.
 	 * @param string $html HTML content if no $dataMod is set as target.
-	 * @param string $dataMod Name of the module that should be replaced with $html.
-	 * @param array  $payload Can be what ever you require. 
-	 * @param string $content HTML you want to appear in the content section.
 	 * @return string JSON Object
 	 */
-	protected function renderJSON(string $html = "", string $dataMod = "", array $payload = [], string $content = ""): string
+	protected function renderJSON(string $html = ""): string
 	{
-		$toJson = [
+		return json_encode([
 			"title" => Config::get("page_settings", "title"),
+			"caching" => $this->getHistoryCaching(),
 			"module" => $this->modName,
 			"content" => $html
-		];
-
-		return json_encode($toJson);
+		]);
 	}
 
-	protected function setLogin(string $un) : void
+	protected function setLogin(string $un): void
 	{
 		Session::set("logged_in", true);
-        Session::set("user", $un);
+		Session::set("user", $un);
 	}
 
-	public static function checkLogin() : bool
+	public static function checkLogin(): bool
 	{
 		return self::$isLoggedIn;
 	}
 
-	protected function setLogout() : void
+	protected function setLogout(): void
 	{
 		Session::set("logged_in", false);
-        Session::set(Session::get("user"), null);
+		Session::set(Session::get("user"), null);
 	}
 
 	public function __call(string $method, mixed $args): string
@@ -190,9 +210,11 @@ abstract class Module {
 class ErrorMod {
 
 	public function __construct(
-		private $modName, 
+		private $modName,
 		private $force = ""
-	) {}
+	)
+	{
+	}
 
 	public function build(): string
 	{
@@ -203,24 +225,30 @@ class ErrorMod {
 		} else {
 			return json_encode([
 				"title" => "Error!",
+				"caching" => true,
 				"module" => $this->modName,
-				"payload" => [],
-				"segment" => [],
 				"content" => $html
 			]);
 		}
+	}
+
+	public function __call(string $name, array $arguments ) : void
+	{
+
 	}
 }
 
 
 class AccessDeniedMod {
 
-	public $accessDenied = true;
+	private $protected = 1;
 
 	public function __construct(
-		private $modName, 
+		private $modName,
 		private $force = ""
-	) {}
+	)
+	{
+	}
 
 	public function build()
 	{
@@ -231,11 +259,15 @@ class AccessDeniedMod {
 		} else {
 			return json_encode([
 				"title" => "Access denied!",
+				"caching" => false,
 				"module" => $this->modName,
-				"payload" => [],
-				"segment" => [],
 				"content" => $html
 			]);
 		}
+	}
+
+	public function isProtected(): int
+	{
+		return $this->protected;
 	}
 }

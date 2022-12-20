@@ -24,7 +24,7 @@ $(document).ready(() => {
         if (mod) {
             $(this).blur();
             $('nav li a.active').removeClass('active');
-            let state = { path: uri, title: '', content: '' };
+            let state = { path: uri, caching: true, title: '', content: '' };
             loadContent(state)
             history.pushState(state, mod, uri);
         }
@@ -35,7 +35,7 @@ $(document).ready(() => {
             let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
-        } else if (state.content== '') {
+        } else if (state.content == ''  || state.caching == false) {
             let data = await requestData(state.path);
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
@@ -62,7 +62,8 @@ $(document).ready(() => {
                 content: "Sorry! Something has gone wrong :("
             };
         }).done(data => {
-            state = { path: path, title: data.title, content: data.content };
+            console.log("data", data);
+            state = { path: path, caching: data.caching, title: data.title, content: data.content };
             history.replaceState(state, data.module, path);
             $('*[data-mod="content"]').html(data.content);
             $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
