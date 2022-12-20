@@ -20,10 +20,13 @@ $(document).ready(() => {
 
     let rewriting = getAttachedParameter("rw");
 
-    setRoute = (mod, uri) => {
+    setRoute = (obj, mod, uri) => {
         if (mod) {
             $(this).blur();
-            $('nav li a.active').removeClass('active');
+            if (obj) {
+                $('nav.navbar a.active').removeClass('active');
+                $(obj).addClass('active');
+            }
             let state = { path: uri, caching: true, title: '', content: '' };
             loadContent(state)
             history.pushState(state, mod, uri);
@@ -32,7 +35,7 @@ $(document).ready(() => {
 
     loadContent = async state => {
         if (!state) {
-            let data = await requestData(rewriting == 1 ? 'index/' : '?mod=index');
+            let data = await requestData(rewriting == 1 ? '/index/' : '?mod=index');
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
         } else if (state.content == ''  || state.caching == false) {
@@ -53,7 +56,7 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: rewriting == 1 ? '/json/' + path : path + '&render=json',
+            url: rewriting == 1 ? '/json' + path : path + '&render=json',
             dataType: 'json'
         }).fail(() => {
             state = {

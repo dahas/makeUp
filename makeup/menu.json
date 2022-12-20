@@ -19,8 +19,7 @@
             },
             {
                 "text": "Men",
-                "module": "perfumemen",
-                "protected": 1
+                "module": "perfumemen"
             },
             {
                 "text": "Women",
