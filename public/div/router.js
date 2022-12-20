@@ -24,7 +24,7 @@ $(document).ready(() => {
         if (mod) {
             $(this).blur();
             $('nav li a.active').removeClass('active');
-            let state = { path: uri, segment: { dataMod: 'content', html: '' }, title: '', content: '' };
+            let state = { path: uri, title: '', content: '' };
             loadContent(state)
             history.pushState(state, mod, uri);
         }
@@ -33,24 +33,15 @@ $(document).ready(() => {
     loadContent = async state => {
         if (!state) {
             let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
-            $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-            if (data.content) {
-                $('*[data-mod="content"]').html(data.content);
-            }
+            $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
-        } else if (state.segment.html == '') {
+        } else if (state.content== '') {
             let data = await requestData(state.path);
-            $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-            if (data.content) {
-                $('*[data-mod="content"]').html(data.content);
-            }
+            $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
         } else {
             $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS, () => {
-                $('*[data-mod="' + state.segment.dataMod + '"]').html(state.segment.html);
-                if (state.content) {
-                    $('*[data-mod="content"]').html(state.content);
-                }
+                $('*[data-mod="content"]').html(state.content);
                 $(document).prop('title', state.title);
                 $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
             });
@@ -67,16 +58,13 @@ $(document).ready(() => {
         }).fail(() => {
             state = {
                 path: path,
-                segments: [],
                 title: "Error!",
                 content: "Sorry! Something has gone wrong :("
             };
         }).done(data => {
-            state = { path: path, segment: data.segment, title: data.title, content: data.content };
+            state = { path: path, title: data.title, content: data.content };
             history.replaceState(state, data.module, path);
-            if (data.content) {
-                $('*[data-mod="content"]').html(data.content);
-            }
+            $('*[data-mod="content"]').html(data.content);
             $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
         });
         return state;

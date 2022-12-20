@@ -107,25 +107,25 @@ class Tools
         return $link;
     }
 
-    public static function createFormToken(): string
+    public static function createFormToken(string $name): string
     {
         $expSecs = 5; // Token expires after this amount of seconds
         $timestamp = time();
-        if ($timestamp >= Session::get("form_token_expires")) {
+        if ($timestamp >= Session::get($name . "_token_expires")) {
             $token = sha1($timestamp . random_int(1000, 9999));
-            Session::set("form_token", $token);
-            Session::set("form_token_expires", $timestamp + $expSecs);
+            Session::set($name . "_token", $token);
+            Session::set($name . "_token_expires", $timestamp + $expSecs);
             return $token;
         } else {
-            return Session::get("form_token");
+            return Session::get($name . "_token");
         }
     }
 
-    public static function checkFormToken(string $token): bool
+    public static function checkFormToken(string $name, string $token): bool
     {
-        $valid = $token == Session::get("form_token");
-        if (time() >= Session::get("form_token_expires")) {
-            Session::clear("form_token");
+        $valid = $token == Session::get($name . "_token");
+        if (time() >= Session::get($name . "_token_expires")) {
+            Session::clear($name . "_token");
         }
         return $valid;
     }

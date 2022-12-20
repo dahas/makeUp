@@ -30,7 +30,7 @@ class Authentication extends Module {
         return $this->getTemplate("authentication.login.html")->parse([
             "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
             "[[REGISTER_LINK]]" => Tools::linkBuilder("authentication"),
-            "[[TOKEN]]" => Tools::createFormToken()
+            "[[TOKEN]]" => Tools::createFormToken("auth")
         ]);
     }
 
@@ -38,8 +38,7 @@ class Authentication extends Module {
     private function buildLogoutForm(): string
     {
         return $this->getTemplate("authentication.logout.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
-            "[[TOKEN]]" => Tools::createFormToken()
+            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout")
         ]);
     }
 
@@ -47,7 +46,7 @@ class Authentication extends Module {
     private function buildRegistrationForm(): string
     {
         if (!Module::checkLogin()) {
-            $token = Tools::createFormToken();
+            $token = Tools::createFormToken("reg");
 
             $html = $this->getTemplate("authentication.register.html")->parse([
                 "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "register"),
@@ -119,7 +118,7 @@ class Authentication extends Module {
         $hash = $userData[1];
         $validPw = password_verify($pw, $hash);
         fclose($file);
-        return Tools::checkFormToken($token) && $username === $un && $validPw;
+        return Tools::checkFormToken("auth", $token) && $username === $un && $validPw;
     }
 
 
@@ -128,7 +127,7 @@ class Authentication extends Module {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('reg_token')) && RQ::POST('username') && RQ::POST('password')) {
+        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken("reg", RQ::POST('reg_token')) && RQ::POST('username') && RQ::POST('password')) {
             $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);

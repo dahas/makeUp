@@ -157,16 +157,8 @@ abstract class Module {
 		$toJson = [
 			"title" => Config::get("page_settings", "title"),
 			"module" => $this->modName,
-			"payload" => $payload,
-			"segment" => [],
-			"content" => $content
+			"content" => $html
 		];
-
-		if ($dataMod && $html) {
-			$toJson['segment'] = ["dataMod" => $dataMod, "html" => $html];
-		} else if ((!$dataMod && $html && !$content)) {
-			$toJson['content'] = $html;
-		}
 
 		return json_encode($toJson);
 	}
