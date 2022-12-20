@@ -29,21 +29,13 @@ abstract class Module {
 
 		// Debugging:
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
-			$idxMod = array_search('--mod', $_SERVER['argv']);
-			if ($idxMod > 0)
-				$_GET['mod'] = $_SERVER['argv'][$idxMod + 1];
+			for ($n = 0; $n < $_SERVER['argc']; $n++) {
+				if (str_contains($_SERVER['argv'][$n], "--")) {
+					$_GET[substr($_SERVER['argv'][$n], 2)] = $_SERVER['argv'][$n + 1];
+				}
+			}
 
-			$idxTask = array_search('--task', $_SERVER['argv']);
-			if ($idxTask > 0)
-				$_GET['task'] = $_SERVER['argv'][$idxTask + 1];
-
-			$idxRender = array_search('--render', $_SERVER['argv']);
-			if ($idxRender > 0)
-				$_GET['render'] = $_SERVER['argv'][$idxRender + 1];
-
-			$idxAuth = array_search('--auth', $_SERVER['argv']);
-			if ($idxAuth > 0)
-				self::$isLoggedIn = intval($_SERVER['argv'][$idxAuth + 1]) == 1;
+			self::$isLoggedIn = isset($_GET['auth']) && $_GET['auth'] > 0;
 
 			RQ::init();
 		} else {
@@ -144,18 +136,18 @@ abstract class Module {
 		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->getRender() == "html")
 			return $html;
 		else
-			return $this->renderJSON("content", $html);
+			return $this->renderJSON($html, "content");
 	}
 
 	/**
 	 * Returns meta data of a page as a JSON Object.
+	 * @param string $html HTML content if no $dataMod is set as target.
 	 * @param string $dataMod Name of the module that should be replaced with $html.
-	 * @param string $html The HTML used by $dataMod.
 	 * @param array  $payload Can be what ever you require. 
 	 * @param string $content HTML you want to appear in the content section.
 	 * @return string JSON Object
 	 */
-	protected function renderJSON(string $dataMod = "", string $html = "", array $payload = [], string $content = ""): string
+	protected function renderJSON(string $html = "", string $dataMod = "", array $payload = [], string $content = ""): string
 	{
 		$toJson = [
 			"title" => Config::get("page_settings", "title"),
@@ -167,6 +159,8 @@ abstract class Module {
 
 		if ($dataMod && $html) {
 			$toJson['segment'] = ["dataMod" => $dataMod, "html" => $html];
+		} else if ((!$dataMod && $html && !$content)) {
+			$toJson['content'] = $html;
 		}
 
 		return json_encode($toJson);

@@ -7,10 +7,11 @@
             "request": "launch",
             "program": "${workspaceRoot}\\public\\index.php",
             "args": [
-                "--mod", "skincare",   // module name
+                "--mod", "index",   // module name
                 "--task", "",       // task name
                 "--render", "",     // Output switch ("html" (default) or "json")
-                "--auth", "1"       // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
+                "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
+                "--uid", "3"
             ],
             "externalConsole": false,
             "port": 9003

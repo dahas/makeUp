@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Config;
 use makeUp\lib\Lang;
 use makeUp\lib\Module;
 use makeUp\lib\RQ;
@@ -18,31 +19,28 @@ class Authentication extends Module {
     {
         $html = match ($variant) {
             default => $this->buildRegistrationForm(),
-            "form" => $this->buildSignInOutForm()
+            "form" => Module::checkLogin() ? $this->buildLogoutForm() : $this->buildLoginForm()
         };
         return $this->render($html);
     }
 
 
-    private function buildSignInOutForm(): string
+    private function buildLoginForm(): string
     {
-        $template = "authentication.login.html";
-        $token = Tools::createFormToken();
+        return $this->getTemplate("authentication.login.html")->parse([
+            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
+            "[[REGISTER_LINK]]" => Tools::linkBuilder("authentication"),
+            "[[TOKEN]]" => Tools::createFormToken()
+        ]);
+    }
 
-        if (Module::checkLogin()) {
-            $html = $this->getTemplate($template)->getSlice("{{SIGNOUT}}")->parse([
-                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
-                "[[TOKEN]]" => $token
-            ]);
-        } else {
-            $html = $this->getTemplate($template)->getSlice("{{SIGNIN}}")->parse([
-                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
-                "[[REGISTER_LINK]]" => Tools::linkBuilder("authentication"),
-                "[[TOKEN]]" => $token
-            ]);
-        }
 
-        return $html;
+    private function buildLogoutForm(): string
+    {
+        return $this->getTemplate("authentication.logout.html")->parse([
+            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout"),
+            "[[TOKEN]]" => Tools::createFormToken()
+        ]);
     }
 
 
@@ -50,7 +48,7 @@ class Authentication extends Module {
     {
         if (!Module::checkLogin()) {
             $token = Tools::createFormToken();
-    
+
             $html = $this->getTemplate("authentication.register.html")->parse([
                 "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "register"),
                 "[[TOKEN]]" => $token
@@ -66,19 +64,35 @@ class Authentication extends Module {
 
     public function signin()
     {
+        // $sss = Module::create("index")->build();
+        $segments = [];
         if ($this->authorized(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
             $this->setLogin(RQ::POST('username'));
-            $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
-            return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_in')]]);
+            $toast = ["success", Lang::get('signed_in')];
+            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLogoutForm()]);
+            // array_push($segments, ["dataMod" => "content", "html" => Module::create(RQ::GET("mod"))->build()]);
+        } else {
+            $toast = ["error", Lang::get('login_failed')];
         }
-        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["error", Lang::get('login_failed')]]);
+
+        return json_encode([
+            "title" => Config::get("page_settings", "title"),
+            "module" => "authentication",
+            "toast" => $toast,
+            "segments" => $segments
+        ]);
     }
 
 
     public function signout()
     {
         $this->setLogout();
-        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => ["success", Lang::get('signed_out')]]);
+        return json_encode([
+            "title" => Config::get("page_settings", "title"),
+            "module" => "authentication",
+            "toast" => ["success", Lang::get('signed_out')],
+            "segments" => [["dataMod" => "authentication", "html" => $this->buildLoginForm()]]
+        ]);
     }
 
 
@@ -90,7 +104,7 @@ class Authentication extends Module {
 
         if (!$userData)
             return false;
-        
+
         $username = $userData[0];
         $hash = $userData[1];
         $validPw = password_verify($pw, $hash);
@@ -112,16 +126,24 @@ class Authentication extends Module {
             $response = "success";
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
             $content = $this->getTemplate("authentication.signup.html")->parse($m);
+            $html = $this->buildLogoutForm();
         } else {
             $response = "error";
             $content = "";
+            $html = $this->buildLoginForm();
         }
         fclose($file);
-        return $this->renderJSON("authentication", $this->buildSignInOutForm(), ["toast" => [$response, Lang::get($response)]], $content);
+        return json_encode([
+            "title" => Config::get("page_settings", "title"),
+            "module" => "authentication",
+            "toast" => [$response, Lang::get($response)],
+            "segment" => ["dataMod" => "authentication", "html" => $html],
+            "content" => $content
+        ]);
     }
 
 
-    private function userExists($file, string $username) : array|false
+    private function userExists($file, string $username): array |false
     {
         if ($file) {
             while (($line = fgets($file, 4096)) !== FALSE) {
