@@ -32,7 +32,7 @@ $(document).ready(() => {
 
     loadContent = async state => {
         if (!state) {
-            let data = await requestData(rewriting == 1 ? 'index.html' : '?mod=index');
+            let data = await requestData(rewriting == 1 ? 'index/' : '?mod=index');
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
         } else if (state.content == ''  || state.caching == false) {
