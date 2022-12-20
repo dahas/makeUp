@@ -62,7 +62,6 @@ $(document).ready(() => {
                 content: "Sorry! Something has gone wrong :("
             };
         }).done(data => {
-            console.log("data", data);
             state = { path: path, caching: data.caching, title: data.title, content: data.content };
             history.replaceState(state, data.module, path);
             $('*[data-mod="content"]').html(data.content);
