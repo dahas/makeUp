@@ -108,7 +108,10 @@ class Authentication extends Module {
     public function authorized(string $token, string $un, string $pw): bool
     {
         $docRoot = dirname(__DIR__, 3);
-        $file = fopen($docRoot . "/users.txt", "r");
+        $file = @fopen($docRoot . "/users.txt", "r");
+        if (!$file)
+            return false;
+
         $userData = $this->userExists($file, $un);
 
         if (!$userData)
