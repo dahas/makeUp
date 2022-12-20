@@ -65,7 +65,7 @@ class Authentication extends Module {
     public function signin()
     {
         $segments = [];
-        if ($this->authorized(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
+        if ($this->authorized(RQ::POST('login_token'), RQ::POST('username'), RQ::POST('password'))) {
             $this->setLogin(RQ::POST('username'));
             $toast = ["success", Lang::get('signed_in')];
             $navigation = Module::create("navigation", "html")->build();
@@ -128,7 +128,7 @@ class Authentication extends Module {
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('token')) && RQ::POST('username') && RQ::POST('password')) {
+        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken(RQ::POST('reg_token')) && RQ::POST('username') && RQ::POST('password')) {
             $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);
@@ -147,8 +147,10 @@ class Authentication extends Module {
             "title" => Config::get("page_settings", "title"),
             "module" => "authentication",
             "toast" => [$response, Lang::get($response)],
-            "segment" => ["dataMod" => "authentication", "html" => $html],
-            "content" => $content
+            "segments" => [
+                ["dataMod" => "authentication", "html" => $html],
+                ["dataMod" => "content", "html" => $content]
+            ]
         ]);
     }
 

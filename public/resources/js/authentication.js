@@ -7,7 +7,6 @@ $(document).ready(() => {
             url: path,
             data: $('form[name="'+formName+'"]').serialize(),
             success: data => {
-                console.log(data);
                 data.segments.forEach(segment => {
                     $('*[data-mod="' + segment.dataMod + '"]').html(segment.html);
                 })
