@@ -10,6 +10,7 @@ abstract class Module {
 	private $className = "";
 	protected $modName = "";
 	protected $render = "";
+	public $accessDenied = false;
 	protected static $isLoggedIn = false;
 
 	public function __construct()
@@ -54,6 +55,10 @@ abstract class Module {
 		// Parameter "render" is optional
 		$render = RQ::GET('render') ?: "html";
 
+		if(RQ::GET('mod') && !RQ::GET('task')) {
+			Session::set("route", RQ::GET("mod"));
+		}
+
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
 		if ($render == "json") {
 			Config::init($modName);
@@ -70,10 +75,10 @@ abstract class Module {
 	/**
 	 * Creates an object of a module.
 	 * @param mixed $modName
-	 * @param mixed $force
+	 * @param mixed $render
 	 * @return mixed
 	 */
-	public static function create(string $modName, string $force = ""): mixed
+	public static function create(string $modName, string $render = ""): mixed
 	{
 		$modFile = dirname(__DIR__, 1) . "/modules/$modName/controller/$modName.php";
 
@@ -81,21 +86,21 @@ abstract class Module {
 			$modConfig = Tools::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
 			if ($protected && !Module::checkLogin())
-				return new AccessDeniedMod($modName, $force);
+				return new AccessDeniedMod($modName, $render);
 
 			$className = Tools::upperCamelCase($modName);
 
 			require_once $modFile;
 			$module = new $className();
 			$module->injectServices();
-			$module->setRender($force);
-			if (RQ::GET('task')) {
+			$module->setRender($render);
+			if (RQ::GET('task') && $render != "html") {
 				$task = RQ::GET('task');
 				die($module->$task());
 			}
 			return $module;
 		} else {
-			return new ErrorMod($modName, $force);
+			return new ErrorMod($modName, $render);
 		}
 	}
 
@@ -217,6 +222,9 @@ class ErrorMod {
 
 
 class AccessDeniedMod {
+
+	public $accessDenied = true;
+
 	public function __construct(
 		private $modName, 
 		private $force = ""

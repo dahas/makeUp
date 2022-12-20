@@ -64,13 +64,15 @@ class Authentication extends Module {
 
     public function signin()
     {
-        // $sss = Module::create("index")->build();
         $segments = [];
         if ($this->authorized(RQ::POST('token'), RQ::POST('username'), RQ::POST('password'))) {
             $this->setLogin(RQ::POST('username'));
             $toast = ["success", Lang::get('signed_in')];
+            $navigation = Module::create("navigation", "html")->build();
+            $content = Module::create(Session::get("route"), "html")->build();
             array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLogoutForm()]);
-            // array_push($segments, ["dataMod" => "content", "html" => Module::create(RQ::GET("mod"))->build()]);
+            array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
+            array_push($segments, ["dataMod" => "content", "html" => $content]);
         } else {
             $toast = ["error", Lang::get('login_failed')];
         }
@@ -86,12 +88,20 @@ class Authentication extends Module {
 
     public function signout()
     {
+        $segments = [];
         $this->setLogout();
+        $navigation = Module::create("navigation", "html")->build();
+        $route = Session::get("route");
+        $routeMod = Module::create($route, "html");
+        $content = !$routeMod->accessDenied ? $routeMod->build() : Module::create("index", "html")->build();
+        array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLoginForm()]);
+        array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
+        array_push($segments, ["dataMod" => "content", "html" => $content]);
         return json_encode([
             "title" => Config::get("page_settings", "title"),
             "module" => "authentication",
             "toast" => ["success", Lang::get('signed_out')],
-            "segments" => [["dataMod" => "authentication", "html" => $this->buildLoginForm()]]
+            "segments" => $segments
         ]);
     }
 
