@@ -124,6 +124,7 @@ class Authentication extends Module {
 
     public function register()
     {
+        $segments = [];
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
@@ -134,22 +135,21 @@ class Authentication extends Module {
             Session::set("user", RQ::POST('username'));
             $response = "success";
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
-            $content = $this->getTemplate("authentication.signup.html")->parse($m);
-            $html = $this->buildLogoutForm();
+            $navigation = Module::create("navigation", "html")->build();
+            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLogoutForm()]);
+            array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
+            array_push($segments, ["dataMod" => "content", "html" => $this->getTemplate("authentication.signup.html")->parse($m)]);
         } else {
             $response = "error";
-            $content = "";
-            $html = $this->buildLoginForm();
+            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLoginForm()]);
         }
         fclose($file);
+
         return json_encode([
             "title" => Config::get("page_settings", "title"),
             "module" => "authentication",
             "toast" => [$response, Lang::get($response)],
-            "segments" => [
-                ["dataMod" => "authentication", "html" => $html],
-                ["dataMod" => "content", "html" => $content]
-            ]
+            "segments" => $segments
         ]);
     }
 
