@@ -6,8 +6,7 @@ use makeUp\lib\Routing;
 use makeUp\lib\Tools;
 
 
-class Navigation extends Module
-{
+class Navigation extends Module {
     public function __construct()
     {
         parent::__construct();
@@ -19,14 +18,10 @@ class Navigation extends Module
 
         // Init slices:
         $menuNoSubSlice = $mainTmpl->getSlice("{{MENU_NO_SUB}}");
-        $s["{{MENU_NO_SUB}}"] = "";
         $menuHasSubSlice = $mainTmpl->getSlice("{{MENU_HAS_SUB}}");
-        $s["{{MENU_HAS_SUB}}"] = "";
         $icon = $mainTmpl->getSlice("{{OI_ICON}}");
-        $s["{{OI_ICON}}"] = "";
 
-        $m = [];
-        $m["[[MENU_ITEMS]]"] = "";
+        $html = "";
 
         $routing = Routing::getConfig();
 
@@ -34,7 +29,7 @@ class Navigation extends Module
             // Main menu:
             if (!isset($data->submenu)) {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
-                    $m["[[MENU_ITEMS]]"] .= $menuNoSubSlice->parse([
+                    $html .= $menuNoSubSlice->parse([
                         "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
                         "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
@@ -48,7 +43,7 @@ class Navigation extends Module
             // With submenu:
             else {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
-                    $m["[[MENU_ITEMS]]"] .= $menuHasSubSlice->parse([
+                    $html .= $menuHasSubSlice->parse([
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
                         "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, @$data->task) : "",
                         "[[TEXT]]" => $data->text,
@@ -61,7 +56,7 @@ class Navigation extends Module
             }
         }
 
-        return $mainTmpl->parse($m, $s);
+        return $html;
     }
 
     private function submenu($data): string
@@ -123,7 +118,7 @@ class Navigation extends Module
                             "[[NAME]]" => @$subData->icon
                         ]) : ""
                     ];
-    
+
                     // Main menu:
                     if (!isset($subData->submenu)) {
                         $ss[$sliceMarker] .= $subMenuNoSubSlice->parse($markers);
