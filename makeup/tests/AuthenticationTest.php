@@ -21,7 +21,7 @@ class AuthenticationTest extends TestCase
 
     public function testAuthenticate()
     {
-        $token = Tools::createFormToken();
+        $token = Tools::createFormToken("auth");
         $this->assertTrue($this->auth->authorized($token, 'user', 'pass'));
         $this->assertFalse($this->auth->authorized($token, 'user', 'asdfg'));
         $this->assertFalse($this->auth->authorized($token, 'qwert', 'pass'));
