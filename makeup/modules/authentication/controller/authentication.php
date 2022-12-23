@@ -28,7 +28,7 @@ class Authentication extends Module {
     private function buildLoginForm(): string
     {
         return $this->getTemplate("authentication.login.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signin"),
+            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "signin"]),
             "[[REGISTER_LINK]]" => Tools::linkBuilder("authentication"),
             "[[TOKEN]]" => Tools::createFormToken("auth")
         ]);
@@ -38,7 +38,7 @@ class Authentication extends Module {
     private function buildLogoutForm(): string
     {
         return $this->getTemplate("authentication.logout.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "signout")
+            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "signout"])
         ]);
     }
 
@@ -49,7 +49,7 @@ class Authentication extends Module {
             $token = Tools::createFormToken("reg");
 
             $html = $this->getTemplate("authentication.register.html")->parse([
-                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, "register"),
+                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "register"]),
                 "[[TOKEN]]" => $token
             ]);
         } else {

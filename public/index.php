@@ -14,7 +14,7 @@ require dirname(__DIR__, 1) . "/makeup/vendor/autoload.php";
 ## SET FOR DEBUGGER. COMMENT OUT IN BROWSER! ##
 ## ----------------------------------------- ##
 if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0) {
-    $_SERVER['REQUEST_URI'] = "/skincare?render=json";
+    $_SERVER['REQUEST_URI'] = "/test?task=delete&uid=3";
     // $_SERVER['REQUEST_URI'] = "/index";
     $_SERVER['REQUEST_METHOD'] = "GET";
     $_POST['user'] = "Test data";

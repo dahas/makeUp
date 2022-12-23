@@ -1,10 +1,9 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace makeUp\lib;
 
 
-class Tools
-{
+class Tools {
     private static $bodyOnload = '';
     private static $debugArr = [];
     private static $tokenArr = [];
@@ -91,14 +90,11 @@ class Tools
         return $languages;
     }
 
-    public static function linkBuilder(string $mod = "", string|null $task = "", array $query = [], string $render = "json"): string
+    public static function linkBuilder(string $mod, array $query = []): string
     {
-        if (!$mod)
-            $mod = RQ::get("mod");
+        $link = "/$mod";
+        $link .= !empty($query) ? "?" . http_build_query($query) : "";
 
-        $link = $task ? "/$mod?render=$render&task=$task" : "/$mod";
-        $link .= !empty($query) ? "&" . http_build_query($query) : "";
-        
         return $link;
     }
 
@@ -125,32 +121,32 @@ class Tools
         return $valid;
     }
 
-    public static function setBodyOnload($value) : void
+    public static function setBodyOnload($value): void
     {
         self::$bodyOnload .= $value;
     }
 
-    public static function getBodyOnload() : string
+    public static function getBodyOnload(): string
     {
         return self::$bodyOnload;
     }
 
-    public static function errorMessage(string $msg) : string
+    public static function errorMessage(string $msg): string
     {
         return '<span style="font-size: 12px; font-weight: bold; color: red;">' . $msg . '</span>';
     }
 
-    public static function upperCamelCase(string $input, string $separator = '_') : string
+    public static function upperCamelCase(string $input, string $separator = '_'): string
     {
         return str_replace($separator, '', ucwords($input, $separator));
     }
 
-    public static function lowerCamelCase(string $input, string $separator = '_') : string
+    public static function lowerCamelCase(string $input, string $separator = '_'): string
     {
         return str_replace($separator, '', lcfirst(ucwords($input, $separator)));
     }
 
-    public static function camelCaseToUnderscore(string $input) : string
+    public static function camelCaseToUnderscore(string $input): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $input));
     }
@@ -175,7 +171,7 @@ class Tools
         return $array1;
     }
 
-    public static function debug(string $val = "") : void
+    public static function debug(string $val = ""): void
     {
         if (Config::get("app_settings", "dev_mode")) {
             $bt = debug_backtrace();
@@ -190,7 +186,7 @@ class Tools
         }
     }
 
-    public static function renderDebugPanel() : string
+    public static function renderDebugPanel(): string
     {
         $html = "";
         Cookie::read("__sys_makeup__");

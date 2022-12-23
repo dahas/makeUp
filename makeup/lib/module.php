@@ -6,7 +6,7 @@ use ReflectionClass;
 
 
 abstract class Module {
-	protected static array $arguments = [];
+	private static array $arguments = [];
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
@@ -57,14 +57,18 @@ abstract class Module {
         $class = ucfirst(self::getModName());
 		$modName = $class ?: Config::get("app_settings", "default_module");
 
+		$render = isset($params['render']) ? $params['render'] : "html";
+
 		if (!isset($params['task'])) {
+			$task = "build";
 			Session::set("route", $modName);
+		} else {
+			$task = $params['task'];
 		}
 
-		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
-		if (isset($params['render']) && $params['render'] == "json") {
+		if ($render == "json" || $task != "build") {
 			Config::init($modName);
-			$appHtml = Module::create($modName, "json")->build();
+			$appHtml = Module::create($modName, $render)->$task();
 		} else {
 			$html = $this->build();
 			$debugPanel = Tools::renderDebugPanel();

@@ -9,7 +9,7 @@ $(document).ready(() => {
             obj.children[0].className = "fa-solid fa-spinner fa-spin-pulse";
             $.ajax({
                 type: 'GET',
-                url: "?mod=test&task=delete&uid=" + uid,
+                url: "/test?task=delete&uid=" + uid,
                 dataType: 'json'
             }).done(data => {
                 console.log(data.success);

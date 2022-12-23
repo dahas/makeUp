@@ -33,7 +33,6 @@ class LanguageSelector extends Module
         foreach ($suppLangs as $code => $name) {
             $sm = [];
             $sm["[[ACTIVE]]"] = $code == $current ? "active" : "";
-            // $sm["[[LINK]]"] = Tools::linkBuilder($this->modName, "change_language", ["referer" => RQ::get("mod"), "lang_code" => $code]);
             $sm["[[CC]]"] = $code;
             $sm["[[LANG_NAME]]"] = $name;
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
