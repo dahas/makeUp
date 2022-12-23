@@ -12,6 +12,7 @@
         "app_created_success": "Mache als nächstes eine geführte Tour und erfahre, wie Du <b><a href='https://github.com/dahas/makeup2/wiki/02.-Creating-and-using-modules' target='_blank'>die App mit Modulen erweitern</a></b> kannst"
     },
     "authentication": {
+        "auth_title": "Jetzt registrieren!",
         "login_failed": "Anmeldung fehlgeschlagen! Bitte überprüfe Deinen Benutzernamen und Dein Passwort.",
         "signed_in": "Du hast Dich erfolgreich angemeldet!",
         "signed_out": "Du wurdest erfolgreich ausgeloggt!",

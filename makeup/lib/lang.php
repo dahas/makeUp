@@ -10,7 +10,7 @@ class Lang {
     public static function init()
     {
         if (empty(self::$strings)) {
-            $appLang = Tools::getTranslation();
+            $appLang = Utils::getTranslation();
         } else {
             $appLang = self::$strings;
         }

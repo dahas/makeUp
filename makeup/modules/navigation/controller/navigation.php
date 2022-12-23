@@ -1,9 +1,8 @@
 <?php
 
 use makeUp\lib\Module;
-use makeUp\lib\RQ;
-use makeUp\lib\Routing;
-use makeUp\lib\Tools;
+use makeUp\lib\Menu;
+use makeUp\lib\Utils;
 
 
 class Navigation extends Module {
@@ -14,6 +13,7 @@ class Navigation extends Module {
 
     public function build(): string
     {
+        $modName = Module::getModName();
         $mainTmpl = $this->getTemplate();
 
         // Init slices:
@@ -23,9 +23,9 @@ class Navigation extends Module {
 
         $html = "";
 
-        $routing = Routing::getConfig();
+        $menuConf = Menu::getConfig();
 
-        foreach ($routing as $data) {
+        foreach ($menuConf as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
@@ -34,9 +34,9 @@ class Navigation extends Module {
                         array_push($query, ["task" => @$data->task]);
                     }
                     $html .= $menuNoSubSlice->parse([
-                        "[[ACTIVE]]" => RQ::GET("mod") == @$data->module ? "active" : "",
+                        "[[ACTIVE]]" => $modName == @$data->module ? "active" : "",
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                        "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, $query) : "",
+                        "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, $query) : "",
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
@@ -53,12 +53,12 @@ class Navigation extends Module {
                     }
                     $html .= $menuHasSubSlice->parse([
                         "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                        "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, $query) : "",
+                        "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, $query) : "",
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
                         ]) : "",
-                        "[[SUBMENU]]" => $this->submenu($data)
+                        "[[SUBMENU]]" => $this->submenu($data, $modName)
                     ]);
                 }
             }
@@ -67,7 +67,7 @@ class Navigation extends Module {
         return $html;
     }
 
-    private function submenu($data): string
+    private function submenu($data, string $modName): string
     {
         $subMenuTmpl = $this->getTemplate("navigation.sub.html");
 
@@ -92,8 +92,8 @@ class Navigation extends Module {
                     }
                 $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
                     "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                    "[[LINK]]" => @$data->module ? Tools::linkBuilder(@$data->module, $query) : "",
-                    "[[ACTIVE]]" => @$data->module == RQ::get("mod") ? "active" : "",
+                    "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, $query) : "",
+                    "[[ACTIVE]]" => @$data->module == $modName ? "active" : "",
                     "[[TEXT]]" => $data->text,
                     "[[ICON]]" => ""
                 ]);
@@ -127,8 +127,8 @@ class Navigation extends Module {
                     }
                     $markers = [
                         "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
-                        "[[LINK]]" => @$subData->module ? Tools::linkBuilder(@$subData->module, $query) : "",
-                        "[[ACTIVE]]" => @$subData->module == RQ::get("mod") ? "active" : "",
+                        "[[LINK]]" => @$subData->module ? Utils::linkBuilder(@$subData->module, $query) : "",
+                        "[[ACTIVE]]" => @$subData->module == $modName ? "active" : "",
                         "[[TEXT]]" => $subData->text,
                         "[[ICON]]" => @$subData->icon ? $icon->parse([
                             "[[NAME]]" => @$subData->icon
@@ -141,7 +141,7 @@ class Navigation extends Module {
                     }
                     // With submenu:
                     else {
-                        $markers["[[SUBMENU]]"] = $this->submenu($subData);
+                        $markers["[[SUBMENU]]"] = $this->submenu($subData, $modName);
                         $ss[$sliceMarker] .= $subMenuHasSubSlice->parse($markers);
                     }
                 }

@@ -1,9 +1,7 @@
 <?php
 
 use makeUp\lib\Module;
-use makeUp\lib\RQ;
-use makeUp\lib\Tools;
-use makeUp\lib\Template;
+use makeUp\lib\Utils;
 use makeUp\lib\Cookie;
 use makeUp\lib\Session;
 
@@ -21,8 +19,8 @@ class LanguageSelector extends Module
         $m = [];
         $s = [];
 
-        $suppLangs = Tools::getSupportedLanguages();
-        $current = Cookie::get("lang_code") ?? Tools::getUserLanguageCode();
+        $suppLangs = Utils::getSupportedLanguages();
+        $current = Cookie::get("lang_code") ?? Utils::getUserLanguageCode();
 
         $m["[[CURRENT_LANGUAGE]]"] = $suppLangs[$current];
 
@@ -44,7 +42,8 @@ class LanguageSelector extends Module
 
     public function change() : string
     {
-        Cookie::set("lang_code", RQ::GET("cc"));
+        $params = Module::getParameters();
+        Cookie::set("lang_code", $params["cc"]);
         Session::clear("translation"); // String resources must be renewed in the session
         return json_encode(['result' => 1]);
     }

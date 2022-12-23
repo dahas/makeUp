@@ -5,7 +5,7 @@ namespace makeUp\lib;
 use makeUp\lib\Session;
 
 
-class Routing 
+class Menu 
 {
     public static function getConfig() : array
     {

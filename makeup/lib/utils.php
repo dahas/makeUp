@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Tools {
+class Utils {
     private static $bodyOnload = '';
     private static $debugArr = [];
     private static $tokenArr = [];

@@ -5,12 +5,15 @@ namespace makeUp\lib;
 
 class Config
 {
+    private static $modName = array();
     private static $config = array();
 
-    public static function init($moduleFileName = "app")
+    public static function init($modName = "app")
     {
+        self::$modName = $modName;
+
         if (empty(self::$config)) {
-            $appConfig = Tools::loadIniFile();
+            $appConfig = Utils::loadIniFile();
             $appConfig['additional_css_files']['screen'] = self::setCssFilesPath($appConfig, 'screen');
             $appConfig['additional_css_files']['print'] = self::setCssFilesPath($appConfig, 'print');
             $appConfig['additional_js_files_head']['js'] = self::setJsFilesPath($appConfig, 'head');
@@ -19,13 +22,13 @@ class Config
             $appConfig = self::$config;
         }
 
-        if ($moduleFileName != "app") {
-            if ($modConfig = Tools::loadIniFile($moduleFileName)) {
+        if ($modName != "app") {
+            if ($modConfig = Utils::loadIniFile($modName)) {
                 $modConfig['additional_css_files']['screen'] = self::setCssFilesPath($modConfig, 'screen');
                 $modConfig['additional_css_files']['print'] = self::setCssFilesPath($modConfig, 'print');
                 $modConfig['additional_js_files_head']['js'] = self::setJsFilesPath($modConfig, 'head');
                 $modConfig['additional_js_files_body']['js'] = self::setJsFilesPath($modConfig, 'body');
-                $appConfig = Tools::arrayMerge($appConfig, $modConfig);
+                $appConfig = Utils::arrayMerge($appConfig, $modConfig);
             }
         } 
         
@@ -60,8 +63,7 @@ class Config
         $pos = strpos($arg, "*");
         if ($pos !== false && $pos == 0) {
             $string = str_replace("*", "", $arg);
-            $modName = RQ::get("mod") && RQ::get("mod") != self::$config['app_settings']['default_module'] ? RQ::get("mod") : "app";
-            if (!$arg = Lang::get($modName, $string))
+            if (!$arg = Lang::get(self::$modName, $string))
                 $arg = Lang::get("app", $string);
         }
         return $arg;

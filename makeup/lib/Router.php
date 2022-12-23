@@ -2,11 +2,7 @@
 
 namespace makeUp\lib;
 
-use makeUp\lib\traits\Utils;
-
 class Router {
-
-    use Utils;
 
     private array $handler;
     private const GET = "GET";
@@ -14,7 +10,6 @@ class Router {
 
 
     /**
-     * **get()**
      * Execute callable function when the specific path is set as a GET request.
      * @param string $path
      * @param callable|array $callback
@@ -28,7 +23,6 @@ class Router {
 
 
     /**
-     * **post()**
      * Execute callable function when the specific path is set as a POST request.
      * @param string $path
      * @param callable|array $callback
@@ -41,6 +35,13 @@ class Router {
     }
 
 
+    /**
+     * Add callback to handler.
+     * @param string $method
+     * @param string $path
+     * @param callable|array $callback
+     * @return void
+     */
     private function addHandler(string $method, string $path, callable |array $callback): void
     {
         $this->handler = [
@@ -53,12 +54,18 @@ class Router {
 
     /**
      * Run the callback handlers
-     * @return string HTML
      */
     public function run(): void
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI']);
+        // Debugging:
+        if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
+            $method = parse_url($_SERVER['argv'][4]);
+            $uri = parse_url($_SERVER['argv'][2]);
+        } else {
+            $method = $_SERVER['REQUEST_METHOD'];
+            $uri = parse_url($_SERVER['REQUEST_URI']);
+        }
+
         $path = $uri['path'];
         $query = [];
         if (isset($uri['query']) && $uri['query']) {
@@ -80,4 +87,38 @@ class Router {
             "parameters" => array_merge($query, $formData)
         ]]);
     }
+
+
+    /**
+     * Sanitizing GET variables.
+     * @param array $query
+     * @return array
+     */
+    public function parseQuery(array $query): array
+    {
+        return array_map('self::filterInput', $query);
+    }
+
+
+    /**
+     * Sanitizing POST variables.
+     * @param array $formData
+     * @return array
+     */
+    public function parseFormData(array $formData): array
+    {
+        return array_map('self::filterInput', $formData);
+    }
+
+
+    /**
+     * Applies Filter.
+     * @param mixed $input
+     * @return string
+     */
+    private static function filterInput($input): string
+    {
+        return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
 }

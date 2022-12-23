@@ -2,11 +2,12 @@
 
 namespace makeUp\lib;
 
+use makeUp\lib\exceptions\FileNotFoundException;
 use ReflectionClass;
 
 
 abstract class Module {
-	private static array $arguments = [];
+	protected static array $arguments = [];
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
@@ -19,12 +20,11 @@ abstract class Module {
 	{
 		$modNsArr = explode("\\", get_class($this));
 		$this->className = array_pop($modNsArr);
-		$this->modName = Tools::camelCaseToUnderscore($this->className);
+		$this->modName = Utils::camelCaseToUnderscore($this->className);
 
 		// Order matters!
 		Session::start(); // 1st
 		Config::init($this->modName); // 2nd
-		RQ::init(); // 3rd
 		Lang::init(); // 4th
 
 		if (Config::get("cookie", "name"))
@@ -32,15 +32,7 @@ abstract class Module {
 
 		// Debugging:
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
-			for ($n = 0; $n < $_SERVER['argc']; $n++) {
-				if (str_contains($_SERVER['argv'][$n], "--")) {
-					$_GET[substr($_SERVER['argv'][$n], 2)] = $_SERVER['argv'][$n + 1];
-				}
-			}
-
-			self::$isLoggedIn = isset($_GET['auth']) && $_GET['auth'] > 0;
-
-			RQ::init();
+			self::$isLoggedIn = isset($_SERVER['argv'][8]) && $_SERVER['argv'][8] > 0;
 		} else {
 			self::$isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
 		}
@@ -54,7 +46,7 @@ abstract class Module {
 		$this->procArguments(func_get_args());
 
 		$params = self::getParameters();
-        $class = ucfirst(self::getModName());
+		$class = ucfirst(self::getModName());
 		$modName = $class ?: Config::get("app_settings", "default_module");
 
 		$render = isset($params['render']) ? $params['render'] : "html";
@@ -71,7 +63,7 @@ abstract class Module {
 			$appHtml = Module::create($modName, $render)->$task();
 		} else {
 			$html = $this->build();
-			$debugPanel = Tools::renderDebugPanel();
+			$debugPanel = Utils::renderDebugPanel();
 			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
 		}
 
@@ -86,16 +78,16 @@ abstract class Module {
 	 */
 	public static function create(string $modName, string $render = "html"): mixed
 	{
-		// $params = Module::getParameters();
+		$params = Module::getParameters();
 		$modFile = dirname(__DIR__, 1) . "/modules/$modName/controller/$modName.php";
 
 		if (is_file($modFile)) {
-			$modConfig = Tools::loadIniFile($modName);
+			$modConfig = Utils::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
 			if ($protected && !Module::checkLogin())
-				return new AccessDeniedMod($modName, $render);
+				return new AccessDeniedMod($modName, $render, $params);
 
-			$className = Tools::upperCamelCase($modName);
+			$className = Utils::upperCamelCase($modName);
 
 			require_once $modFile;
 			$module = new $className();
@@ -104,13 +96,13 @@ abstract class Module {
 			$module->setProtected($protected);
 			if ($protected)
 				$module->setHistCaching(false);
-			if (RQ::GET('task') && $render != "html") {
-				$task = RQ::GET('task');
+			if (isset($params['task']) && $render != "html") {
+				$task = $params['task'];
 				die($module->$task());
 			}
 			return $module;
 		} else {
-			return new ErrorMod($modName, $render);
+			throw new FileNotFoundException($modFile);
 		}
 	}
 
@@ -168,7 +160,8 @@ abstract class Module {
 
 	protected function render(string $html = ""): string
 	{
-		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->getRender() == "html")
+		$params = self::getParameters();
+		if (!isset($params['render']) || $params['render'] == 'html' || $this->getRender() == "html")
 			return $html;
 		else
 			return $this->renderJSON($html);
@@ -190,32 +183,32 @@ abstract class Module {
 	}
 
 	/**
-     * Make GET and POST vars available in Modules.
-     * @param array $args
-     * @return void
-     */
-    protected function procArguments(array $args): void
-    {
-        self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
-    }
+	 * Make GET and POST vars available in Modules.
+	 * @param array $args
+	 * @return void
+	 */
+	protected function procArguments(array $args): void
+	{
+		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
+	}
 
-    /**
-     * Access Name of a Module.
-     * @return string
-     */
-    public static function getModName(): string
-    {
-        return self::$arguments['modules'][0];
-    }
+	/**
+	 * Access Name of a Module.
+	 * @return string
+	 */
+	public static function getModName(): string
+	{
+		return self::$arguments['modules'][0];
+	}
 
-    /**
-     * Access GET and POST vars in Modules.
-     * @return array
-     */
-    public static function getParameters(): array
-    {
-        return self::$arguments['parameters'];
-    }
+	/**
+	 * Access GET and POST vars in Modules.
+	 * @return array
+	 */
+	public static function getParameters(): array
+	{
+		return self::$arguments['parameters'];
+	}
 
 	protected function setLogin(string $un): void
 	{
@@ -236,39 +229,7 @@ abstract class Module {
 
 	public function __call(string $method, mixed $args): string
 	{
-		return Tools::errorMessage("Task $method() not defined!");
-	}
-}
-
-
-class ErrorMod {
-
-	public function __construct(
-		private $modName,
-		private $force = ""
-	)
-	{
-	}
-
-	public function build(): string
-	{
-		$html = Tools::errorMessage("Module '$this->modName' not found!");
-
-		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->force == 'html') {
-			return $html;
-		} else {
-			return json_encode([
-				"title" => "Error!",
-				"caching" => true,
-				"module" => $this->modName,
-				"content" => $html
-			]);
-		}
-	}
-
-	public function __call(string $name, array $arguments ) : void
-	{
-
+		return Utils::errorMessage("Task $method() not defined!");
 	}
 }
 
@@ -279,16 +240,17 @@ class AccessDeniedMod {
 
 	public function __construct(
 		private $modName,
-		private $force = ""
+		private $force = "",
+		private $params = []
 	)
 	{
 	}
 
 	public function build()
 	{
-		$html = Tools::errorMessage("You are not permitted to view this content! Please log in or sign up.");
+		$html = Utils::errorMessage("You are not permitted to view this content! Please log in or sign up.");
 
-		if (!RQ::GET('render') || RQ::GET('render') == 'html' || $this->force == 'html') {
+		if (!isset($this->params['render']) || $this->params['render'] == 'html' || $this->force == "html") {
 			return $html;
 		} else {
 			return json_encode([

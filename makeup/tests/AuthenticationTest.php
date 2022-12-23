@@ -2,7 +2,7 @@
 
 use makeUp\lib\Module;
 use PHPUnit\Framework\TestCase;
-use makeUp\lib\Tools;
+use makeUp\lib\Utils;
 
 class AuthenticationTest extends TestCase
 {
@@ -21,7 +21,7 @@ class AuthenticationTest extends TestCase
 
     public function testAuthenticate()
     {
-        $token = Tools::createFormToken("auth");
+        $token = Utils::createFormToken("auth");
         $this->assertTrue($this->auth->authorized($token, 'user', 'pass'));
         $this->assertFalse($this->auth->authorized($token, 'user', 'asdfg'));
         $this->assertFalse($this->auth->authorized($token, 'qwert', 'pass'));

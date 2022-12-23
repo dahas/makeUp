@@ -3,8 +3,7 @@
 use makeUp\lib\Config;
 use makeUp\lib\Lang;
 use makeUp\lib\Module;
-use makeUp\lib\RQ;
-use makeUp\lib\Tools;
+use makeUp\lib\Utils;
 use makeUp\lib\Session;
 
 
@@ -28,9 +27,9 @@ class Authentication extends Module {
     private function buildLoginForm(): string
     {
         return $this->getTemplate("authentication.login.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "signin"]),
-            "[[REGISTER_LINK]]" => Tools::linkBuilder("authentication"),
-            "[[TOKEN]]" => Tools::createFormToken("auth")
+            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signin"]),
+            "[[REGISTER_LINK]]" => Utils::linkBuilder("authentication"),
+            "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
     }
 
@@ -38,7 +37,7 @@ class Authentication extends Module {
     private function buildLogoutForm(): string
     {
         return $this->getTemplate("authentication.logout.html")->parse([
-            "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "signout"])
+            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signout"])
         ]);
     }
 
@@ -46,10 +45,10 @@ class Authentication extends Module {
     private function buildRegistrationForm(): string
     {
         if (!Module::checkLogin()) {
-            $token = Tools::createFormToken("reg");
+            $token = Utils::createFormToken("reg");
 
             $html = $this->getTemplate("authentication.register.html")->parse([
-                "[[FORM_ACTION]]" => Tools::linkBuilder($this->modName, ["task" => "register"]),
+                "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "register"]),
                 "[[TOKEN]]" => $token
             ]);
         } else {
@@ -63,9 +62,10 @@ class Authentication extends Module {
 
     public function signin()
     {
+        $params = Module::getParameters();
         $segments = [];
-        if ($this->authorized(RQ::POST('login_token'), RQ::POST('username'), RQ::POST('password'))) {
-            $this->setLogin(RQ::POST('username'));
+        if ($this->authorized($params['login_token'], $params['username'], $params['password'])) {
+            $this->setLogin($params['username']);
             $toast = ["success", Lang::get('signed_in')];
             $navigation = Module::create("navigation", "html")->build();
             $content = Module::create(Session::get("route"), "html")->build();
@@ -121,21 +121,23 @@ class Authentication extends Module {
         $hash = $userData[1];
         $validPw = password_verify($pw, $hash);
         fclose($file);
-        return Tools::checkFormToken("auth", $token) && $username === $un && $validPw;
+        return Utils::checkFormToken("auth", $token) && $username === $un && $validPw;
     }
 
 
     public function register()
     {
+        $params = Module::getParameters();
         $segments = [];
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!Module::checkLogin() && !$this->userExists($file, RQ::POST('username')) && Tools::checkFormToken("reg", RQ::POST('reg_token')) && RQ::POST('username') && RQ::POST('password')) {
-            $userdata = RQ::POST('username') . ":" . password_hash(RQ::POST('password'), PASSWORD_BCRYPT) . ":END";
+        if (!Module::checkLogin() && !$this->userExists($file, $params['username']) &&
+            Utils::checkFormToken("reg", $params['reg_token']) && $params['username'] && $params['password']) {
+            $userdata = $params['username'] . ":" . password_hash($params['password'], PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             Session::set("logged_in", true);
-            Session::set("user", RQ::POST('username'));
+            Session::set("user", $params['username']);
             $response = "success";
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
             $navigation = Module::create("navigation", "html")->build();
