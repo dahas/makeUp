@@ -46,8 +46,7 @@ abstract class Module {
 		$this->procArguments(func_get_args());
 
 		$params = self::getParameters();
-		$class = ucfirst(self::getModName());
-		$modName = $class ?: Config::get("app_settings", "default_module");
+		$modName = self::getModName();
 
 		$render = isset($params['render']) ? $params['render'] : "html";
 
@@ -79,7 +78,7 @@ abstract class Module {
 	public static function create(string $modName, string $render = "html"): mixed
 	{
 		$params = Module::getParameters();
-		$modFile = dirname(__DIR__, 1) . "/modules/$modName/controller/$modName.php";
+		$modFile = dirname(__DIR__, 1) . "/app/modules/$modName/$modName.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Utils::loadIniFile($modName);
@@ -198,7 +197,11 @@ abstract class Module {
 	 */
 	public static function getModName(): string
 	{
-		return self::$arguments['modules'][0];
+		if(!empty(self::$arguments['modules'] && self::$arguments['modules'][0])) {
+			return self::$arguments['modules'][0];
+		} else {
+			return Config::get("app_settings", "default_module");
+		}
 	}
 
 	/**

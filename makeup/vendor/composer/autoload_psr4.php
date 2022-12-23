@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'makeUp\\services\\' => array($baseDir . '/services'),
-    'makeUp\\modules\\' => array($baseDir . '/modules'),
     'makeUp\\lib\\' => array($baseDir . '/lib'),
-    'makeUp\\' => array($baseDir . '/app/controller'),
+    'makeUp\\' => array($baseDir . '/app'),
 );

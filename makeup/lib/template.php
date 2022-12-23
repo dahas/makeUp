@@ -20,9 +20,9 @@ class Template
 		$realPath = realpath('');
 
 		if ($modName == "app")
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/app.html";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/modules/$modName/view/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/modules/$modName/$templateFile";
 
 		return new Template($file);
 	}

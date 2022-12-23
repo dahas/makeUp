@@ -15,7 +15,6 @@
 namespace makeUp;
 
 use makeUp\lib\Config;
-use makeUp\lib\Session;
 use makeUp\lib\Template;
 use makeUp\lib\Module;
 use makeUp\lib\Lang;

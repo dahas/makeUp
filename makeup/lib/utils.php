@@ -16,9 +16,9 @@ class Utils {
         $realPath = realpath('');
 
         if (strtolower($modName) == "app")
-            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/config/app.ini";
+            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/app.ini";
         else
-            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/modules/$modName/config/$fileName";
+            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/modules/$modName/$fileName";
 
         if (file_exists($path))
             return parse_ini_file($path, true);
