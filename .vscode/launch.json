@@ -11,7 +11,7 @@
                 "--task", "",       // task name
                 "--render", "",     // Output switch ("html" (default) or "json")
                 "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
-                "--uid", "3"
+                // "--uid", "3"
             ],
             "externalConsole": false,
             "port": 9003
