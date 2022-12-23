@@ -15,10 +15,10 @@
 namespace makeUp;
 
 use makeUp\lib\Config;
+use makeUp\lib\Session;
 use makeUp\lib\Template;
 use makeUp\lib\Module;
 use makeUp\lib\Lang;
-use makeUp\lib\RQ;
 
 class App extends Module
 {
@@ -30,12 +30,11 @@ class App extends Module
 
     protected function build() : string
     {
+        $modName = Module::getModName();
         $m = [];
-
-        $module = RQ::GET('mod');
         
         /**** IMPORTANT: Module with page content must come first! *************/
-        $m["[[CONTENT]]"] = Module::create($module)->build();
+        $m["[[CONTENT]]"] = Module::create($modName)->build();
 
         /**** Parsing the HTML head section ************************************/
 

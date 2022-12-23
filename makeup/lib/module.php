@@ -6,6 +6,7 @@ use ReflectionClass;
 
 
 abstract class Module {
+	protected static array $arguments = [];
 	protected $config = array();
 	private $className = "";
 	protected $modName = "";
@@ -50,20 +51,20 @@ abstract class Module {
 	 */
 	public function execute(): void
 	{
-		// Parameter "mod" is the mandatory module name
-		$modName = RQ::GET('mod') ?: Config::get("app_settings", "default_module");
+		$this->procArguments(func_get_args());
 
-		// Parameter "render" is optional
-		$render = RQ::GET('render') ?: "html";
+		$params = self::getParameters();
+        $class = ucfirst(self::getModName());
+		$modName = $class ?: Config::get("app_settings", "default_module");
 
-		if (RQ::GET('mod') && !RQ::GET('task')) {
-			Session::set("route", RQ::GET("mod"));
+		if (!isset($params['task'])) {
+			Session::set("route", $modName);
 		}
 
 		// With parameter render="json" a module is rendered as an object with metadata and its own slice template only.
-		if ($render == "json") {
+		if (isset($params['render']) && $params['render'] == "json") {
 			Config::init($modName);
-			$appHtml = Module::create($modName)->build();
+			$appHtml = Module::create($modName, "json")->build();
 		} else {
 			$html = $this->build();
 			$debugPanel = Tools::renderDebugPanel();
@@ -79,8 +80,9 @@ abstract class Module {
 	 * @param mixed $render
 	 * @return mixed
 	 */
-	public static function create(string $modName, string $render = ""): mixed
+	public static function create(string $modName, string $render = "html"): mixed
 	{
+		// $params = Module::getParameters();
 		$modFile = dirname(__DIR__, 1) . "/modules/$modName/controller/$modName.php";
 
 		if (is_file($modFile)) {
@@ -182,6 +184,34 @@ abstract class Module {
 			"content" => $html
 		]);
 	}
+
+	/**
+     * Make GET and POST vars available in Modules.
+     * @param array $args
+     * @return void
+     */
+    protected function procArguments(array $args): void
+    {
+        self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
+    }
+
+    /**
+     * Access Name of a Module.
+     * @return string
+     */
+    public static function getModName(): string
+    {
+        return self::$arguments['modules'][0];
+    }
+
+    /**
+     * Access GET and POST vars in Modules.
+     * @return array
+     */
+    public static function getParameters(): array
+    {
+        return self::$arguments['parameters'];
+    }
 
 	protected function setLogin(string $un): void
 	{

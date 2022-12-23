@@ -12,8 +12,9 @@ class Index extends Module
     }
 
 
-    public function build() : string
+    protected function build() : string
     {
+        $params = Module::getParameters();
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
 
         if (Module::checkLogin()) {

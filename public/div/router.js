@@ -3,23 +3,6 @@ $(document).ready(() => {
 
     let fadeDurMS = 200;
 
-    getAttachedParameter = paramter => {
-        let params = $('#mup-router').attr('src').split("?").pop().split("&");
-        let paramsArr = [];
-        for (let j = 0; j < params.length; j++) {
-            let keyVal = params[j].split("=");
-            let key = keyVal[0];
-            let val = keyVal[1];
-            if (key == paramter) {
-                return val;
-            }
-            paramsArr[key] = val[1];
-        }
-        return paramsArr;
-    }
-
-    let rewriting = getAttachedParameter("rw");
-
     setRoute = (obj, mod, uri) => {
         if (mod) {
             $(this).blur();
@@ -35,7 +18,7 @@ $(document).ready(() => {
 
     loadContent = async state => {
         if (!state) {
-            let data = await requestData(rewriting == 1 ? '/index/' : '?mod=index');
+            let data = await requestData('/index');
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
         } else if (state.content == ''  || state.caching == false) {
@@ -56,7 +39,7 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: rewriting == 1 ? '/json' + path : path + '&render=json',
+            url: path + '?render=json',
             dataType: 'json'
         }).fail(() => {
             state = {
