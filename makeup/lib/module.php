@@ -184,7 +184,10 @@ abstract class Module {
 	protected function renderJSON(string $html = ""): string
 	{
 		return json_encode([
+			"protected" => Config::get("mod_settings", "protected"),
 			"title" => Config::get("page_settings", "title"),
+			"metatags" => Config::get("metatags"),
+			"meta_http_equiv" => Config::get("meta_http_equiv"),
 			"caching" => false, // $this->getHistoryCaching(),
 			"module" => $this->modName,
 			"content" => $html
