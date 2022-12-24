@@ -185,7 +185,7 @@ abstract class Module {
 	{
 		return json_encode([
 			"title" => Config::get("page_settings", "title"),
-			"caching" => $this->getHistoryCaching(),
+			"caching" => false, // $this->getHistoryCaching(),
 			"module" => $this->modName,
 			"content" => $html
 		]);
