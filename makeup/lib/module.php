@@ -209,7 +209,7 @@ abstract class Module {
 	 */
 	public static function getModName(): string
 	{
-		if(!empty(self::$arguments['modules'] && self::$arguments['modules'][0])) {
+		if (!empty(self::$arguments['modules'] && self::$arguments['modules'][0])) {
 			return self::$arguments['modules'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
@@ -223,9 +223,13 @@ abstract class Module {
 	 */
 	public static function getParameters(): array
 	{
-		return self::$arguments['parameters'] ?: [];
+		if (!empty(self::$arguments) && isset(self::$arguments['parameters'])) {
+			return self::$arguments['parameters'];
+		} else {
+			return [];
+		}
 	}
-	
+
 
 	protected function setLogin(string $un): void
 	{
