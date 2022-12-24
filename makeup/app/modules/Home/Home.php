@@ -4,15 +4,9 @@ use makeUp\lib\Lang;
 use makeUp\lib\Module;
 
 
-class Home extends Module
-{
-    public function __construct()
-    {
-        parent::__construct();
-    }
+class Home extends Module {
 
-
-    protected function build() : string
+    protected function build(): string
     {
         $params = Module::getParameters();
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");

@@ -6,10 +6,6 @@ use makeUp\lib\Utils;
 
 
 class Navigation extends Module {
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     public function build(): string
     {

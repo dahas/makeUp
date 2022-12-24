@@ -11,12 +11,6 @@ class PerfumeMen extends Module
     // protected $SampleService;
 
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-
     protected function build() : string
     {
         $m["[[MODULE]]"] = $this->modName;

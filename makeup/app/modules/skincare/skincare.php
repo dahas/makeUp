@@ -5,11 +5,6 @@ use makeup\lib\Module;
 
 
 class Skincare extends Module {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
 
     protected function build(): string
     {

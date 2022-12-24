@@ -8,11 +8,6 @@ use makeUp\lib\Session;
 
 
 class Authentication extends Module {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
 
     protected function build(string $variant = ""): string
     {

@@ -6,15 +6,9 @@ use makeUp\lib\Cookie;
 use makeUp\lib\Session;
 
 
-class Language extends Module
-{
-    public function __construct()
-    {
-        parent::__construct();
-    }
+class Language extends Module {
 
-    
-    protected function build() : string
+    protected function build(): string
     {
         $m = [];
         $s = [];
@@ -40,7 +34,7 @@ class Language extends Module
     }
 
 
-    public function change() : string
+    public function change(): string
     {
         $params = Module::getParameters();
         Cookie::set("lang_code", $params["cc"]);
