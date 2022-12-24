@@ -39,7 +39,7 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: path + '?render=json',
+            url: path + '?json',
             dataType: 'json'
         }).fail(() => {
             state = {

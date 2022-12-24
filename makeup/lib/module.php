@@ -39,16 +39,16 @@ abstract class Module {
 	}
 
 	/**
-	 * Run and output the app.
+	 * Compile and output the app as HTML.
 	 */
-	public function execute(): void
+	public function compile(): void
 	{
 		$this->procArguments(func_get_args());
 
 		$params = self::getParameters();
 		$modName = self::getModName();
 
-		$render = isset($params['render']) ? $params['render'] : "html";
+		$render = isset($params['json']) ? "json" : "html";
 
 		if (!isset($params['task'])) {
 			$task = "build";
@@ -160,7 +160,7 @@ abstract class Module {
 	protected function render(string $html = ""): string
 	{
 		$params = self::getParameters();
-		if (!isset($params['render']) || $params['render'] == 'html' || $this->getRender() == "html")
+		if (!isset($params['json']) || $this->getRender() == "html")
 			return $html;
 		else
 			return $this->renderJSON($html);

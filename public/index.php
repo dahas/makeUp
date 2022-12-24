@@ -12,4 +12,4 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === "localhost:2400")
 }
 
 $Router = new Router();
-$Router->get("/", [App::class, "execute"])->run();
+$Router->get("/", [App::class, "compile"])->run();
