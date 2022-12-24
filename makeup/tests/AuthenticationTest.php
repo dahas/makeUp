@@ -10,7 +10,7 @@ class AuthenticationTest extends TestCase
  
     protected function setUp() : void
     {
-        $this->auth = Module::create('authentication');
+        $this->auth = Module::create('Authentication');
     }
  
     protected function tearDown() : void

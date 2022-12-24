@@ -26,9 +26,9 @@ class Authentication extends Module {
 
     private function buildLoginForm(): string
     {
-        return $this->getTemplate("authentication.login.html")->parse([
+        return $this->getTemplate("Authentication.login.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signin"]),
-            "[[REGISTER_LINK]]" => Utils::linkBuilder("authentication"),
+            "[[REGISTER_LINK]]" => Utils::linkBuilder("Authentication"),
             "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
     }
@@ -36,7 +36,7 @@ class Authentication extends Module {
 
     private function buildLogoutForm(): string
     {
-        return $this->getTemplate("authentication.logout.html")->parse([
+        return $this->getTemplate("Authentication.logout.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signout"])
         ]);
     }
@@ -47,12 +47,12 @@ class Authentication extends Module {
         if (!Module::checkLogin()) {
             $token = Utils::createFormToken("reg");
 
-            $html = $this->getTemplate("authentication.register.html")->parse([
+            $html = $this->getTemplate("Authentication.register.html")->parse([
                 "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "register"]),
                 "[[TOKEN]]" => $token
             ]);
         } else {
-            $html = $this->getTemplate("authentication.signup.html")->parse([
+            $html = $this->getTemplate("Authentication.signup.html")->parse([
                 "[[WELCOME_MSG]]" => sprintf(Lang::get("welcome"), Session::get('user'))
             ]);
         }
@@ -67,10 +67,10 @@ class Authentication extends Module {
         if ($this->authorized($params['login_token'], $params['username'], $params['password'])) {
             $this->setLogin($params['username']);
             $toast = ["success", Lang::get('signed_in')];
-            $navigation = Module::create("navigation", "html")->build();
+            $Navigation = Module::create("Navigation", "html")->build();
             $content = Module::create(Session::get("route"), "html")->build();
-            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLogoutForm()]);
-            array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
+            array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
+            array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
             array_push($segments, ["dataMod" => "content", "html" => $content]);
         } else {
             $toast = ["error", Lang::get('login_failed')];
@@ -78,7 +78,7 @@ class Authentication extends Module {
 
         return json_encode([
             "title" => Config::get("page_settings", "title"),
-            "module" => "authentication",
+            "module" => "Authentication",
             "toast" => $toast,
             "segments" => $segments
         ]);
@@ -89,16 +89,16 @@ class Authentication extends Module {
     {
         $segments = [];
         $this->setLogout();
-        $navigation = Module::create("navigation", "html")->build();
+        $Navigation = Module::create("Navigation", "html")->build();
         $route = Session::get("route");
         $routeMod = Module::create($route, "html");
-        $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("index", "html")->build();
-        array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLoginForm()]);
-        array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
+        $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("Home", "html")->build();
+        array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);
+        array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
         array_push($segments, ["dataMod" => "content", "html" => $content]);
         return json_encode([
             "title" => Config::get("page_settings", "title"),
-            "module" => "authentication",
+            "module" => "Authentication",
             "toast" => ["success", Lang::get('signed_out')],
             "segments" => $segments
         ]);
@@ -140,19 +140,19 @@ class Authentication extends Module {
             Session::set("user", $params['username']);
             $response = "success";
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
-            $navigation = Module::create("navigation", "html")->build();
-            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLogoutForm()]);
-            array_push($segments, ["dataMod" => "navigation", "html" => $navigation]);
-            array_push($segments, ["dataMod" => "content", "html" => $this->getTemplate("authentication.signup.html")->parse($m)]);
+            $Navigation = Module::create("Navigation", "html")->build();
+            array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
+            array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
+            array_push($segments, ["dataMod" => "content", "html" => $this->getTemplate("Authentication.signup.html")->parse($m)]);
         } else {
             $response = "error";
-            array_push($segments, ["dataMod" => "authentication", "html" => $this->buildLoginForm()]);
+            array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);
         }
         fclose($file);
 
         return json_encode([
             "title" => Config::get("page_settings", "title"),
-            "module" => "authentication",
+            "module" => "Authentication",
             "toast" => [$response, Lang::get($response)],
             "segments" => $segments
         ]);

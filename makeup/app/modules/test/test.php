@@ -48,7 +48,7 @@ class Test extends Module
             $s["{{SAMPLE_DATA}}"] .= $slice->parse($sm, $ss);
         }
 
-        $html = $this->getTemplate("test.html")->parse($m, $s);
+        $html = $this->getTemplate("Test.html")->parse($m, $s);
         return $this->render($html);
     }
 

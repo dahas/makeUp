@@ -56,9 +56,9 @@ function createTable($config)
 				<?php
 				foreach ($var as $idx => $val) {
 					$debug = "";
-					$pathParts = explode("makeup/", str_replace("\\", "/", $var[$idx]['file']));
+					$pathParts = explode("makeUp/", str_replace("\\", "/", $var[$idx]['file']));
 
-					$path = "makeup/" . $pathParts[1];
+					$path = "makeUp/" . $pathParts[1];
 					$line = $var[$idx]['line'];
 
 					$debug .= '<b>"' . $path . '"</b> <span style="color:red;">[Zeile: ' . $line . ']</span><br/>';

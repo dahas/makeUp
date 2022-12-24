@@ -1,5 +1,5 @@
 {
-    "app": {
+    "App": {
         "head_title": "makeUp - makes Bootstrap a doddle!",
         "title": "Congratulation! :-)",
         "subtitle": "Your app is up and running. To take a quick look below the surface, check out the app folder and its content.",
@@ -8,10 +8,10 @@
         "continue_learning": "Continue with the tour and learn how to <b><a href='https://github.com/dahas/makeUp2/wiki/03.-Connecting-the-database' target='_blank'>connect your module with a database</a></b>",
         "back": "Back"
     },
-    "index": {
+    "Home": {
         "app_created_success": "Make a guided tour next and learn how to <b><a href='https://github.com/dahas/makeup2/wiki/02.-Creating-and-using-modules' target='_blank'>extend your app with modules</a></b>"
     },
-    "authentication": {
+    "Authentication": {
         "auth_title": "Sign up now!",
         "login_failed": "Login failed! Please check your username and password.",
         "signed_in": "You successfully signed in!",

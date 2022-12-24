@@ -12,7 +12,7 @@ use makeUp\lib\ServiceItem;
     key: 'uid', 
     columns: 'uid, name, age, city, country'
 )]
-class Sampledata extends Service
+class SampleData extends Service
 {
     public function __construct()
     {

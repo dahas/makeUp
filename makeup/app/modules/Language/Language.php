@@ -6,7 +6,7 @@ use makeUp\lib\Cookie;
 use makeUp\lib\Session;
 
 
-class LanguageSelector extends Module
+class Language extends Module
 {
     public function __construct()
     {

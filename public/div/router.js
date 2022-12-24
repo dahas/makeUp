@@ -18,10 +18,10 @@ $(document).ready(() => {
 
     loadContent = async state => {
         if (!state) {
-            let data = await requestData('/index');
+            let data = await requestData('/');
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);
-        } else if (state.content == ''  || state.caching == false) {
+        } else if (state.content == '' || state.caching == false) {
             let data = await requestData(state.path);
             $('*[data-mod="content"]').html(data.content);
             $(document).prop('title', data.title);

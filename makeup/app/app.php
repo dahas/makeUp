@@ -1,17 +1,5 @@
 <?php
 
-/*******************************************************************************
- *                         _        _   _                                      *
- *         _ __ ___   __ _| | _____| | | |_ __                                 *
- *        | '_ ` _ \ / _` | |/ / _ \ | | | '_ \                                *
- *        | | | | | | (_| |   <  __/ |_| | |_) |                               *
- *        |_| |_| |_|\__,_|_|\_\___|\___/| .__/                                *
- *                                       |_|                                   *
- *                                                                             *
- *   makeUp is a PHP framework to build a Bootstrap single page application.   *
- *                                                                             * 
- *******************************************************************************/
-
 namespace makeUp;
 
 use makeUp\lib\Config;
@@ -56,9 +44,9 @@ class App extends Module
 
         /**** Parsing the HTML body section ************************************/
 
-        $m["[[NAVIGATION]]"] = Module::create("navigation")->build(); // Adds the menu to the navbar
-        $m["[[AUTHENTICATION]]"] = Module::create("authentication")->build("form"); // Adds the login form to the navbar
-        $m["[[LANGUAGE_SELECTOR]]"] = Module::create("language_selector")->build(); // Adds the language selector to the navbar
+        $m["[[NAVIGATION]]"] = Module::create("Navigation")->build(); // Adds the menu to the navbar
+        $m["[[AUTHENTICATION]]"] = Module::create("Authentication")->build("form"); // Adds the login form to the navbar
+        $m["[[LANGUAGE]]"] = Module::create("Language")->build(); // Adds the language selector to the navbar
         $m["[[SUBTITLE]]"] = Config::get("page_settings", "subtitle");
         $m["[[RW]]"] = Config::get("app_settings", "url_rewriting");
 

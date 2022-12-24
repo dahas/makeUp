@@ -15,14 +15,12 @@ class Template
 
 	public static function load(string $modName, string $templateFile): Template
 	{
-		$modName = Utils::camelCaseToUnderscore($modName);
-
 		$realPath = realpath('');
 
-		if ($modName == "app")
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/app.html";
+		if ($modName == "App")
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeUp/app/App.html";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/modules/$modName/$templateFile";
+			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeUp/app/modules/$modName/$templateFile";
 
 		return new Template($file);
 	}

@@ -69,7 +69,7 @@ class Navigation extends Module {
 
     private function submenu($data, string $modName): string
     {
-        $subMenuTmpl = $this->getTemplate("navigation.sub.html");
+        $subMenuTmpl = $this->getTemplate("Navigation.sub.html");
 
         // Init slices:
         $subMenuNoSubSlice = $subMenuTmpl->getSlice("{{SUBMENU_NO_SUB}}");

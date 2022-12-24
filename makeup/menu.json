@@ -1,7 +1,7 @@
 [
     {
         "text": "Home",
-        "module": "index",
+        "module": "Home",
         "icon": "home"
     },
     {
@@ -9,7 +9,7 @@
         "submenu": [
             {
                 "text": "Skincare",
-                "module": "skincare"
+                "module": "Skincare"
             },
             {
                 "separate": true
@@ -19,17 +19,17 @@
             },
             {
                 "text": "Men",
-                "module": "perfumemen"
+                "module": "PerfumeMen"
             },
             {
-                "text": "Women",
-                "module": "perfume_women"
+                "text": "Missing Module",
+                "module": "PerfumeWomen"
             }
         ]
     },
     {
         "text": "Test",
-        "module": "test",
+        "module": "Test",
         "protected": 1
     }
 ]

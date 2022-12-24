@@ -7,6 +7,7 @@ use ReflectionClass;
 
 
 abstract class Module {
+
 	protected static array $arguments = [];
 	protected $config = array();
 	private $className = "";
@@ -16,11 +17,11 @@ abstract class Module {
 	protected $history_caching = true;
 	protected static $isLoggedIn = false;
 
+
 	public function __construct()
 	{
 		$modNsArr = explode("\\", get_class($this));
-		$this->className = array_pop($modNsArr);
-		$this->modName = Utils::camelCaseToUnderscore($this->className);
+		$this->modName = array_pop($modNsArr);
 
 		// Order matters!
 		Session::start(); // 1st
@@ -37,6 +38,7 @@ abstract class Module {
 			self::$isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
 		}
 	}
+
 
 	/**
 	 * Compile and output the app as HTML.
@@ -68,6 +70,7 @@ abstract class Module {
 
 		die($appHtml);
 	}
+
 
 	/**
 	 * Creates an object of a module.
@@ -105,6 +108,7 @@ abstract class Module {
 		}
 	}
 
+
 	protected function injectServices()
 	{
 		$rc = new ReflectionClass(get_class($this));
@@ -119,6 +123,7 @@ abstract class Module {
 		}
 	}
 
+
 	protected function setRender(string $render = ""): void
 	{
 		$this->render = $render;
@@ -129,6 +134,7 @@ abstract class Module {
 		return $this->render;
 	}
 
+
 	protected function setProtected(int $protected = 0): void
 	{
 		$this->protected = $protected;
@@ -138,6 +144,7 @@ abstract class Module {
 	{
 		return $this->protected;
 	}
+
 
 	protected function setHistCaching(bool $caching): void
 	{
@@ -151,11 +158,13 @@ abstract class Module {
 
 	abstract protected function build(): string;
 
+
 	protected function getTemplate($fileName = ""): Template
 	{
 		$fname = $fileName ? $fileName : $this->modName . ".html";
-		return Template::load($this->className, $fname);
+		return Template::load($this->modName, $fname);
 	}
+
 
 	protected function render(string $html = ""): string
 	{
@@ -165,6 +174,7 @@ abstract class Module {
 		else
 			return $this->renderJSON($html);
 	}
+
 
 	/**
 	 * Returns meta data of a page as a JSON Object.
@@ -181,6 +191,7 @@ abstract class Module {
 		]);
 	}
 
+
 	/**
 	 * Make GET and POST vars available in Modules.
 	 * @param array $args
@@ -190,6 +201,7 @@ abstract class Module {
 	{
 		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
 	}
+
 
 	/**
 	 * Access Name of a Module.
@@ -204,6 +216,7 @@ abstract class Module {
 		}
 	}
 
+
 	/**
 	 * Access GET and POST vars in Modules.
 	 * @return array
@@ -212,6 +225,7 @@ abstract class Module {
 	{
 		return self::$arguments['parameters'];
 	}
+	
 
 	protected function setLogin(string $un): void
 	{
@@ -229,6 +243,7 @@ abstract class Module {
 		Session::set("logged_in", false);
 		Session::set(Session::get("user"), null);
 	}
+
 
 	public function __call(string $method, mixed $args): string
 	{
@@ -253,7 +268,7 @@ class AccessDeniedMod {
 	{
 		$html = Utils::errorMessage("You are not permitted to view this content! Please log in or sign up.");
 
-		if (!isset($this->params['render']) || $this->params['render'] == 'html' || $this->force == "html") {
+		if (!isset($this->params['json']) || $this->force == "html") {
 			return $html;
 		} else {
 			return json_encode([
@@ -264,6 +279,7 @@ class AccessDeniedMod {
 			]);
 		}
 	}
+
 
 	public function isProtected(): int
 	{

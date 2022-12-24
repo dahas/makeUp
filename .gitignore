@@ -2,16 +2,16 @@
 /.idea/
 /.sass-cache/
 
-/makeup/modules/test/
-/makeup/users.txt
+/makeUp/modules/Test/
+/makeUp/users.txt
 
 /public/node_modules/
 /node_modules/
 /public/package-lock.json
 /nbproject/private/
 
-/makeup/.phpunit.result.cache
-makeup/.phpunit.result.cache
+/makeUp/.phpunit.result.cache
+makeUp/.phpunit.result.cache
 
 node_modules
-makeup/users.txt
+makeUp/users.txt

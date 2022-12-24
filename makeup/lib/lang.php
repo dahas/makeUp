@@ -33,20 +33,20 @@ class Lang {
         }
 
         // Is the translated string for the module available?
-        if (isset(self::$strings['translation'][$mod][$string]))
-            return self::$strings['translation'][$mod][$string];
+        if (isset(self::$strings["translation"][$mod][$string]))
+            return self::$strings["translation"][$mod][$string];
 
         // Is the translated string available on a global level?
-        if (isset(self::$strings['translation']['app'][$string]))
-            return self::$strings['translation']['app'][$string];
+        if (isset(self::$strings["translation"]["App"][$string]))
+            return self::$strings["translation"]["App"][$string];
 
         // Is a default string for the module available?
-        if (isset(self::$strings['default'][$mod][$string]))
-            return self::$strings['default'][$mod][$string];
+        if (isset(self::$strings["default"][$mod][$string]))
+            return self::$strings["default"][$mod][$string];
 
         // Is a default string available on a global level?
-        if (isset(self::$strings['default']['app'][$string]))
-            return self::$strings['default']['app'][$string];
+        if (isset(self::$strings["default"]["App"][$string]))
+            return self::$strings["default"]["App"][$string];
 
         return '';
     }

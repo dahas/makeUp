@@ -1,17 +1,17 @@
 {
-    "app": {
+    "App": {
         "head_title": "makeUp - macht Bootstrap zum Kinderspiel!",
         "title": "Herzlichen Glückwunsch! :-)",
-        "subtitle": "Deine App funktioniert. Vielleicht willst Du einen ersten Blick hinter die Kulissen werfen. Schau Dir dazu am besten das 'app' Verzeichnis genauer an.",
+        "subtitle": "Deine App funktioniert. Vielleicht willst Du einen ersten Blick hinter die Kulissen werfen. Schau Dir dazu am besten das 'App' Verzeichnis genauer an.",
         "wiki_button": "Hier geht's zum Wiki &raquo;",
         "module_created_success": "Du hast folgendes Modul erfolgreich erstellt",
         "continue_learning": "Fahre mit der Tour fort und erfahre, wie Du Dein <b><a href='https://github.com/dahas/makeUp2/wiki/03.-Connecting-the-database' target='_blank'>Modul mit einer Datenbank</a></b> verbindest",
         "back": "Zurück"
     },
-    "index": {
+    "Home": {
         "app_created_success": "Mache als nächstes eine geführte Tour und erfahre, wie Du <b><a href='https://github.com/dahas/makeup2/wiki/02.-Creating-and-using-modules' target='_blank'>die App mit Modulen erweitern</a></b> kannst"
     },
-    "authentication": {
+    "Authentication": {
         "auth_title": "Jetzt registrieren!",
         "login_failed": "Anmeldung fehlgeschlagen! Bitte überprüfe Deinen Benutzernamen und Dein Passwort.",
         "signed_in": "Du hast Dich erfolgreich angemeldet!",

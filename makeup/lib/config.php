@@ -8,7 +8,7 @@ class Config
     private static $modName = array();
     private static $config = array();
 
-    public static function init($modName = "app")
+    public static function init($modName = "App")
     {
         self::$modName = $modName;
 
@@ -22,7 +22,7 @@ class Config
             $appConfig = self::$config;
         }
 
-        if ($modName != "app") {
+        if ($modName != "App") {
             if ($modConfig = Utils::loadIniFile($modName)) {
                 $modConfig['additional_css_files']['screen'] = self::setCssFilesPath($modConfig, 'screen');
                 $modConfig['additional_css_files']['print'] = self::setCssFilesPath($modConfig, 'print');
@@ -64,7 +64,7 @@ class Config
         if ($pos !== false && $pos == 0) {
             $string = str_replace("*", "", $arg);
             if (!$arg = Lang::get(self::$modName, $string))
-                $arg = Lang::get("app", $string);
+                $arg = Lang::get("App", $string);
         }
         return $arg;
     }

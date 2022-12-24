@@ -5,7 +5,7 @@ use makeup\lib\Module;
 // use makeUp\lib\attributes\Inject;
 
 
-class Perfumemen extends Module
+class PerfumeMen extends Module
 {
     // #[Inject('Sampledata')]
     // protected $SampleService;
@@ -50,7 +50,7 @@ class Perfumemen extends Module
         //     $s["{{SAMPLE_DATA}}"] .= $slice->parse($sm, $ss);
         // }
 
-        $html = $this->getTemplate("perfumemen.html")->parse($m, $s);
+        $html = $this->getTemplate("PerfumeMen.html")->parse($m, $s);
         return $this->render($html);
     }
 

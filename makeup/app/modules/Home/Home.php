@@ -4,7 +4,7 @@ use makeUp\lib\Lang;
 use makeUp\lib\Module;
 
 
-class Index extends Module
+class Home extends Module
 {
     public function __construct()
     {
