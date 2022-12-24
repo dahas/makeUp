@@ -223,7 +223,7 @@ abstract class Module {
 	 */
 	public static function getParameters(): array
 	{
-		return self::$arguments['parameters'];
+		return self::$arguments['parameters'] ?: [];
 	}
 	
 
