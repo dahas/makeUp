@@ -18,7 +18,7 @@ $(document).ready(() => {
                         showToast(data.payload.toast[0], data.payload.toast[1]);
                     }
                     if (data.content) {
-                        $('*[data-mod="content"]').html(data.content);
+                        $('*[data-mod="App"]').html(data.content);
                     }
                 }
             },

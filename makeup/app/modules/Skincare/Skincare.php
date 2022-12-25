@@ -13,10 +13,12 @@ class Skincare extends Module {
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
-        $testMod = Module::create("Test", "html");
-        if ($testMod->isProtected())
+        $SampleDataMod = Module::create("SampleData");
+        $SampleDataMod->setRender("html");
+        $SampleDataMod->setDataMod("SampleData");
+        if ($SampleDataMod->isProtected())
             $this->setHistCaching(false);
-        $m["[[TEST_MOD]]"] = $testMod->build();
+        $m["[[TEST_MOD]]"] = $SampleDataMod->build();
 
         $html = $this->getTemplate("Skincare.html")->parse($m);
         return $this->render($html);

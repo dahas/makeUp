@@ -62,8 +62,8 @@ class Authentication extends Module {
         if ($this->authorized($params['login_token'], $params['username'], $params['password'])) {
             $this->setLogin($params['username']);
             $toast = ["success", Lang::get('signed_in')];
-            $Navigation = Module::create("Navigation", "html")->build();
-            $content = Module::create(Session::get("route"), "html")->build();
+            $Navigation = Module::create("Navigation")->build();
+            $content = Module::create(Session::get("route"))->build();
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
             array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
             array_push($segments, ["dataMod" => "content", "html" => $content]);

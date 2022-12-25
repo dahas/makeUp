@@ -93,7 +93,7 @@ abstract class Module {
 			$module->setProtected($protected);
 			if ($protected)
 				$module->setHistCaching(false);
-			if (isset($params['task']) && $render != "html") {
+			if (isset($params['task']) && $module->getRender() != "html") {
 				$task = $params['task'];
 				die($module->$task());
 			}
@@ -283,9 +283,7 @@ class AccessDeniedMod {
 		}
 	}
 
-
-	public function isProtected(): int
+	public function __call(string $method, mixed $args): void
 	{
-		return $this->protected;
 	}
 }

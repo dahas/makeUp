@@ -1,6 +1,8 @@
-<!--{{SAMPLE_DATA}}-->
 </br>
-<p><b>[[HEADER]]</b></p>
+<p class="text-success">
+    <a onclick="refresh();"><i class="fa-solid fa-arrows-rotate"></i> Refresh</a> &nbsp;
+    <a onclick="addItem(this, '[[DATA-MOD]]');"><i class="fa-solid fa-circle-plus"></i> Add</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -18,9 +20,11 @@
             <td>[[NAME]]</td>
             <td>[[CITY]]</td>
             <td>[[COUNTRY]]</td>
-            <td><button style="border: none; background: none;" class="text-danger" onclick="deleteItem(this, [[UID]]);"><i class="fa-solid fa-circle-xmark"></i></button></td>
+            <td><button style="border: none; background: none;" class="text-danger"
+                    onclick="deleteItem(this, [[UID]]);">
+                    <i class="fa-solid fa-circle-xmark"></i></button>
+            </td>
         </tr>
         <!--{{ROW}}-->
     </tbody>
 </table>
-<!--{{SAMPLE_DATA}}-->

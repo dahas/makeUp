@@ -8,7 +8,7 @@
         "text": "Products",
         "submenu": [
             {
-                "text": "Skincare",
+                "text": "Skin care",
                 "module": "Skincare"
             },
             {
@@ -18,7 +18,7 @@
                 "header": "Perfume"
             },
             {
-                "text": "Men",
+                "text": "Perfume for Men",
                 "module": "PerfumeMen"
             },
             {
@@ -28,8 +28,8 @@
         ]
     },
     {
-        "text": "Test",
-        "module": "Test",
+        "text": "Sample Data",
+        "module": "SampleData",
         "protected": 1
     }
 ]

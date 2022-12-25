@@ -1,0 +1,76 @@
+<?php
+
+use makeUp\lib\Lang;
+use makeup\lib\Module;
+use makeUp\lib\attributes\Inject;
+
+
+class SampleData extends Module {
+    #[Inject('SampleService')]
+    protected $SampleService;
+
+    private $dataMod = "App";
+
+
+    protected function build(): string
+    {
+        $template = $this->getTemplate("SampleData.html");
+        $this->SampleService->read(where: "deleted=0");
+
+        if ($this->SampleService->count() > 0) {
+            $row = $template->getSlice("{{ROW}}");
+
+            $m["[[DATA-MOD]]"] = $this->getDataMod();
+            $s["{{ROW}}"] = "";
+
+            while ($Data = $this->SampleService->next()) {
+                $sm = [];
+                $sm["[[UID]]"] = $Data->getProperty("uid");
+                $sm["[[NAME]]"] = $Data->getProperty("name");
+                $sm["[[CITY]]"] = $Data->getProperty("city");
+                $sm["[[COUNTRY]]"] = $Data->getProperty("country");
+                $s["{{ROW}}"] .= $row->parse($sm);
+            }
+        }
+
+        $html = $template->parse($m, $s);
+        return $this->render($html);
+    }
+
+
+    public function add(): string
+    {
+        $m = [];
+        $s = [];
+        $template = $this->getTemplate("SampleData.add.html");
+        $html = $template->parse($m, $s);
+
+        return $this->render($html);
+    }
+
+
+    public function delete(): string
+    {
+        $params = Module::getParameters();
+        $Item = $this->SampleService->getByUniqueId($params['uid']);
+        $Item->setProperty("deleted", 1);
+        $update = $Item->update();
+
+        return json_encode([
+            "success" => $update,
+            "uid" => $params['uid']
+        ]);
+    }
+
+
+    public function setDataMod(string $mod): void
+    {
+        $this->dataMod = $mod;
+    }
+
+    public function getDataMod(): string
+    {
+        return $this->dataMod;
+    }
+
+}

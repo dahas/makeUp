@@ -19,23 +19,23 @@ $(document).ready(() => {
     loadContent = async state => {
         if (!state) {
             let data = await requestData('/');
-            $('*[data-mod="content"]').html(data.content);
+            $('*[data-mod="App"]').html(data.content);
             $(document).prop('title', data.title);
         } else if (state.content == '' || state.caching == false) {
             let data = await requestData(state.path);
-            $('*[data-mod="content"]').html(data.content);
+            $('*[data-mod="App"]').html(data.content);
             $(document).prop('title', data.title);
         } else {
-            $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS, () => {
-                $('*[data-mod="content"]').html(state.content);
+            $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS, () => {
+                $('*[data-mod="App"]').html(state.content);
                 $(document).prop('title', state.title);
-                $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
+                $('*[data-mod="App"]').animate({ opacity: 1 }, fadeDurMS);
             });
         }
     }
 
     requestData = async path => {
-        $('*[data-mod="content"]').animate({ opacity: 0 }, fadeDurMS);
+        $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS);
         let state = {};
         await $.ajax({
             type: 'GET',
@@ -50,8 +50,8 @@ $(document).ready(() => {
         }).done(data => {
             state = { path: path, caching: data.caching, title: data.title, content: data.content };
             history.replaceState(state, data.module, path);
-            $('*[data-mod="content"]').html(data.content);
-            $('*[data-mod="content"]').animate({ opacity: 1 }, fadeDurMS);
+            $('*[data-mod="App"]').html(data.content);
+            $('*[data-mod="App"]').animate({ opacity: 1 }, fadeDurMS);
         });
         return state;
     }

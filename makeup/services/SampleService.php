@@ -12,7 +12,7 @@ use makeUp\lib\ServiceItem;
     key: 'uid', 
     columns: 'uid, name, age, city, country'
 )]
-class SampleData extends Service
+class SampleService extends Service
 {
     public function __construct()
     {
@@ -21,7 +21,7 @@ class SampleData extends Service
 }
 
 
-class SampledataItem extends ServiceItem
+class SampleServiceItem extends ServiceItem
 {
 
 }
