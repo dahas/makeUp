@@ -1,0 +1,30 @@
+{
+  "name": "makeup",
+  "version": "2.8.1",
+  "description": "A PHP SPA Framework for Bootstrap Apps",
+  "main": "index.php",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dahas/makeUp.git"
+  },
+  "keywords": [
+    "PHP",
+    "SPA",
+    "Single",
+    "Page",
+    "Application",
+    "Framework",
+    "Bootstrap"
+  ],
+  "author": "Martin J. Wolf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dahas/makeUp/issues"
+  },
+  "homepage": "https://github.com/dahas/makeUp#readme"
+}

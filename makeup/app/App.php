@@ -42,7 +42,11 @@ class App extends Module {
         $m["[[AUTHENTICATION]]"] = Module::create("Authentication")->build("form"); // Adds the login form to the navbar
         $m["[[LANGUAGE]]"] = Module::create("Language")->build(); // Adds the language selector to the navbar
         $m["[[SUBTITLE]]"] = Config::get("page_settings", "subtitle");
-        $m["[[RW]]"] = Config::get("app_settings", "url_rewriting");
+
+        $packageJson = json_decode(file_get_contents("../package.json"), true);
+        
+        $m["[[VERSION_NO]]"] = $packageJson['version'];
+        $m["[[COPYRIGHT_YEAR]]"] = date("Y");
 
         return $this->getTemplate()->parse($m);
     }
