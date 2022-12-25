@@ -43,7 +43,7 @@ class App extends Module {
         $m["[[LANGUAGE]]"] = Module::create("Language")->build(); // Adds the language selector to the navbar
         $m["[[SUBTITLE]]"] = Config::get("page_settings", "subtitle");
 
-        $packageJson = json_decode(file_get_contents("../package.json"), true);
+        $packageJson = json_decode(file_get_contents(dirname(__DIR__, 2) . "/package.json"), true);
         
         $m["[[VERSION_NO]]"] = $packageJson['version'];
         $m["[[COPYRIGHT_YEAR]]"] = date("Y");
