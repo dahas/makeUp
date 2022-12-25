@@ -16,9 +16,9 @@ class Utils {
         $realPath = realpath('');
 
         if ($modName == "App")
-            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeUp/app/App.ini";
+            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/App.ini";
         else
-            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeUp/app/modules/$modName/$fileName";
+            $path = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/modules/$modName/$fileName";
 
         if (file_exists($path))
             return parse_ini_file($path, true);
@@ -30,7 +30,7 @@ class Utils {
     {
         $strings = [];
         $lang = self::getUserLanguageCode();
-        $fpath = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeUp/lang/%s.json";
+        $fpath = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/lang/%s.json";
 
         $path = sprintf($fpath, strtolower($lang));
         $defPath = sprintf($fpath, $default);
@@ -70,7 +70,7 @@ class Utils {
         if (!Config::get("app_settings", "dev_mode") && Session::get("supported_languages")) {
             $languages = Session::get("supported_languages");
         } else {
-            $path = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeUp/lang";
+            $path = str_replace("/public", "", str_replace("\\", "/", realpath(''))) . "/makeup/lang";
             $isoLangs = json_decode(file_get_contents($path . "/_iso.json"), true);
             $langFiles = scandir($path);
 

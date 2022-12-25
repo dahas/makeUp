@@ -15,7 +15,7 @@
 use makeUp\App;
 use makeUp\lib\Router;
 
-require dirname(__DIR__, 1) . "/makeUp/vendor/autoload.php";
+require dirname(__DIR__, 1) . "/makeup/vendor/autoload.php";
 
 if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === "localhost:2400")) {
     error_reporting(E_ALL);
