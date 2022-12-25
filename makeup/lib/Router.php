@@ -9,6 +9,12 @@ class Router {
     private const POST = "POST";
 
 
+    public function __construct()
+    {
+        Session::start();
+    }
+
+
     /**
      * Execute callable function when the specific path is set as a GET request.
      * @param string $path

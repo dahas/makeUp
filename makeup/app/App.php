@@ -7,19 +7,13 @@ use makeUp\lib\Template;
 use makeUp\lib\Module;
 use makeUp\lib\Lang;
 
-class App extends Module
-{
-    public function __construct()
-    {
-        parent::__construct();
-    }
+class App extends Module {
 
-
-    protected function build() : string
+    protected function build(): string
     {
-        $modName = Module::getModName();
+        $modName = Module::getRoute();
         $m = [];
-        
+
         /**** IMPORTANT: Module with page content must come first! *************/
         $m["[[CONTENT]]"] = Module::create($modName)->build();
 
@@ -31,13 +25,13 @@ class App extends Module
         $m["[[CONF_METATAGS]]"] = Template::createMetaTags();
         $m["[[CONF_CSS_FILES]]"] = Template::createStylesheetTags();
         $m["[[CONF_JS_FILES_HEAD]]"] = Template::createJsScriptTagsHead();
-        
+
         $m["[[COOKIE_NAME]]"] = Config::get("cookie", "name") ?: "makeup";
         $m["[[COOKIE_EXP]]"] = Config::get("cookie", "expires_days") ?: 0;
         $m["[[COOKIE_PATH]]"] = Config::get("cookie", "path") ?: "/";
 
         $m["[[CONF_JS_FILES_BODY]]"] = Template::createJsScriptTagsBody();
-        
+
         $m["[[LANG_TITLE]]"] = Lang::get("title");
         $m["[[LANG_SUBTITLE]]"] = Lang::get("subtitle");
         $m["[[LANG_WIKI_BUTTON]]"] = Lang::get("wiki_button");
@@ -52,4 +46,4 @@ class App extends Module
 
         return $this->getTemplate()->parse($m);
     }
-}      
+}

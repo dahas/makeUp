@@ -20,16 +20,14 @@ abstract class Module {
 
 	public function __construct()
 	{
-		$modNsArr = explode("\\", get_class($this));
+		$modNsArr = explode("\\", $this::class);
 		$this->modName = array_pop($modNsArr);
 
 		// Order matters!
-		Session::start(); // 1st
-		Config::init($this->modName); // 2nd
-		Lang::init(); // 4th
-
+		Config::init(self::getRoute()); 
+		Lang::init();
 		if (Config::get("cookie", "name"))
-			Cookie::read(Config::get("cookie", "name")); // 5th
+			Cookie::read(Config::get("cookie", "name"));
 
 		// Debugging:
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
@@ -48,20 +46,19 @@ abstract class Module {
 		$this->procArguments(func_get_args());
 
 		$params = self::getParameters();
-		$modName = self::getModName();
+		$route = self::getRoute();
 
 		$render = isset($params['json']) ? "json" : "html";
 
 		if (!isset($params['task'])) {
 			$task = "build";
-			Session::set("route", $modName);
+			Session::set("route", $route);
 		} else {
 			$task = $params['task'];
 		}
 
 		if ($render == "json" || $task != "build") {
-			Config::init($modName);
-			$appHtml = Module::create($modName, $render)->$task();
+			$appHtml = Module::create($route, $render)->$task();
 		} else {
 			$html = $this->build();
 			$debugPanel = Utils::renderDebugPanel();
@@ -89,10 +86,8 @@ abstract class Module {
 			if ($protected && !Module::checkLogin())
 				return new AccessDeniedMod($modName, $render, $params);
 
-			$className = Utils::upperCamelCase($modName);
-
 			require_once $modFile;
-			$module = new $className();
+			$module = new $modName();
 			$module->injectServices();
 			$module->setRender($render);
 			$module->setProtected($protected);
@@ -210,9 +205,10 @@ abstract class Module {
 	 * Access Name of a Module.
 	 * @return string
 	 */
-	public static function getModName(): string
+	public static function getRoute(): string
 	{
-		if (!empty(self::$arguments['modules'] && self::$arguments['modules'][0])) {
+		if (!empty(self::$arguments) && isset(self::$arguments['modules']) && 
+				isset(self::$arguments['modules'][0]) && self::$arguments['modules'][0]) {
 			return self::$arguments['modules'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
