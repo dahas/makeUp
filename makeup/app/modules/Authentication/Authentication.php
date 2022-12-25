@@ -66,7 +66,7 @@ class Authentication extends Module {
             $content = Module::create(Session::get("route"))->build();
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
             array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
-            array_push($segments, ["dataMod" => "content", "html" => $content]);
+            array_push($segments, ["dataMod" => "App", "html" => $content]);
         } else {
             $toast = ["error", Lang::get('login_failed')];
         }
@@ -84,12 +84,12 @@ class Authentication extends Module {
     {
         $segments = [];
         $this->setLogout();
-        $Navigation = Module::create("Navigation", "html")->build();
-        $routeMod = Module::create(Session::get("route"), "html");
-        $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("Home", "html")->build();
+        $Navigation = Module::create("Navigation")->build();
+        $routeMod = Module::create(Session::get("route"));
+        $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("Home")->build();
         array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);
         array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
-        array_push($segments, ["dataMod" => "content", "html" => $content]);
+        array_push($segments, ["dataMod" => "App", "html" => $content]);
         return json_encode([
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
@@ -134,10 +134,10 @@ class Authentication extends Module {
             Session::set("user", $params['username']);
             $response = "success";
             $m["[[WELCOME_MSG]]"] = sprintf(Lang::get("welcome"), Session::get('user'));
-            $Navigation = Module::create("Navigation", "html")->build();
+            $Navigation = Module::create("Navigation")->build();
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
             array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
-            array_push($segments, ["dataMod" => "content", "html" => $this->getTemplate("Authentication.signup.html")->parse($m)]);
+            array_push($segments, ["dataMod" => "App", "html" => $this->getTemplate("Authentication.signup.html")->parse($m)]);
         } else {
             $response = "error";
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);

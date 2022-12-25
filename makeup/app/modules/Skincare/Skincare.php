@@ -14,7 +14,6 @@ class Skincare extends Module {
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
         $SampleDataMod = Module::create("SampleData");
-        $SampleDataMod->setRender("html");
         $SampleDataMod->setDataMod("SampleData");
         if ($SampleDataMod->isProtected())
             $this->setHistCaching(false);
