@@ -5,9 +5,9 @@
             "name": "makeUp xdebug",
             "type": "php",
             "request": "launch",
-            "program": "${workspaceRoot}\\public\\index.php",
+            "program": "${workspaceRoot}/public/index.php",
             "args": [
-                "--path", "/Authentication?task=signout",   // Route (module name) and query. E.g.: /test?json&var1=123&var2=444
+                "--path", "/",   // Route (module name) and query. E.g.: /test?json&var1=123&var2=444
                 "--method", "GET",   // GET or POST
                 "--post-data", "",           // Form data
                 "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)

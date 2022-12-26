@@ -122,7 +122,7 @@ class Authentication extends Module {
             $response = "error";
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);
         }
-        fclose($file);
+        fclose($file); 
 
         return json_encode([
             "title" => Config::get("page_settings", "title"),

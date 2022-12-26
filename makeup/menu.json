@@ -28,8 +28,8 @@
         ]
     },
     {
-        "text": "Sample Data",
-        "module": "SampleData",
-        "protected": 1
+        "text": "My Test",
+        "module": "Test",
+        "protected": 0
     }
 ]

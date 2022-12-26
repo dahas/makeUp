@@ -1,6 +1,5 @@
 <?php
 
-use makeUp\lib\Lang;
 use makeup\lib\Module;
 use makeUp\lib\attributes\Inject;
 

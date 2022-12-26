@@ -22,7 +22,6 @@ $(document).ready(() => {
                 url: "/SampleData?task=delete&uid=" + uid,
                 dataType: 'json'
             }).done(data => {
-                console.log(data.success);
                 $('#data-' + data.uid).fadeOut(() => {
                     locked = false;
                 });
