@@ -3,6 +3,7 @@
 namespace makeUp\lib;
 
 use makeUp\lib\exceptions\FileNotFoundException;
+use makeUp\lib\AccessDenied;
 use ReflectionClass;
 
 
@@ -13,6 +14,7 @@ abstract class Module {
 	private $className = "";
 	protected $modName = "";
 	protected $render = "";
+	protected $dataMod = "App";
 	protected $protected = 0;
 	protected $history_caching = true;
 	protected static $isLoggedIn = false;
@@ -24,7 +26,7 @@ abstract class Module {
 		$this->modName = array_pop($modNsArr);
 
 		// Order matters!
-		Config::init(self::getRoute()); 
+		Config::init(self::getRoute());
 		Lang::init();
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name"));
@@ -36,6 +38,8 @@ abstract class Module {
 			self::$isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
 		}
 	}
+
+	abstract protected function build(): string;
 
 
 	/**
@@ -57,9 +61,9 @@ abstract class Module {
 			$task = $params['task'];
 		}
 
-		if ($render == "json" || $task != "build") {
-			$appHtml = Module::create($route, $render)->$task();
-		} else {
+		if ($render == "json" || $task != "build") { // Create only the Module
+			$appHtml = self::create($route, $render)->$task();
+		} else { // Create the whole App
 			$html = $this->build();
 			$debugPanel = Utils::renderDebugPanel();
 			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
@@ -73,91 +77,36 @@ abstract class Module {
 	 * Creates an object of a module.
 	 * @param mixed $modName
 	 * @param mixed $render
+	 * @param mixed $dataMod
 	 * @return mixed
 	 */
-	public static function create(string $modName, string $render = "html"): mixed
+	public static function create(string $modName, string $render = "html", bool $useDataMod = false): mixed
 	{
-		$params = Module::getParameters();
+		$params = self::getParameters();
 		$modFile = dirname(__DIR__, 1) . "/app/modules/$modName/$modName.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Utils::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
-			if ($protected && !Module::checkLogin())
-				return new AccessDeniedMod($modName, $render, $params);
-
-			require_once $modFile;
-			$module = new $modName();
-			$module->injectServices();
-			$module->setRender($render);
-			$module->setProtected($protected);
-			if ($protected)
-				$module->setHistCaching(false);
-			if (isset($params['task']) && $module->getRender() != "html") {
-				$task = $params['task'];
-				die($module->$task());
+			if ($protected && !self::checkLogin()) {
+				$module = new AccessDenied();
+				$module->setRender($render);
+			} else {
+				require_once $modFile;
+				$module = new $modName();
+				$module->injectServices();
+				$module->setRender($render);
+				$module->setProtected($protected);
+				if ($useDataMod)
+					$module->setDataMod($modName);
+				if ($protected)
+					$module->setHistCaching(false);
 			}
+
 			return $module;
 		} else {
 			throw new FileNotFoundException($modFile);
 		}
-	}
-
-
-	protected function injectServices()
-	{
-		$rc = new ReflectionClass(get_class($this));
-		$properties = $rc->getProperties();
-		foreach ($properties as $property) {
-			$pName = $property->name;
-			foreach ($property->getAttributes() as $attribute) {
-				$service = $attribute->newInstance()->service;
-				$sName = 'makeUp\\services\\' . $service;
-				$this->$pName = new $sName();
-			}
-		}
-	}
-
-
-	protected function setRender(string $render = ""): void
-	{
-		$this->render = $render;
-	}
-
-	protected function getRender(): string
-	{
-		return $this->render;
-	}
-
-
-	protected function setProtected(int $protected = 0): void
-	{
-		$this->protected = $protected;
-	}
-
-	protected function isProtected(): int
-	{
-		return $this->protected;
-	}
-
-
-	protected function setHistCaching(bool $caching): void
-	{
-		$this->history_caching = $caching;
-	}
-
-	protected function getHistoryCaching(): bool
-	{
-		return $this->history_caching;
-	}
-
-	abstract protected function build(): string;
-
-
-	protected function getTemplate($fileName = ""): Template
-	{
-		$fname = $fileName ? $fileName : $this->modName . ".html";
-		return Template::load($this->modName, $fname);
 	}
 
 
@@ -190,6 +139,72 @@ abstract class Module {
 	}
 
 
+	protected function injectServices()
+	{
+		$rc = new ReflectionClass(get_class($this));
+		$properties = $rc->getProperties();
+		foreach ($properties as $property) {
+			$pName = $property->name;
+			foreach ($property->getAttributes() as $attribute) {
+				$service = $attribute->newInstance()->service;
+				$sName = 'makeUp\\services\\' . $service;
+				$this->$pName = new $sName();
+			}
+		}
+	}
+
+
+	protected function setRender(string $render = ""): void
+	{
+		$this->render = $render;
+	}
+
+	protected function getRender(): string
+	{
+		return $this->render;
+	}
+
+
+	public function setDataMod(string $mod): void
+	{
+		$this->dataMod = $mod;
+	}
+
+	public function getDataMod(): string
+	{
+		return $this->dataMod;
+	}
+
+
+	protected function setProtected(int $protected = 0): void
+	{
+		$this->protected = $protected;
+	}
+
+	protected function isProtected(): int
+	{
+		return $this->protected;
+	}
+
+
+	protected function setHistCaching(bool $caching): void
+	{
+		$this->history_caching = $caching;
+	}
+
+	protected function getHistoryCaching(): bool
+	{
+		return $this->history_caching;
+	}
+
+
+	protected function getTemplate($fileName = ""): Template
+	{
+		$fname = $fileName ? $fileName : $this->modName . ".html";
+		return Template::load($this->modName, $fname);
+	}
+
+
 	/**
 	 * Make GET and POST vars available in Modules.
 	 * @param array $args
@@ -207,8 +222,8 @@ abstract class Module {
 	 */
 	public static function getRoute(): string
 	{
-		if (!empty(self::$arguments) && isset(self::$arguments['modules']) && 
-				isset(self::$arguments['modules'][0]) && self::$arguments['modules'][0]) {
+		if (!empty(self::$arguments) && isset(self::$arguments['modules']) &&
+			isset(self::$arguments['modules'][0]) && self::$arguments['modules'][0]) {
 			return self::$arguments['modules'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
@@ -251,39 +266,5 @@ abstract class Module {
 	public function __call(string $method, mixed $args): string
 	{
 		return Utils::errorMessage("Task $method() not defined!");
-	}
-}
-
-
-class AccessDeniedMod {
-
-	private $protected = 1;
-
-	public function __construct(
-		private $modName,
-		private $force = "",
-		private $params = []
-	)
-	{
-	}
-
-	public function build()
-	{
-		$html = Utils::errorMessage("You are not permitted to view this content! Please log in or sign up.");
-
-		if (!isset($this->params['json']) || $this->force == "html") {
-			return $html;
-		} else {
-			return json_encode([
-				"title" => "Access denied!",
-				"caching" => false,
-				"module" => $this->modName,
-				"content" => $html
-			]);
-		}
-	}
-
-	public function __call(string $method, mixed $args): void
-	{
 	}
 }

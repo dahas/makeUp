@@ -9,8 +9,6 @@ class SampleData extends Module {
     #[Inject('SampleService')]
     protected $SampleService;
 
-    private $dataMod = "App";
-
 
     protected function build(): string
     {
@@ -60,17 +58,6 @@ class SampleData extends Module {
             "success" => $update,
             "uid" => $params['uid']
         ]);
-    }
-
-
-    public function setDataMod(string $mod): void
-    {
-        $this->dataMod = $mod;
-    }
-
-    public function getDataMod(): string
-    {
-        return $this->dataMod;
     }
 
 }

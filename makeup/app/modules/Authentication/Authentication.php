@@ -99,26 +99,6 @@ class Authentication extends Module {
     }
 
 
-    public function authorized(string $token, string $un, string $pw): bool
-    {
-        $docRoot = dirname(__DIR__, 3);
-        $file = @fopen($docRoot . "/users.txt", "r");
-        if (!$file)
-            return false;
-
-        $userData = $this->userExists($file, $un);
-
-        if (!$userData)
-            return false;
-
-        $username = $userData[0];
-        $hash = $userData[1];
-        $validPw = password_verify($pw, $hash);
-        fclose($file);
-        return Utils::checkFormToken("auth", $token) && $username === $un && $validPw;
-    }
-
-
     public function register()
     {
         $params = Module::getParameters();
@@ -150,6 +130,26 @@ class Authentication extends Module {
             "toast" => [$response, Lang::get($response)],
             "segments" => $segments
         ]);
+    }
+
+
+    public function authorized(string $token, string $un, string $pw): bool
+    {
+        $docRoot = dirname(__DIR__, 3);
+        $file = @fopen($docRoot . "/users.txt", "r");
+        if (!$file)
+            return false;
+
+        $userData = $this->userExists($file, $un);
+
+        if (!$userData)
+            return false;
+
+        $username = $userData[0];
+        $hash = $userData[1];
+        $validPw = password_verify($pw, $hash);
+        fclose($file);
+        return Utils::checkFormToken("auth", $token) && $username === $un && $validPw;
     }
 
 

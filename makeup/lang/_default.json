@@ -6,7 +6,8 @@
         "wiki_button": "Visit the documentation wiki &raquo;",
         "module_created_success": "You successfully created the module",
         "continue_learning": "Continue with the tour and learn how to <b><a href='https://github.com/dahas/makeUp2/wiki/03.-Connecting-the-database' target='_blank'>connect your module with a database</a></b>",
-        "back": "Back"
+        "back": "Back",
+        "access_denied": "You are not permitted to view this content! Please log in or sign up."
     },
     "Home": {
         "app_created_success": "Make a guided tour next and learn how to <b><a href='https://github.com/dahas/makeup2/wiki/02.-Creating-and-using-modules' target='_blank'>extend your app with modules</a></b>"
