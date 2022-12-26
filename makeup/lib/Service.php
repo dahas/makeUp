@@ -79,7 +79,7 @@ abstract class Service
 
 	public function count() : int
 	{
-		return $this->recordset->getRecordCount();
+		return $this->recordset ? $this->recordset->getRecordCount() : 0;
 	}
 	
 	public function getByUniqueId(string|int $value) : ?ServiceItem

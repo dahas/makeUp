@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 
 namespace makeUp\lib;
+use mysqli_sql_exception;
 
 
 class DB
@@ -21,9 +22,11 @@ class DB
         $this->pass = Config::get('database', 'password');
         $this->charset = Config::get('database', 'charset');
 
-        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass) or die("Connection to database failed! Supply the mandatory values in app.ini first.");
-        @mysqli_select_db($this->conn, $this->db) or die("Database '$this->db' doesn´t exist!");
-        mysqli_set_charset($this->conn, $this->charset);
+        try {
+            $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
+            @mysqli_select_db($this->conn, $this->db);
+            mysqli_set_charset($this->conn, $this->charset);
+        } catch(mysqli_sql_exception $e) {}
     }
 
     public static function getInstance() : DB
@@ -35,8 +38,12 @@ class DB
         return self::$instance;
     }
 
-    public function select(array $conf) : Recordset
+    public function select(array $conf) : Recordset|false
     {
+        if (!$this->conn) {
+            return false;
+        }
+
         $sql = "SELECT";
         if (isset($conf['columns'])) {
             $sql .= " {$conf['columns']}";
@@ -68,6 +75,10 @@ class DB
 
     public function insert(array $conf) : int
     {
+        if (!$this->conn) {
+            return 0;
+        }
+
         $sql = "INSERT INTO";
         if (isset($conf['into'])) {
             $sql .= " {$conf['into']}";
@@ -96,6 +107,10 @@ class DB
 
     public function update(array $conf) : mixed
     {
+        if (!$this->conn) {
+            return false;
+        }
+
         $sql = "UPDATE";
         if (isset($conf['table'])) {
             $sql .= " {$conf['table']}";
@@ -114,6 +129,10 @@ class DB
 
     public function delete(array $conf) : mixed
     {
+        if (!$this->conn) {
+            return false;
+        }
+        
         $sql = "DELETE FROM";
         if (isset($conf['from'])) {
             $sql .= " {$conf['from']}";

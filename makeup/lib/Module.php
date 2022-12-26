@@ -2,8 +2,8 @@
 
 namespace makeUp\lib;
 
-use makeUp\lib\exceptions\FileNotFoundException;
 use makeUp\lib\AccessDenied;
+use makeUp\lib\RouteNotFound;
 use ReflectionClass;
 
 
@@ -102,11 +102,11 @@ abstract class Module {
 				if ($protected)
 					$module->setHistCaching(false);
 			}
-
-			return $module;
 		} else {
-			throw new FileNotFoundException($modFile);
+			$module = new RouteNotFound();
 		}
+
+		return $module;
 	}
 
 

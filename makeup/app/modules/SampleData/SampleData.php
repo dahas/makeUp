@@ -12,14 +12,16 @@ class SampleData extends Module {
 
     protected function build(): string
     {
+        $m = []; $s = [];
+
         $template = $this->getTemplate("SampleData.html");
         $this->SampleService->read(where: "deleted=0");
 
+        $m["[[DATA-MOD]]"] = $this->getDataMod();
+        $s["{{ROW}}"] = "";
+
         if ($this->SampleService->count() > 0) {
             $row = $template->getSlice("{{ROW}}");
-
-            $m["[[DATA-MOD]]"] = $this->getDataMod();
-            $s["{{ROW}}"] = "";
 
             while ($Data = $this->SampleService->next()) {
                 $sm = [];

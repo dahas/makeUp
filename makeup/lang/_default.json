@@ -7,6 +7,7 @@
         "module_created_success": "You successfully created the module",
         "continue_learning": "Continue with the tour and learn how to <b><a href='https://github.com/dahas/makeUp2/wiki/03.-Connecting-the-database' target='_blank'>connect your module with a database</a></b>",
         "back": "Back",
+        "route_not_found": "Error 404: Page Not Found!",
         "access_denied": "You are not permitted to view this content! Please log in or sign up."
     },
     "Home": {
