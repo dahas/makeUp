@@ -22,7 +22,7 @@ class Authentication extends Module {
     private function buildLoginForm(): string
     {
         return $this->getTemplate("Authentication.login.html")->parse([
-            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signin"]),
+            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signin"),
             "[[REGISTER_LINK]]" => Utils::linkBuilder("Authentication"),
             "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
@@ -32,7 +32,7 @@ class Authentication extends Module {
     private function buildLogoutForm(): string
     {
         return $this->getTemplate("Authentication.logout.html")->parse([
-            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "signout"])
+            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signout")
         ]);
     }
 
@@ -43,7 +43,7 @@ class Authentication extends Module {
             $token = Utils::createFormToken("reg");
 
             $html = $this->getTemplate("Authentication.register.html")->parse([
-                "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, ["task" => "register"]),
+                "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "register"),
                 "[[TOKEN]]" => $token
             ]);
         } else {

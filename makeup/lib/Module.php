@@ -51,15 +51,13 @@ abstract class Module {
 
 		$params = self::getParameters();
 		$route = self::getRoute();
+		$task = self::getTask();
 
 		$render = isset($params['json']) ? "json" : "html";
 
 		if (!isset($params['task'])) {
-			$task = "build";
 			Session::set("route", $route);
-		} else {
-			$task = $params['task'];
-		}
+		} 
 
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($route, $render)->$task();
@@ -225,6 +223,21 @@ abstract class Module {
 			return self::$arguments['route'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
+		}
+	}
+
+
+	/**
+	 * Access Name of a Task.
+	 * @return string
+	 */
+	public static function getTask(): string
+	{
+		if (!empty(self::$arguments) && isset(self::$arguments['route']) &&
+			isset(self::$arguments['route'][1]) && self::$arguments['route'][1]) {
+			return self::$arguments['route'][1];
+		} else {
+			return "build";
 		}
 	}
 

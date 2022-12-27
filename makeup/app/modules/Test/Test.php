@@ -19,4 +19,8 @@ class Test extends Module {
         return $this->render($html);
     }
 
+    protected function doit() {
+        return "DID IT!";
+    }
+
 }

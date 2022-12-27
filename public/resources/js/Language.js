@@ -4,7 +4,7 @@ $(document).ready(() =>
     setLanguage = lang => {
         $.ajax({
             type: 'GET',
-            url: '/Language?task=change&cc=' + lang,
+            url: '/Language/change?cc=' + lang,
             dataType: 'json'
         }).fail()
             .done(data => {

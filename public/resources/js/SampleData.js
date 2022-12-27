@@ -7,7 +7,7 @@ $(document).ready(() => {
             obj.children[0].className = "fa-solid fa-spinner fa-spin-pulse";
             $.ajax({
                 type: 'GET',
-                url: "/SampleData?task=add"
+                url: "/SampleData/add"
             }).done(html => {
                 $('*[data-mod="' + dataMod + '"]').html(html);
             });
@@ -19,7 +19,7 @@ $(document).ready(() => {
             obj.children[0].className = "fa-solid fa-spinner fa-spin-pulse";
             $.ajax({
                 type: 'GET',
-                url: "/SampleData?task=delete&uid=" + uid,
+                url: "/SampleData/delete?uid=" + uid,
                 dataType: 'json'
             }).done(data => {
                 $('#data-' + data.uid).fadeOut(() => {

@@ -88,11 +88,11 @@ class Utils {
         return $languages;
     }
 
-    public static function linkBuilder(string $mod, array $query = []): string
+    public static function linkBuilder(string $mod, mixed $task = null, array $query = []): string
     {
         $link = "/$mod";
+        $link .= $task ? "/$task" : "";
         $link .= !empty($query) ? "?" . http_build_query($query) : "";
-
         return $link;
     }
 
