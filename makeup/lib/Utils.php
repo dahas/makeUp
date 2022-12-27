@@ -4,8 +4,6 @@ namespace makeUp\lib;
 
 
 class Utils {
-    private static $bodyOnload = '';
-    private static $debugArr = [];
     private static $tokenArr = [];
 
     public static function loadIniFile(string $modName = "App", string $fileName = ""): array |false
@@ -121,34 +119,9 @@ class Utils {
         return $valid;
     }
 
-    public static function setBodyOnload($value): void
-    {
-        self::$bodyOnload .= $value;
-    }
-
-    public static function getBodyOnload(): string
-    {
-        return self::$bodyOnload;
-    }
-
     public static function errorMessage(string $msg): string
     {
         return '<span style="font-size: 12px; font-weight: bold; color: red;">' . $msg . '</span>';
-    }
-
-    public static function upperCamelCase(string $input, string $separator = '_'): string
-    {
-        return str_replace($separator, '', ucwords($input, $separator));
-    }
-
-    public static function lowerCamelCase(string $input, string $separator = '_'): string
-    {
-        return str_replace($separator, '', lcfirst(ucwords($input, $separator)));
-    }
-
-    public static function camelCaseToUnderscore(string $input): string
-    {
-        return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $input));
     }
 
     public static function arrayMerge(array $array1, array $array2): mixed
@@ -169,46 +142,6 @@ class Utils {
             }
         }
         return $array1;
-    }
-
-    public static function debug(string $val = ""): void
-    {
-        if (Config::get("app_settings", "dev_mode")) {
-            $bt = debug_backtrace();
-            $caller = array_shift($bt);
-            unset($caller["function"]);
-            unset($caller["class"]);
-            unset($caller["type"]);
-            self::$debugArr[] = $caller;
-            Session::set('_debug', self::$debugArr);
-        } else {
-            Session::clear('_debug');
-        }
-    }
-
-    public static function renderDebugPanel(): string
-    {
-        $html = "";
-        Cookie::read("__sys_makeup__");
-        if (Cookie::get("panel_open") == true) {
-            $dbgHandleIcon = "/div/img/close.png";
-            $dbgHandleDspl = "block";
-        } else {
-            $dbgHandleIcon = "/div/img/open.png";
-            $dbgHandleDspl = "none";
-        }
-        if (Config::get("app_settings", "dev_mode")) {
-            $height = Session::get('_debug') ? 700 : 377;
-            $html = '<script type="text/javascript" src="/div/system.js"></script>
-<div style="position:fixed; bottom:0; right:0; z-index:99999; background: silver; border: 1px solid grey;">
-  <div id="dbg-handle" style="float:left; width: 20px; height: 20px; padding: 0px 4px 4px 3px; cursor: pointer;" title="Debug panel"><img id="dbg-img" style="margin-top:-6px;" src="' . $dbgHandleIcon . '" height="14" /></div>
-  <div id="dbg-frame" style="display:' . $dbgHandleDspl . '; float:right; width:500px;">
-    <iframe src="/div/debug.php" style="width: 100%; height: ' . $height . 'px; border:none;"></iframe>
-  </div>
-</div>';
-        }
-
-        return $html;
     }
 
 }

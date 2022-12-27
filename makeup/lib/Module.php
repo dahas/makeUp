@@ -64,9 +64,7 @@ abstract class Module {
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($route, $render)->$task();
 		} else { // Create the whole App
-			$html = $this->build();
-			$debugPanel = Utils::renderDebugPanel();
-			$appHtml = Template::html($html)->parse(["</body>" => "$debugPanel\n</body>"]);
+			$appHtml = $this->build();
 		}
 
 		die($appHtml);
