@@ -80,16 +80,16 @@ class Router {
         }
         $formData = $this->parseFormData($_POST); // <-- POST vars are filtered and sanitized
 
-        $modules = explode("/", $path);
-        array_shift($modules);
-        if (sizeof($modules) == 1 && !$modules[0])
-            $modules = [];
+        $routeArr = explode("/", $path);
+        array_shift($routeArr);
+        if (sizeof($routeArr) == 1 && !$routeArr[0])
+            $routeArr = [];
 
         $callback = [new $this->handler["callback"][0], $this->handler["callback"][1]];
 
         call_user_func_array($callback, [[
             "method" => $method,
-            "modules" => $modules,
+            "route" => $routeArr,
             "parameters" => array_merge($query, $formData)
         ]]);
     }

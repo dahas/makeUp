@@ -220,9 +220,9 @@ abstract class Module {
 	 */
 	public static function getRoute(): string
 	{
-		if (!empty(self::$arguments) && isset(self::$arguments['modules']) &&
-			isset(self::$arguments['modules'][0]) && self::$arguments['modules'][0]) {
-			return self::$arguments['modules'][0];
+		if (!empty(self::$arguments) && isset(self::$arguments['route']) &&
+			isset(self::$arguments['route'][0]) && self::$arguments['route'][0]) {
+			return self::$arguments['route'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
 		}
