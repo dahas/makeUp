@@ -5,6 +5,7 @@ use makeUp\lib\attributes\Inject;
 
 
 class SampleData extends Module {
+    
     #[Inject('SampleService')]
     protected $SampleService;
 

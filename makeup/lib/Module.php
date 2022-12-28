@@ -16,7 +16,6 @@ abstract class Module {
 	protected $render = "";
 	protected $dataMod = "App";
 	protected $protected = 0;
-	protected $history_caching = true;
 	protected static $isLoggedIn = false;
 
 
@@ -95,8 +94,6 @@ abstract class Module {
 				$module->setProtected($protected);
 				if ($useDataMod)
 					$module->setDataMod($modName);
-				if ($protected)
-					$module->setHistCaching(false);
 			}
 		} else {
 			$module = new RouteNotFound();
@@ -180,17 +177,6 @@ abstract class Module {
 	protected function isProtected(): int
 	{
 		return $this->protected;
-	}
-
-
-	protected function setHistCaching(bool $caching): void
-	{
-		$this->history_caching = $caching;
-	}
-
-	protected function getHistoryCaching(): bool
-	{
-		return $this->history_caching;
 	}
 
 
