@@ -6,6 +6,7 @@ use mysqli_sql_exception;
 
 
 class DB {
+    
     private static $instance = null;
     private $conn = null;
     private $db = "";
