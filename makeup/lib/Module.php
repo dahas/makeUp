@@ -11,8 +11,8 @@ abstract class Module {
 
 	protected static array $arguments = [];
 	protected $config = array();
-	private $className = "";
 	protected $modName = "";
+	protected $route = "";
 	protected $render = "";
 	protected $dataMod = "App";
 	protected $protected = 0;

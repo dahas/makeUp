@@ -1,11 +1,11 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace makeUp\lib;
+
 use mysqli_sql_exception;
 
 
-class DB
-{
+class DB {
     private static $instance = null;
     private $conn = null;
     private $db = "";
@@ -24,12 +24,15 @@ class DB
 
         try {
             $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
-            @mysqli_select_db($this->conn, $this->db);
-            mysqli_set_charset($this->conn, $this->charset);
-        } catch(mysqli_sql_exception $e) {}
+            if ($this->conn) {
+                @mysqli_select_db($this->conn, $this->db);
+                mysqli_set_charset($this->conn, $this->charset);
+            }
+        } catch (mysqli_sql_exception $e) {
+        }
     }
 
-    public static function getInstance() : DB
+    public static function getInstance(): DB
     {
         if (self::$instance == null) {
             self::$instance = new DB();
@@ -38,7 +41,7 @@ class DB
         return self::$instance;
     }
 
-    public function select(array $conf) : Recordset|false
+    public function select(array $conf): Recordset|false
     {
         if (!$this->conn) {
             return false;
@@ -73,7 +76,7 @@ class DB
         return new Recordset($rs);
     }
 
-    public function insert(array $conf) : int
+    public function insert(array $conf): int
     {
         if (!$this->conn) {
             return 0;
@@ -105,7 +108,7 @@ class DB
         return 0;
     }
 
-    public function update(array $conf) : mixed
+    public function update(array $conf): mixed
     {
         if (!$this->conn) {
             return false;
@@ -127,12 +130,12 @@ class DB
         return mysqli_query($this->conn, $sql);
     }
 
-    public function delete(array $conf) : mixed
+    public function delete(array $conf): mixed
     {
         if (!$this->conn) {
             return false;
         }
-        
+
         $sql = "DELETE FROM";
         if (isset($conf['from'])) {
             $sql .= " {$conf['from']}";
@@ -154,8 +157,7 @@ class DB
 
 }
 
-class Recordset
-{
+class Recordset {
     private $recordset = null;
 
     public function __construct(mixed $rs)
@@ -163,17 +165,17 @@ class Recordset
         $this->recordset = $rs;
     }
 
-    public function getRecordCount() : int
+    public function getRecordCount(): int
     {
         return $this->recordset ? mysqli_num_rows($this->recordset) : 0;
     }
 
-    public function reset() : bool
+    public function reset(): bool
     {
         return $this->recordset ? mysqli_data_seek($this->recordset, 0) : false;
     }
 
-    public function next() : mixed
+    public function next(): mixed
     {
         $record = $this->recordset ? mysqli_fetch_object($this->recordset) : null;
         if ($record) {
@@ -196,8 +198,7 @@ class Recordset
  * Class Record
  * @package makeUp\lib
  */
-class Record
-{
+class Record {
     private $record = null;
 
     /**

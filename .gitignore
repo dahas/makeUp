@@ -15,3 +15,6 @@ makeup/.phpunit.result.cache
 
 node_modules
 makeup/users.txt
+
+/package-lock.json
+package-lock.json
