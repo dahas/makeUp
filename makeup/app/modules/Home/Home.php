@@ -8,7 +8,7 @@ class Home extends Module {
 
     protected function build(): string
     {
-        $params = Module::getParameters();
+        $params = Module::requestData();
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
 
         if (Module::checkLogin()) {

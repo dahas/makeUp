@@ -8,7 +8,7 @@ class Test extends Module {
 
     protected function build() : string
     {
-        $params = Module::getParameters(); // Use this method to retrieve sanitized GET and POST data.
+        $params = Module::requestData(); // Use this method to retrieve sanitized GET and POST data.
 
         $m["[[MODULE]]"] = $this->modName;
 

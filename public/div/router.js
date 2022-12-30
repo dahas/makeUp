@@ -30,7 +30,10 @@ $(document).ready(() => {
         await $.ajax({
             type: 'GET',
             url: path + '?json',
-            dataType: 'json'
+            dataType: 'json',
+            headers: {
+                Route: path
+            }
         }).fail(() => {
             state = {
                 path: path,

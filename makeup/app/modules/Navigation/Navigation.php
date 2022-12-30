@@ -9,7 +9,7 @@ class Navigation extends Module {
 
     public function build(): string
     {
-        $modName = Module::getRoute();
+        $modName = Module::name();
         $mainTmpl = $this->getTemplate();
 
         // Init slices:

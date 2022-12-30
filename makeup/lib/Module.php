@@ -12,7 +12,6 @@ abstract class Module {
 	protected static array $arguments = [];
 	protected $config = array();
 	protected $modName = "";
-	protected $route = "";
 	protected $render = "";
 	protected $dataMod = "App";
 	protected $protected = 0;
@@ -25,7 +24,7 @@ abstract class Module {
 		$this->modName = array_pop($modNsArr);
 
 		// Order matters!
-		Config::init(self::getRoute());
+		Config::init(self::name());
 		Lang::init();
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name"));
@@ -48,18 +47,28 @@ abstract class Module {
 	{
 		$this->procArguments(func_get_args());
 
-		$params = self::getParameters();
-		$route = self::getRoute();
-		$task = self::getTask();
+		$rq = self::requestData();
+		$modName = self::name();
+		$task = self::task();
 
-		$render = isset($params['json']) ? "json" : "html";
+		$headers = getallheaders();
 
-		if (!isset($params['task'])) {
-			Session::set("route", $route);
-		} 
+		if (isset($rq['json']) && isset($headers['Route'])) {
+			$routeArr = explode("/", $headers['Route']);
+			array_shift($routeArr);
+			if ($routeArr[0]) {
+				Session::set("route", $routeArr[0]);
+			} else {
+				Session::set("route", "Home");
+			}
+		} else if(!Session::get("route")) {
+			Session::set("route", $modName);
+		}
+
+		$render = isset($rq['json']) ? "json" : "html";
 
 		if ($render == "json" || $task != "build") { // Create only the Module
-			$appHtml = self::create($route, $render)->$task();
+			$appHtml = self::create($modName, $render)->$task();
 		} else { // Create the whole App
 			$appHtml = $this->build();
 		}
@@ -77,7 +86,7 @@ abstract class Module {
 	 */
 	public static function create(string $modName, string $render = "html", bool $useDataMod = false): mixed
 	{
-		$params = self::getParameters();
+		$params = self::requestData();
 		$modFile = dirname(__DIR__, 1) . "/app/modules/$modName/$modName.php";
 
 		if (is_file($modFile)) {
@@ -105,7 +114,7 @@ abstract class Module {
 
 	protected function render(string $html = ""): string
 	{
-		$params = self::getParameters();
+		$params = self::requestData();
 		if (!isset($params['json']) || $this->getRender() == "html")
 			return $html;
 		else
@@ -198,15 +207,21 @@ abstract class Module {
 	}
 
 
+	protected function route(): string
+	{
+		return Session::get("route");
+	}
+
+
 	/**
 	 * Access Name of a Module.
 	 * @return string
 	 */
-	public static function getRoute(): string
+	protected static function name(): string
 	{
-		if (!empty(self::$arguments) && isset(self::$arguments['route']) &&
-			isset(self::$arguments['route'][0]) && self::$arguments['route'][0]) {
-			return self::$arguments['route'][0];
+		if (!empty(self::$arguments) && isset(self::$arguments['module']) &&
+			isset(self::$arguments['module'][0]) && self::$arguments['module'][0]) {
+			return self::$arguments['module'][0];
 		} else {
 			return Config::get("app_settings", "default_module");
 		}
@@ -217,11 +232,11 @@ abstract class Module {
 	 * Access Name of a Task.
 	 * @return string
 	 */
-	public static function getTask(): string
+	protected static function task(): string
 	{
-		if (!empty(self::$arguments) && isset(self::$arguments['route']) &&
-			isset(self::$arguments['route'][1]) && self::$arguments['route'][1]) {
-			return self::$arguments['route'][1];
+		if (!empty(self::$arguments) && isset(self::$arguments['module']) &&
+			isset(self::$arguments['module'][1]) && self::$arguments['module'][1]) {
+			return self::$arguments['module'][1];
 		} else {
 			return "build";
 		}
@@ -232,7 +247,7 @@ abstract class Module {
 	 * Access GET and POST vars in Modules.
 	 * @return array
 	 */
-	public static function getParameters(): array
+	public static function requestData(): array
 	{
 		if (!empty(self::$arguments) && isset(self::$arguments['parameters'])) {
 			return self::$arguments['parameters'];

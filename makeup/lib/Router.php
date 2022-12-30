@@ -90,7 +90,7 @@ class Router {
 
         call_user_func_array($callback, [[
             "method" => $method,
-            "route" => $routeArr,
+            "module" => $routeArr,
             "parameters" => array_merge($query, $formData)
         ]]);
     }

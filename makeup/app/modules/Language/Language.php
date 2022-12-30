@@ -36,7 +36,7 @@ class Language extends Module {
 
     public function change(): string
     {
-        $params = Module::getParameters();
+        $params = Module::requestData();
         Cookie::set("lang_code", $params["cc"]);
         Session::clear("translation"); // String resources must be renewed in the session
         return json_encode(['result' => 1]);

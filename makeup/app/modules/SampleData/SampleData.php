@@ -51,7 +51,7 @@ class SampleData extends Module {
 
     public function delete(): string
     {
-        $params = Module::getParameters();
+        $params = Module::requestData();
         $Item = $this->SampleService->getByUniqueId($params['uid']);
         $Item->setProperty("deleted", 1);
         $update = $Item->update();

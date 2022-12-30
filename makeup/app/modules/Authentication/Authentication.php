@@ -57,13 +57,14 @@ class Authentication extends Module {
 
     public function signin()
     {
-        $params = Module::getParameters();
+        $rq = Module::requestData();
+        $route = Module::name();
         $segments = [];
-        if ($this->authorized($params['login_token'], $params['username'], $params['password'])) {
-            $this->setLogin($params['username']);
+        if ($this->authorized($rq['login_token'], $rq['username'], $rq['password'])) {
+            $this->setLogin($rq['username']);
             $toast = ["success", Lang::get('signed_in')];
             $Navigation = Module::create("Navigation")->build();
-            $content = Module::create(Session::get("route"))->build();
+            $content = Module::create($this->route())->build();
             array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLogoutForm()]);
             array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
             array_push($segments, ["dataMod" => "App", "html" => $content]);
@@ -75,7 +76,8 @@ class Authentication extends Module {
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
             "toast" => $toast,
-            "segments" => $segments
+            "segments" => $segments,
+            "route" => $route
         ]);
     }
 
@@ -85,7 +87,7 @@ class Authentication extends Module {
         $segments = [];
         $this->setLogout();
         $Navigation = Module::create("Navigation")->build();
-        $routeMod = Module::create(Session::get("route"));
+        $routeMod = Module::create($this->route());
         $content = !$routeMod->isProtected() ? $routeMod->build() : Module::create("Home")->build();
         array_push($segments, ["dataMod" => "Authentication", "html" => $this->buildLoginForm()]);
         array_push($segments, ["dataMod" => "Navigation", "html" => $Navigation]);
@@ -101,7 +103,7 @@ class Authentication extends Module {
 
     public function register()
     {
-        $params = Module::getParameters();
+        $params = Module::requestData();
         $segments = [];
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");

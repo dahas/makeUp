@@ -11,7 +11,7 @@ class App extends Module {
 
     protected function build(): string
     {
-        $modName = Module::getRoute();
+        $modName = Module::name();
         $m = [];
 
         /**** IMPORTANT: Module with page content must come first! *************/
