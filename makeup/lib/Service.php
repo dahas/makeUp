@@ -104,7 +104,7 @@ abstract class Service
 		return $this->next($key, $value);
 	}
 	
-	public function next(string $key = "", string $value = "") : ?ServiceItem
+	public function next(string $key = "", mixed $value = null) : ?ServiceItem
 	{
 		if (!$this->recordset) {
 			throw new \Exception('No collection found! Create a recordset first.');
@@ -129,7 +129,7 @@ class ServiceItem
     private $key = "";
     private $value = "";
 
-    public function __construct(DB $db, ?object $record, string $table, string $key, string $value)
+    public function __construct(DB $db, ?object $record, string $table, string $key, mixed $value)
     {
         $this->DB = $db;
         $this->record = $record;
@@ -143,7 +143,7 @@ class ServiceItem
         return isset($this->record->$item) ? $this->record->$item : null;
     }
 
-    public function setProperty(string $item, string|int $value) : void
+    public function setProperty(string $item, mixed $value) : void
     {
         $this->record->$item = $value;
     }

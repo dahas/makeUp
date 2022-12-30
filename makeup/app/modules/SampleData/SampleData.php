@@ -17,24 +17,34 @@ class SampleData extends Module {
         $template = $this->getTemplate("SampleData.html");
         $this->SampleService->read(where: "deleted=0");
 
-        $m["[[DATA-MOD]]"] = $this->getDataMod();
-        $s["{{ROW}}"] = "";
+        $m["[[DATA-MOD]]"] = "SampleData";
+        $m["[[LIST]]"] = $this->list();
+
+        $html = $template->parse($m);
+        return $this->render($html);
+    }
+
+
+    public function list(): string
+    {
+        $m = [];
+
+        $html = "";
+
+        $template = $this->getTemplate("SampleData.list.html");
+        $this->SampleService->read(where: "deleted=0");
 
         if ($this->SampleService->count() > 0) {
-            $row = $template->getSlice("{{ROW}}");
-
             while ($Data = $this->SampleService->next()) {
-                $sm = [];
-                $sm["[[UID]]"] = $Data->getProperty("uid");
-                $sm["[[NAME]]"] = $Data->getProperty("name");
-                $sm["[[CITY]]"] = $Data->getProperty("city");
-                $sm["[[COUNTRY]]"] = $Data->getProperty("country");
-                $s["{{ROW}}"] .= $row->parse($sm);
+                $m["[[UID]]"] = $Data->getProperty("uid");
+                $m["[[NAME]]"] = $Data->getProperty("name");
+                $m["[[CITY]]"] = $Data->getProperty("city");
+                $m["[[COUNTRY]]"] = $Data->getProperty("country");
+                $html .= $template->parse($m);
             }
         }
 
-        $html = $template->parse($m, $s);
-        return $this->render($html);
+        return $html;
     }
 
 
@@ -46,6 +56,14 @@ class SampleData extends Module {
         $html = $template->parse($m, $s);
 
         return $this->render($html);
+    }
+
+
+    public function insert(): string
+    {
+        $data = $this->requestData();
+        $Item = $this->SampleService->create($data['name'], intval($data['age']), $data['city'], $data['country']);
+        return $Item->getProperty("uid");
     }
 
 

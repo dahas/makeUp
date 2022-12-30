@@ -1,7 +1,7 @@
 </br>
 <p class="text-success">
     <a onclick="refresh();"><i class="fa-solid fa-arrows-rotate"></i> Refresh</a> &nbsp;
-    <a onclick="addItem(this, '[[DATA-MOD]]');"><i class="fa-solid fa-circle-plus"></i> Add</a>
+    <a onclick="addItem();"><i class="fa-solid fa-circle-plus"></i> Add</a>
 </p>
 <table class="table">
     <thead>
@@ -13,18 +13,7 @@
             <th scope="col"></th>
         </tr>
     </thead>
-    <tbody>
-        <!--{{ROW}}-->
-        <tr id="data-[[UID]]">
-            <th scope="row">[[UID]]</th>
-            <td>[[NAME]]</td>
-            <td>[[CITY]]</td>
-            <td>[[COUNTRY]]</td>
-            <td><button style="border: none; background: none;" class="text-danger"
-                    onclick="deleteItem(this, [[UID]]);">
-                    <i class="fa-solid fa-circle-xmark"></i></button>
-            </td>
-        </tr>
-        <!--{{ROW}}-->
+    <tbody data-mod="list">
+        [[LIST]]
     </tbody>
 </table>
