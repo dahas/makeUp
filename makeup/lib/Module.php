@@ -51,19 +51,7 @@ abstract class Module {
 		$modName = self::name();
 		$task = self::task();
 
-		$headers = getallheaders();
-
-		if (isset($rq['json']) && isset($headers['Route'])) {
-			$routeArr = explode("/", $headers['Route']);
-			array_shift($routeArr);
-			if ($routeArr[0]) {
-				Session::set("route", $routeArr[0]);
-			} else {
-				Session::set("route", "Home");
-			}
-		} else if(!Session::get("route")) {
-			Session::set("route", $modName);
-		}
+		$this->procRoute(getallheaders(), $modName);
 
 		$render = isset($rq['json']) ? "json" : "html";
 
@@ -204,6 +192,22 @@ abstract class Module {
 	protected function procArguments(array $args): void
 	{
 		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
+	}
+
+
+	protected function procRoute(array $headers, string $modName): void
+	{
+		if (isset($rq['json']) && isset($headers['Route'])) {
+			$routeArr = explode("/", $headers['Route']);
+			array_shift($routeArr);
+			if ($routeArr[0]) {
+				Session::set("route", $routeArr[0]);
+			} else {
+				Session::set("route", "Home");
+			}
+		} else if(!Session::get("route")) {
+			Session::set("route", $modName);
+		}
 	}
 
 
