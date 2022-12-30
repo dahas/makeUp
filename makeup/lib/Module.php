@@ -50,10 +50,9 @@ abstract class Module {
 		$rq = self::requestData();
 		$modName = self::name();
 		$task = self::task();
-
-		$this->procRoute(getallheaders(), $modName);
-
 		$render = isset($rq['json']) ? "json" : "html";
+
+		$this->procRoute(getallheaders(), $modName, $render);
 
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($modName, $render)->$task();
@@ -195,9 +194,9 @@ abstract class Module {
 	}
 
 
-	protected function procRoute(array $headers, string $modName): void
+	protected function procRoute(array $headers, string $modName, string $render): void
 	{
-		if (isset($rq['json']) && isset($headers['Route'])) {
+		if ($render == "json" && isset($headers['Route'])) {
 			$routeArr = explode("/", $headers['Route']);
 			array_shift($routeArr);
 			if ($routeArr[0]) {
