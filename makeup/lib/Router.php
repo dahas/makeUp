@@ -65,11 +65,13 @@ class Router {
     {
         // Debugging:
         if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
-            $method = parse_url($_SERVER['argv'][4]);
+            $method = $_SERVER['argv'][4];
             $uri = parse_url($_SERVER['argv'][2]);
+            parse_str($_SERVER['argv'][6], $formData);
         } else {
             $method = $_SERVER['REQUEST_METHOD'];
             $uri = parse_url($_SERVER['REQUEST_URI']);
+            $formData = $this->parseFormData($_POST); // <-- POST vars are filtered and sanitized
         }
 
         $path = $uri['path'];
@@ -78,7 +80,6 @@ class Router {
             parse_str($uri['query'], $query);
             $query = $this->parseQuery($query); // <-- GET vars are filtered and sanitized
         }
-        $formData = $this->parseFormData($_POST); // <-- POST vars are filtered and sanitized
 
         $routeArr = explode("/", $path);
         array_shift($routeArr);
