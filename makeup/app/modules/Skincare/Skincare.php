@@ -8,7 +8,7 @@ class Skincare extends Module {
 
     protected function build(): string
     {
-        $m["[[MODULE]]"] = $this->getDataMod();
+        $m["[[MODULE]]"] = $this->modName;
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
