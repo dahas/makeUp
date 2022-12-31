@@ -1,12 +1,59 @@
 </br>
 <p class="text-success">
     <a onclick="refresh();"><i class="fa-solid fa-arrows-rotate"></i> Refresh</a> &nbsp;
-    <a onclick="addItem();"><i class="fa-solid fa-circle-plus"></i> Add</a>
+    <a onclick="add();"><i class="fa-solid fa-circle-plus"></i> Add</a>
 </p>
+<div id="add-form" style="display: none;">
+    <form name="add-sampledata" method="post">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="u-year">Year</span>
+            <input type="text" name="year" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-year">
+            <span class="input-group-text" id="u-name">Name</span>
+            <input type="text" name="name" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-name">
+            <span class="input-group-text" id="u-city">City</span>
+            <input type="text" name="city" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-city">
+            <span class="input-group-text" id="u-country">Country</span>
+            <input type="text" name="country" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-country">
+            <button onclick="cancel('add');" type="button" class="btn btn-secondary"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <button onclick="insert();" type="button" class="btn btn-success"><i
+                    class="fa-solid fa-check"></i></button>
+        </div>
+    </form>
+    </br>
+</div>
+<div id="edit-form" style="display: none;">
+    <form name="edit-sampledata" method="post">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="u-year">Year</span>
+            <input type="hidden" name="uid" value="">
+            <input type="text" name="year" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-year">
+            <span class="input-group-text" id="u-name">Name</span>
+            <input type="text" name="name" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-name">
+            <span class="input-group-text" id="u-city">City</span>
+            <input type="text" name="city" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-city">
+            <span class="input-group-text" id="u-country">Country</span>
+            <input type="text" name="country" class="form-control" aria-label="Sizing example input"
+                aria-describedby="u-country">
+            <button onclick="cancel('edit');" type="button" class="btn btn-secondary"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <button onclick="update();" type="button" class="btn btn-success"><i
+                    class="fa-solid fa-check"></i></button>
+        </div>
+    </form>
+    </br>
+</div>
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Year</th>
             <th scope="col">Name</th>
             <th scope="col">City</th>
             <th scope="col">Country</th>

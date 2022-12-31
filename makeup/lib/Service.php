@@ -138,6 +138,11 @@ class ServiceItem
         $this->value = $value;
     }
 
+    public function getProperties() : object
+    {
+        return $this->record;
+    }
+
     public function getProperty(string $item) : mixed
     {
         return isset($this->record->$item) ? $this->record->$item : null;

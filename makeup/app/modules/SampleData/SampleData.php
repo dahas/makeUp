@@ -2,6 +2,8 @@
 
 use makeup\lib\Module;
 use makeUp\lib\attributes\Inject;
+use makeUp\lib\Template;
+use makeUp\services\SampleServiceItem;
 
 
 class SampleData extends Module {
@@ -12,35 +14,33 @@ class SampleData extends Module {
 
     protected function build(): string
     {
-        $m = []; $s = [];
+        $m = [];
 
-        $template = $this->getTemplate("SampleData.html");
-        $this->SampleService->read(where: "deleted=0");
+        $count = $this->SampleService->read(where: "deleted=0");
 
-        $m["[[DATA-MOD]]"] = "SampleData";
-        $m["[[LIST]]"] = $this->list();
-
-        $html = $template->parse($m);
+        if ($count) {
+            $template = $this->getTemplate("SampleData.html");
+            $m["[[DATA-MOD]]"] = "SampleData";
+            $m["[[LIST]]"] = $this->list();
+            $html = $template->parse($m);
+        } else {
+            $template = $this->getTemplate("SampleData.nodb.html");
+            $html = $template->parse();
+        }
+        
         return $this->render($html);
     }
 
 
     public function list(): string
     {
-        $m = [];
-
         $html = "";
-
-        $template = $this->getTemplate("SampleData.list.html");
-        $this->SampleService->read(where: "deleted=0");
+        $Template = $this->getTemplate("SampleData.list.html");
+        $this->SampleService->read(where: "deleted=0", orderBy: "year DESC");
 
         if ($this->SampleService->count() > 0) {
             while ($Data = $this->SampleService->next()) {
-                $m["[[UID]]"] = $Data->getProperty("uid");
-                $m["[[NAME]]"] = $Data->getProperty("name");
-                $m["[[CITY]]"] = $Data->getProperty("city");
-                $m["[[COUNTRY]]"] = $Data->getProperty("country");
-                $html .= $template->parse($m);
+                $html .= $this->renderRow($Template, $Data);
             }
         }
 
@@ -48,22 +48,58 @@ class SampleData extends Module {
     }
 
 
-    public function add(): string
+    public function renderRow(Template $Template, SampleServiceItem $Item): string
     {
-        $m = [];
-        $s = [];
-        $template = $this->getTemplate("SampleData.add.html");
-        $html = $template->parse($m, $s);
-
-        return $this->render($html);
+        $m["[[UID]]"] = $Item->getProperty("uid");
+        $m["[[NAME]]"] = $Item->getProperty("name");
+        $m["[[YEAR]]"] = $Item->getProperty("year");
+        $m["[[CITY]]"] = $Item->getProperty("city");
+        $m["[[COUNTRY]]"] = $Item->getProperty("country");
+        return $Template->parse($m);
     }
 
 
     public function insert(): string
     {
         $data = $this->requestData();
-        $Item = $this->SampleService->create($data['name'], intval($data['age']), $data['city'], $data['country']);
-        return $Item->getProperty("uid");
+        $Item = $this->SampleService->create($data['name'], intval($data['year']), $data['city'], $data['country']);
+        $Template = $this->getTemplate("SampleData.list.html");
+        $rowHTML = $this->renderRow($Template, $Item);
+        $result = [
+            "uid" => $Item->getProperty("uid"),
+            "name" => $Item->getProperty("name"),
+            "rowHTML" => $rowHTML
+        ];
+        return json_encode($result);
+    }
+
+
+    public function update(): string
+    {
+        $data = $this->requestData();
+        $Item = $this->SampleService->getByUniqueId($data['uid']);
+        if ($Item) {
+            $Item->setProperty("year", $data['year']);
+            $Item->setProperty("name", $data['name']);
+            $Item->setProperty("city", $data['city']);
+            $Item->setProperty("country", $data['country']);
+            $Item->update();
+        }
+        $Template = $this->getTemplate("SampleData.list.html");
+        $rowHTML = $this->renderRow($Template, $Item);
+        $result = [
+            "name" => $data['name'],
+            "rowHTML" => $rowHTML
+        ];
+        return json_encode($result);
+    }
+
+
+    public function getItem(): string
+    {
+        $data = $this->requestData();
+        $Item = $this->SampleService->getByUniqueId($data['uid']);
+        return json_encode($Item->getProperties());
     }
 
 
@@ -76,7 +112,8 @@ class SampleData extends Module {
 
         return json_encode([
             "success" => $update,
-            "uid" => $params['uid']
+            "uid" => $params['uid'],
+            "name" => $Item->getProperty("name")
         ]);
     }
 

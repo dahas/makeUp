@@ -4,7 +4,7 @@ use makeUp\lib\Lang;
 use makeUp\lib\Module;
 
 
-class Test extends Module {
+class TopModels extends Module {
 
     protected function build() : string
     {
@@ -15,12 +15,11 @@ class Test extends Module {
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
-        $html = $this->getTemplate("Test.html")->parse($m);
-        return $this->render($html);
-    }
+        $SampleData = Module::create(modName: "SampleData", useDataMod: true);
+        $m["[[SAMPLE_DATA]]"] = $SampleData->build();
 
-    protected function doit() {
-        return "DID IT!";
+        $html = $this->getTemplate("TopModels.html")->parse($m);
+        return $this->render($html);
     }
 
 }

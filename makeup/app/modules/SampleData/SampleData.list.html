@@ -1,10 +1,11 @@
 <tr id="data-[[UID]]">
-    <th scope="row">[[UID]]</th>
+    <th>[[YEAR]]</th>
     <td>[[NAME]]</td>
     <td>[[CITY]]</td>
     <td>[[COUNTRY]]</td>
-    <td><button style="border: none; background: none;" class="text-danger"
-            onclick="deleteItem(this, [[UID]]);">
+    <td align="right"><button style="border: none; background: none;" class="text-secondary" onclick="edit([[UID]]);">
+            <i class="fa-solid fa-pencil"></i></button>
+        <button style="border: none; background: none;" class="text-danger" onclick="remove(this, [[UID]]);">
             <i class="fa-solid fa-circle-xmark"></i></button>
     </td>
 </tr>

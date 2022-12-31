@@ -28,8 +28,8 @@
         ]
     },
     {
-        "text": "My Test",
-        "module": "Test",
+        "text": "Top Models",
+        "module": "TopModels",
         "protected": 0
     }
 ]
