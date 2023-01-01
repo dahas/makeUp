@@ -52,7 +52,9 @@ abstract class Module {
 		$task = self::task();
 		$render = isset($rq['json']) ? "json" : "html";
 
-		$this->procRoute(getallheaders(), $modName, $render);
+		if(function_exists("getallheaders")) {
+			$this->procRoute(getallheaders(), $modName, $render);
+		}
 
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($modName, $render)->$task();
