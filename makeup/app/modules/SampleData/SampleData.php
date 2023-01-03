@@ -7,7 +7,7 @@ use makeUp\services\SampleServiceItem;
 
 
 class SampleData extends Module {
-    
+
     #[Inject('SampleService')]
     protected $SampleService;
 
@@ -27,7 +27,7 @@ class SampleData extends Module {
             $template = $this->getTemplate("SampleData.nodb.html");
             $html = $template->parse();
         }
-        
+
         return $this->render($html);
     }
 
@@ -36,11 +36,18 @@ class SampleData extends Module {
     {
         $html = "";
         $Template = $this->getTemplate("SampleData.list.html");
-        $this->SampleService->read(where: "deleted=0", orderBy: "year DESC");
 
+        $this->SampleService->read(where: "deleted=0", orderBy: "year DESC");
         if ($this->SampleService->count() > 0) {
             while ($Data = $this->SampleService->next()) {
-                $html .= $this->renderRow($Template, $Data);
+                $html .= $this->renderRow(
+                    $Template,
+                    $Data->getProperty("uid"),
+                    $Data->getProperty("year"),
+                    $Data->getProperty("name"),
+                    $Data->getProperty("city"),
+                    $Data->getProperty("country")
+                );
             }
         }
 
@@ -48,13 +55,20 @@ class SampleData extends Module {
     }
 
 
-    public function renderRow(Template $Template, SampleServiceItem $Item): string
+    public function renderRow(Template $Template, int $uid, int $year, string $name, string $city, string $country, bool $insert = false): string
     {
-        $m["[[UID]]"] = $Item->getProperty("uid");
-        $m["[[NAME]]"] = $Item->getProperty("name");
-        $m["[[YEAR]]"] = $Item->getProperty("year");
-        $m["[[CITY]]"] = $Item->getProperty("city");
-        $m["[[COUNTRY]]"] = $Item->getProperty("country");
+        $m["[[INSERT_CLASS]]"] = "";
+
+        $m["[[UID]]"] = $uid;
+        $m["[[YEAR]]"] = $year;
+        $m["[[NAME]]"] = $name;
+        $m["[[CITY]]"] = $city;
+        $m["[[COUNTRY]]"] = $country;
+
+        if($insert) {
+            $m["[[INSERT_CLASS]]"] = ' class="anim highlight"';
+        }
+
         return $Template->parse($m);
     }
 
@@ -62,58 +76,68 @@ class SampleData extends Module {
     public function insert(): string
     {
         $data = $this->requestData();
-        $Item = $this->SampleService->create($data['name'], intval($data['year']), $data['city'], $data['country']);
+
+        $SampleItem = $this->SampleService->create();
+        $SampleItem->setProperty("year", $data['year']);
+        $SampleItem->setProperty("name", $data['name']);
+        $SampleItem->setProperty("city", $data['city']);
+        $SampleItem->setProperty("country", $data['country']);
+        $uid = $SampleItem->store();
+
         $Template = $this->getTemplate("SampleData.list.html");
-        $rowHTML = $this->renderRow($Template, $Item);
-        $result = [
-            "uid" => $Item->getProperty("uid"),
-            "name" => $Item->getProperty("name"),
+        $rowHTML = $this->renderRow($Template, $uid, $data['year'], $data['name'], $data['city'], $data['country'], true);
+
+        return json_encode([
+            "uid" => $uid,
+            "name" => $SampleItem->getProperty("name"),
             "rowHTML" => $rowHTML
-        ];
-        return json_encode($result);
+        ]);
     }
 
 
     public function update(): string
     {
         $data = $this->requestData();
-        $Item = $this->SampleService->getByUniqueId($data['uid']);
-        if ($Item) {
-            $Item->setProperty("year", $data['year']);
-            $Item->setProperty("name", $data['name']);
-            $Item->setProperty("city", $data['city']);
-            $Item->setProperty("country", $data['country']);
-            $Item->update();
+
+        $SampleItem = $this->SampleService->getByUniqueId($data['uid']);
+        if ($SampleItem) {
+            $SampleItem->setProperty("year", $data['year']);
+            $SampleItem->setProperty("name", $data['name']);
+            $SampleItem->setProperty("city", $data['city']);
+            $SampleItem->setProperty("country", $data['country']);
+            $SampleItem->update();
         }
+
         $Template = $this->getTemplate("SampleData.list.html");
-        $rowHTML = $this->renderRow($Template, $Item);
-        $result = [
+        $rowHTML = $this->renderRow($Template, $data['uid'], $data['year'], $data['name'], $data['city'], $data['country']);
+
+        return json_encode([
             "name" => $data['name'],
             "rowHTML" => $rowHTML
-        ];
-        return json_encode($result);
+        ]);
     }
 
 
     public function getItem(): string
     {
         $data = $this->requestData();
-        $Item = $this->SampleService->getByUniqueId($data['uid']);
-        return json_encode($Item->getProperties());
+        $SampleItem = $this->SampleService->getByUniqueId($data['uid']);
+        return json_encode($SampleItem->getProperties());
     }
 
 
     public function delete(): string
     {
-        $params = Module::requestData();
-        $Item = $this->SampleService->getByUniqueId($params['uid']);
-        $Item->setProperty("deleted", 1);
-        $update = $Item->update();
+        $params = $this->requestData();
+
+        $SampleItem = $this->SampleService->getByUniqueId($params['uid']);
+        $SampleItem->setProperty("deleted", 1);
+        $update = $SampleItem->update();
 
         return json_encode([
             "success" => $update,
             "uid" => $params['uid'],
-            "name" => $Item->getProperty("name")
+            "name" => $SampleItem->getProperty("name")
         ]);
     }
 

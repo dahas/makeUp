@@ -1,12 +1,12 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace makeUp\lib;
 
 use ReflectionClass;
+use stdClass;
 
 
-abstract class Service
-{
+abstract class Service {
 	protected $DB = null;
 	protected $recordset = null;
 	protected $table = "";
@@ -19,14 +19,14 @@ abstract class Service
 		$this->DB = DB::getInstance();
 
 		$rc = new ReflectionClass(get_class($this));
-        foreach($rc->getAttributes() as $attribute) {
-            foreach($attribute->newInstance() as $name => $property) {
-                $this->$name = $property;
-            }
-        }
+		foreach ($rc->getAttributes() as $attribute) {
+			foreach ($attribute->newInstance() as $name => $property) {
+				$this->$name = $property;
+			}
+		}
 	}
 
-	public function read(string $where = "", string $groupBy = "", string $orderBy = "", string $limit = "") : int
+	public function read(string $where = "", string $groupBy = "", string $orderBy = "", string $limit = ""): int
 	{
 		$statement = [
 			"columns" => $this->columns,
@@ -45,66 +45,69 @@ abstract class Service
 			$statement = array_merge($statement, ["limit" => $limit]);
 		}
 		$this->recordset = $this->DB->select($statement);
-		
+
 		return $this->count();
 	}
 
-	public function create() : ?ServiceItem
+	public function create(): ? ServiceItem
 	{
-		$values = func_get_args();
-		$colsArr = explode(",", $this->columns);
-		$columns = array_map('trim', $colsArr);
+		$serviceItem = get_class($this) . "Item";
+		return new $serviceItem($this->DB, new stdClass(), $this->table);
 
-		if (($key = array_search($this->key, $columns)) !== false) {
-			unset($columns[$key]);
-		}
+		// $values = func_get_args();
+		// $colsArr = explode(",", $this->columns);
+		// $columns = array_map('trim', $colsArr);
 
-		$vSize = count($values);
-		$cSize = count($columns);
+		// if (($key = array_search($this->key, $columns)) !== false) {
+		// 	unset($columns[$key]);
+		// }
 
-		if ($vSize < $cSize) {
-			for ($n = $vSize; $n < $cSize; $n++) {
-				$values[$n] = "";
-			}
-		}
+		// $vSize = count($values);
+		// $cSize = count($columns);
 
-		$insertId = $this->DB->insert([
-			"into" => $this->table,
-			"columns" => implode(",", $columns),
-			"values" => implode(",", $values)
-		]);
+		// if ($vSize < $cSize) {
+		// 	for ($n = $vSize; $n < $cSize; $n++) {
+		// 		$values[$n] = "";
+		// 	}
+		// }
 
-		return $this->getByUniqueId($insertId);
+		// $insertId = $this->DB->insert([
+		// 	"into" => $this->table,
+		// 	"columns" => implode(",", $columns),
+		// 	"values" => implode(",", $values)
+		// ]);
+
+		// return $this->getByUniqueId($insertId);
 	}
 
-	public function count() : int
+	public function count(): int
 	{
 		return $this->recordset ? $this->recordset->getRecordCount() : 0;
 	}
-	
-	public function getByUniqueId(string|int $value) : ?ServiceItem
+
+	public function getByUniqueId(string|int $value): ? ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
 			"from" => $this->table,
 			"where" => "{$this->key}='$value'"
 		]);
-		
+
 		return $this->next($this->key, $value);
 	}
-	
-	public function getByKey(string $key, string $value) : ?ServiceItem
+
+	public function getByKey(string $key, string $value): ? ServiceItem
 	{
 		$this->recordset = $this->DB->select([
 			"columns" => $this->columns,
 			"from" => $this->table,
 			"where" => "$key='$value'"
 		]);
-		
+
 		return $this->next($key, $value);
 	}
-	
-	public function next(string $key = "", mixed $value = null) : ?ServiceItem
+
+	public function next(string $key = "", mixed $value = null): ? ServiceItem
 	{
 		if (!$this->recordset) {
 			throw new \Exception('No collection found! Create a recordset first.');
@@ -121,62 +124,77 @@ abstract class Service
 }
 
 
-class ServiceItem
-{
-    private $DB = null;
-    private $record = null;
-    private $table = "";
-    private $key = "";
-    private $value = "";
+class ServiceItem {
+	private $DB = null;
+	private $record = null;
+	private $table = "";
+	private $key = "";
+	private $value = "";
 
-    public function __construct(DB $db, ?object $record, string $table, string $key, mixed $value)
-    {
-        $this->DB = $db;
-        $this->record = $record;
-        $this->table = $table;
-        $this->key = $key;
-        $this->value = $value;
-    }
+	public function __construct(DB $db, ?object $record, string $table, string $key = "", mixed $value = null)
+	{
+		$this->DB = $db;
+		$this->record = $record;
+		$this->table = $table;
+		$this->key = $key;
+		$this->value = $value;
+	}
 
-    public function getProperties() : object
-    {
-        return $this->record;
-    }
+	public function getProperties(): object
+	{
+		return $this->record;
+	}
 
-    public function getProperty(string $item) : mixed
-    {
-        return isset($this->record->$item) ? $this->record->$item : null;
-    }
+	public function getProperty(string $item): mixed
+	{
+		return isset($this->record->$item) ? $this->record->$item : null;
+	}
 
-    public function setProperty(string $item, mixed $value) : void
-    {
-        $this->record->$item = $value;
-    }
+	public function setProperty(string $item, mixed $value): void
+	{
+		$this->record->$item = $value;
+	}
 
-    public function update() : bool
-    {
-        $set = [];
+	public function store(): int
+	{
+		$columns = [];
+		$values = [];
+		foreach ($this->record as $column => $value) {
+			$columns[] = $column;
+			$values[] = $value;
+		}
+		$insertId = $this->DB->insert([
+			"into" => $this->table,
+			"columns" => implode(",", $columns),
+			"values" => implode(",", $values)
+		]);
+		return $insertId;
+	}
 
-        foreach($this->record as $item => $value) {
-            $set[] = "$item='$value'";
-        }
+	public function update(): bool
+	{
+		$set = [];
 
-        if (!empty($set)) {
-            return $this->DB->update([
-                "table" => $this->table,
-                "set" => implode(", ", $set),
-                "where" => $this->key . "=" . $this->value
-            ]);
-        }
-        
-        return false;
-    }
+		foreach ($this->record as $item => $value) {
+			$set[] = "$item='$value'";
+		}
 
-    public function delete() : bool
-    {
-        return $this->DB->delete([
-            "from" => $this->table,
-            "where" => $this->key . "=" . $this->value
-        ]);
-    }
+		if (!empty($set)) {
+			return $this->DB->update([
+				"table" => $this->table,
+				"set" => implode(", ", $set),
+				"where" => $this->key . "=" . $this->value
+			]);
+		}
+
+		return false;
+	}
+
+	public function delete(): bool
+	{
+		return $this->DB->delete([
+			"from" => $this->table,
+			"where" => $this->key . "=" . $this->value
+		]);
+	}
 }

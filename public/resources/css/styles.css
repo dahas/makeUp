@@ -8439,6 +8439,17 @@ a {
   border-top-right-radius: 0; }
 
 /**** End: Login page variant ****/
+/**** Begin: SampleData ****/
+.anim {
+  transition: background 2s linear; }
+
+.highlight {
+  background: #ffefaa; }
+
+.normal {
+  background: transparent; }
+
+/**** End: SampleData ****/
 /*!
  * Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

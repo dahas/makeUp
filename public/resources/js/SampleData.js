@@ -9,7 +9,7 @@ $(document).ready(() => {
     }
 
     cancel = mode => {
-        $("#"+mode+"-form").fadeOut(() => {
+        $("#" + mode + "-form").fadeOut(() => {
             $("#add-form input[type=text], textarea").val("");
         });
     }
@@ -31,6 +31,7 @@ $(document).ready(() => {
     }
 
     remove = (obj, uid) => {
+        $(obj).parent().parent().addClass('highlight');
         if (!locked) {
             locked = true;
             obj.children[0].className = "fa-solid fa-spinner fa-spin-pulse";
@@ -54,8 +55,11 @@ $(document).ready(() => {
             data: $('form[name="add-sampledata"]').serialize(),
             dataType: 'json'
         }).done(data => {
-            $('*[data-mod="list"]').prepend(data.rowHTML);
-            $("tr#data-"+data.uid).fadeIn(); 
+            $(data.rowHTML)
+                .hide()
+                .prependTo('*[data-mod="list"]')
+                .fadeIn()
+                .addClass('normal');
             showToast("success", "Model '" + data.name + "' has been added.");
             $("#add-form input[type=text], textarea").val("");
         });

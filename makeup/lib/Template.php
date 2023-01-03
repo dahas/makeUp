@@ -67,7 +67,7 @@ class Template
 	private function replaceMarker(string $html, array $markerArr): string
 	{
 		foreach ($markerArr as $key => $val) {
-			$html = str_replace($key, $val, $html);
+			$html = str_replace($key, strval($val), $html);
 		}
 		return $html;
 	}
