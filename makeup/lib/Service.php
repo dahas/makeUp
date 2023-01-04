@@ -53,31 +53,6 @@ abstract class Service {
 	{
 		$serviceItem = get_class($this) . "Item";
 		return new $serviceItem($this->DB, new stdClass(), $this->table);
-
-		// $values = func_get_args();
-		// $colsArr = explode(",", $this->columns);
-		// $columns = array_map('trim', $colsArr);
-
-		// if (($key = array_search($this->key, $columns)) !== false) {
-		// 	unset($columns[$key]);
-		// }
-
-		// $vSize = count($values);
-		// $cSize = count($columns);
-
-		// if ($vSize < $cSize) {
-		// 	for ($n = $vSize; $n < $cSize; $n++) {
-		// 		$values[$n] = "";
-		// 	}
-		// }
-
-		// $insertId = $this->DB->insert([
-		// 	"into" => $this->table,
-		// 	"columns" => implode(",", $columns),
-		// 	"values" => implode(",", $values)
-		// ]);
-
-		// return $this->getByUniqueId($insertId);
 	}
 
 	public function count(): int
