@@ -9,7 +9,8 @@
         "submenu": [
             {
                 "text": "Skin care",
-                "module": "Skincare"
+                "module": "Skincare",
+                "protected": 0
             },
             {
                 "separate": true
@@ -29,7 +30,6 @@
     },
     {
         "text": "Top Models",
-        "module": "TopModels",
-        "protected": 0
+        "module": "TopModels"
     }
 ]
