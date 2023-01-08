@@ -7,8 +7,8 @@
             "request": "launch",
             "program": "${workspaceRoot}/public/index.php",
             "args": [
-                "--path", "/?var1=eins&var2=zwei",   // Route (module name) and query. E.g.: /test?json&var1=123&var2=444
-                "--method", "POST",   // GET or POST
+                "--path", "/TopModels",   // Route (module name) and query. E.g.: /test?json&var1=123&var2=444
+                "--method", "GET",   // GET or POST
                 "--post-data", "post1=one&post2=two",           // Form data
                 "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
             ],
