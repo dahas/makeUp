@@ -11,12 +11,12 @@ class TopModels extends Module {
         $SampleData = Module::create(modName: "SampleData", useDataMod: true);
         $m["[[SAMPLE_DATA]]"] = $SampleData->build();
 
-        if(Cookie::get("collapseOne_expanded")) {
-            $m["[[COLLAPSED]]"] = "";
-            $m["[[SHOW]]"] = "show";
+        if(is_null(Cookie::get("collapseOne_expanded")) || Cookie::get("collapseOne_expanded")) {
+            $m["[[HANDLE]]"] = "";
+            $m["[[HELP_TEXT]]"] = "show";
         } else {
-            $m["[[COLLAPSED]]"] = "collapsed";
-            $m["[[SHOW]]"] = "";
+            $m["[[HANDLE]]"] = "collapsed";
+            $m["[[HELP_TEXT]]"] = "";
         }
 
         $html = $this->getTemplate("TopModels.html")->parse($m);
