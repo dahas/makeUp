@@ -1,6 +1,5 @@
 
-$(document).ready(() => 
-{
+$(document).ready(() => {
     setLanguage = lang => {
         $.ajax({
             type: 'GET',

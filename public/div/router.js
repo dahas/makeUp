@@ -44,6 +44,7 @@ $(document).ready(() => {
             state = { path: path, caching: data.caching, title: data.title, content: data.content };
             history.replaceState(state, data.module, path);
             $('*[data-mod="App"]').html(data.content);
+            $(document).trigger("module.loaded"); 
         });
         return state;
     }
