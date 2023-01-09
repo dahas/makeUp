@@ -10,6 +10,6 @@ class AccessDenied extends Module {
 
 	protected function build(): string
 	{
-		return Utils::errorMessage(Lang::get("access_denied"));
+		return $this->render(Utils::errorMessage(Lang::get("access_denied")));
 	}
 }
