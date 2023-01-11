@@ -125,7 +125,7 @@ class Router {
      */
     private static function filterInput($input): string
     {
-        return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        return htmlspecialchars(string: $input, encoding: Config::get("metatags", "charset"));
     }
 
 }
