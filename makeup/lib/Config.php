@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Config
+final class Config
 {
     private static $modName = array();
     private static $config = array();

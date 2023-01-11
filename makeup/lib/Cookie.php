@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Cookie
+final class Cookie
 {
 	private static $value = [];
 

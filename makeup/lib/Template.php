@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Template
+final class Template
 {
 	private $html = "";
 

@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Session
+final class Session
 {
 	public static function start() : void
 	{

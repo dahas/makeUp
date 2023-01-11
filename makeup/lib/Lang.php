@@ -3,7 +3,7 @@
 namespace makeUp\lib;
 
 
-class Lang {
+final class Lang {
     private static $strings = array();
 
 
