@@ -120,9 +120,9 @@ class ServiceItem {
 		$this->value = $value;
 	}
 
-	public function getProperties(): object
+	public function getProperties(): array
 	{
-		return $this->record;
+		return (array) $this->record;
 	}
 
 	public function getProperty(string $item): mixed

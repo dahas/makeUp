@@ -3,7 +3,6 @@
 use makeup\lib\Module;
 use makeUp\lib\attributes\Inject;
 use makeUp\lib\Template;
-use makeUp\services\SampleServiceItem;
 
 
 class SampleData extends Module {
@@ -76,19 +75,31 @@ class SampleData extends Module {
     {
         $data = $this->requestData();
 
-        $SampleItem = $this->SampleService->create();
-        $SampleItem->setProperty("year", $data['year']);
-        $SampleItem->setProperty("name", $data['name']);
-        $SampleItem->setProperty("city", $data['city']);
-        $SampleItem->setProperty("country", $data['country']);
-        $uid = $SampleItem->store();
+        $uid = 0;
+        $authorized = false;
+        $modelName = "";
+        $rowHTML = "";
 
-        $Template = $this->getTemplate("SampleData.list.html");
-        $rowHTML = $this->renderRow($Template, $uid, $data['year'], $data['name'], $data['city'], $data['country'], true);
+        if (Module::checkLogin()) {
+            $authorized = true;
 
+            $SampleItem = $this->SampleService->create();
+            $SampleItem->setProperty("year", $data['year']);
+            $SampleItem->setProperty("name", $data['name']);
+            $SampleItem->setProperty("city", $data['city']);
+            $SampleItem->setProperty("country", $data['country']);
+            $uid = $SampleItem->store();
+    
+            $Template = $this->getTemplate("SampleData.list.html");
+            $rowHTML = $this->renderRow($Template, $uid, $data['year'], $data['name'], $data['city'], $data['country'], true);
+
+            $modelName = $data['name'];
+        } 
+    
         return json_encode([
             "uid" => $uid,
-            "name" => $SampleItem->getProperty("name"),
+            "authorized" => $authorized,
+            "name" => $modelName,
             "rowHTML" => $rowHTML
         ]);
     }
@@ -97,22 +108,62 @@ class SampleData extends Module {
     public function update(): string
     {
         $data = $this->requestData();
+        
+        $authorized = false;
+        $modelName = "";
+        $rowHTML = "";
 
-        $SampleItem = $this->SampleService->getByUniqueId($data['uid']);
-        if ($SampleItem) {
-            $SampleItem->setProperty("year", $data['year']);
-            $SampleItem->setProperty("name", $data['name']);
-            $SampleItem->setProperty("city", $data['city']);
-            $SampleItem->setProperty("country", $data['country']);
-            $SampleItem->update();
+        if (Module::checkLogin()) {
+            $authorized = true;
+
+            $SampleItem = $this->SampleService->getByUniqueId($data['uid']);
+            if ($SampleItem) {
+                $SampleItem->setProperty("year", $data['year']);
+                $SampleItem->setProperty("name", $data['name']);
+                $SampleItem->setProperty("city", $data['city']);
+                $SampleItem->setProperty("country", $data['country']);
+                $SampleItem->update();
+            }
+    
+            $Template = $this->getTemplate("SampleData.list.html");
+            $rowHTML = $this->renderRow($Template, $data['uid'], $data['year'], $data['name'], $data['city'], $data['country']);
+
+            $modelName = $data['name'];
         }
 
-        $Template = $this->getTemplate("SampleData.list.html");
-        $rowHTML = $this->renderRow($Template, $data['uid'], $data['year'], $data['name'], $data['city'], $data['country']);
+        return json_encode([
+            "authorized" => $authorized,
+            "name" => $modelName,
+            "rowHTML" => $rowHTML
+        ]);
+    }
+
+
+    public function delete(): string
+    {
+        $params = $this->requestData();
+
+        $authorized = false;
+        $update = false;
+        $uid = 0;
+        $modelName = "";
+
+        if (Module::checkLogin()) {
+            $authorized = true;
+
+            $SampleItem = $this->SampleService->getByUniqueId($params['uid']);
+            $SampleItem->setProperty("deleted", 1);
+            $update = $SampleItem->update();
+
+            $uid = $params['uid'];
+            $modelName = $SampleItem->getProperty("name");
+        }
 
         return json_encode([
-            "name" => $data['name'],
-            "rowHTML" => $rowHTML
+            "success" => $update,
+            "authorized" => $authorized,
+            "uid" => $uid,
+            "name" => $modelName
         ]);
     }
 
@@ -121,22 +172,10 @@ class SampleData extends Module {
     {
         $data = $this->requestData();
         $SampleItem = $this->SampleService->getByUniqueId($data['uid']);
-        return json_encode($SampleItem->getProperties());
-    }
-
-
-    public function delete(): string
-    {
-        $params = $this->requestData();
-
-        $SampleItem = $this->SampleService->getByUniqueId($params['uid']);
-        $SampleItem->setProperty("deleted", 1);
-        $update = $SampleItem->update();
-
+        $props = $SampleItem->getProperties();
         return json_encode([
-            "success" => $update,
-            "uid" => $params['uid'],
-            "name" => $SampleItem->getProperty("name")
+            ...$props,
+            "authorized" => Module::checkLogin()
         ]);
     }
 

@@ -8,19 +8,19 @@
         <div class="input-group mb-3">
             <span class="input-group-text" id="u-year">Year</span>
             <input type="text" name="year" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-year">
+                aria-describedby="u-year" required>
             <span class="input-group-text" id="u-name">Name</span>
             <input type="text" name="name" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-name">
+                aria-describedby="u-name" required>
             <span class="input-group-text" id="u-city">City</span>
             <input type="text" name="city" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-city">
+                aria-describedby="u-city" required>
             <span class="input-group-text" id="u-country">Country</span>
             <input type="text" name="country" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-country">
+                aria-describedby="u-country" required>
             <button onclick="cancel('add');" type="button" class="btn btn-secondary"><i
                     class="fa-solid fa-xmark"></i></button>
-            <button onclick="insert();" type="button" class="btn btn-success"><i
+            <button type="submit" class="btn btn-success"><i
                     class="fa-solid fa-check"></i></button>
         </div>
     </form>
@@ -32,19 +32,19 @@
             <span class="input-group-text" id="u-year">Year</span>
             <input type="hidden" name="uid" value="">
             <input type="text" name="year" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-year">
+                aria-describedby="u-year" required>
             <span class="input-group-text" id="u-name">Name</span>
             <input type="text" name="name" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-name">
+                aria-describedby="u-name" required>
             <span class="input-group-text" id="u-city">City</span>
             <input type="text" name="city" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-city">
+                aria-describedby="u-city" required>
             <span class="input-group-text" id="u-country">Country</span>
             <input type="text" name="country" class="form-control" aria-label="Sizing example input"
-                aria-describedby="u-country">
+                aria-describedby="u-country" required>
             <button onclick="cancel('edit');" type="button" class="btn btn-secondary"><i
                     class="fa-solid fa-xmark"></i></button>
-            <button onclick="update();" type="button" class="btn btn-success"><i
+            <button type="submit" class="btn btn-success"><i
                     class="fa-solid fa-check"></i></button>
         </div>
     </form>

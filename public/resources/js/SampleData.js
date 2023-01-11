@@ -3,6 +3,15 @@ $(document).ready(() => {
 
     let locked = false;
 
+    $('form[name="add-sampledata"]').on("submit", () => { insert(); return false; });
+    $('form[name="edit-sampledata"]').on("submit", () => { update(); return false; });
+
+    // Event handler must be re-attached after user logged in/out. We catch the event here.
+    $(document).on("user.auth", () => {
+        $('form[name="add-sampledata"]').on("submit", () => { insert(); return false; });
+        $('form[name="edit-sampledata"]').on("submit", () => { update(); return false; });
+    })
+
     add = () => {
         $("#edit-form").hide();
         $("#add-form").fadeIn();
@@ -20,13 +29,56 @@ $(document).ready(() => {
             url: "/SampleData/getItem?uid=" + uid,
             dataType: 'json'
         }).done(data => {
-            $("#add-form").hide();
-            $("#edit-form input[name=uid]").val(data.uid)
-            $("#edit-form input[name=year]").val(data.year)
-            $("#edit-form input[name=name]").val(data.name)
-            $("#edit-form input[name=city]").val(data.city)
-            $("#edit-form input[name=country]").val(data.country)
-            $("#edit-form").fadeIn();
+            if (data.authorized) {
+                $("#add-form").hide();
+                $("#edit-form input[name=uid]").val(data.uid)
+                $("#edit-form input[name=year]").val(data.year)
+                $("#edit-form input[name=name]").val(data.name)
+                $("#edit-form input[name=city]").val(data.city)
+                $("#edit-form input[name=country]").val(data.country)
+                $("#edit-form").fadeIn();
+            } else {
+                showToast("error", "You must be logged in to modify the list of Topmodels!");
+            }
+        });
+    }
+
+    insert = () => {
+        $.ajax({
+            type: 'POST',
+            url: "/SampleData/insert",
+            data: $('form[name="add-sampledata"]').serialize(),
+            dataType: 'json'
+        }).done(data => {
+            if (data.authorized) {
+                $(data.rowHTML)
+                    .hide()
+                    .prependTo('*[data-mod="list"]')
+                    .fadeIn()
+                    .addClass('normal');
+                showToast("success", "Model '" + data.name + "' has been added.");
+                $("#add-form input[type=text], textarea").val("");
+            } else {
+                showToast("error", "You must be logged in to modify the list of Topmodels!");
+            }
+        });
+    }
+
+    update = () => {
+        $.ajax({
+            type: 'POST',
+            url: "/SampleData/update",
+            data: $('form[name="edit-sampledata"]').serialize(),
+            dataType: 'json'
+        }).done(data => {
+            if (data.authorized) {
+                cancel("edit");
+                refresh();
+                showToast("success", "Model '" + data.name + "' has been updated.");
+                $("#edit-form input[type=text], textarea").val("");
+            } else {
+                showToast("error", "You must be logged in to modify the list of Topmodels!");
+            }
         });
     }
 
@@ -40,43 +92,19 @@ $(document).ready(() => {
                 url: "/SampleData/delete?uid=" + uid,
                 dataType: 'json'
             }).done(data => {
-                $('#data-' + data.uid).fadeOut(() => {
+                if (data.authorized) {
+                    $('#data-' + data.uid).fadeOut(() => {
+                        locked = false;
+                    });
+                    showToast("success", "Model '" + data.name + "' has been deleted.")
+                } else {
                     locked = false;
-                });
-                showToast("success", "Model '" + data.name + "' has been deleted.")
+                    obj.children[0].className = "fa-solid fa-circle-xmark";
+                    $(obj).parent().parent().removeClass('highlight');
+                    showToast("error", "You must be logged in to delete a Topmodel!");
+                }
             });
         }
-    }
-
-    insert = () => {
-        $.ajax({
-            type: 'POST',
-            url: "/SampleData/insert",
-            data: $('form[name="add-sampledata"]').serialize(),
-            dataType: 'json'
-        }).done(data => {
-            $(data.rowHTML)
-                .hide()
-                .prependTo('*[data-mod="list"]')
-                .fadeIn()
-                .addClass('normal');
-            showToast("success", "Model '" + data.name + "' has been added.");
-            $("#add-form input[type=text], textarea").val("");
-        });
-    }
-
-    update = () => {
-        $.ajax({
-            type: 'POST',
-            url: "/SampleData/update",
-            data: $('form[name="edit-sampledata"]').serialize(),
-            dataType: 'json'
-        }).done(data => {
-            cancel("edit");
-            refresh();
-            showToast("success", "Model '" + data.name + "' has been updated.");
-            $("#edit-form input[type=text], textarea").val("");
-        });
     }
 
     refresh = () => {
