@@ -26,6 +26,11 @@ abstract class Service {
 		}
 	}
 
+	public function isAvailable(): bool
+	{
+		return $this->DB->isAvailable();
+	}
+
 	public function read(string $where = "", string $groupBy = "", string $orderBy = "", string $limit = ""): int
 	{
 		$statement = [

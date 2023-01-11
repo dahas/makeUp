@@ -16,9 +16,8 @@ class SampleData extends Module {
     {
         $m = [];
 
-        $count = $this->SampleService->read(where: "deleted=0");
-
-        if ($count) {
+        if ($this->SampleService->isAvailable()) {
+            $count = $this->SampleService->read(where: "deleted=0");
             $template = $this->getTemplate("SampleData.html");
             $m["[[DATA-MOD]]"] = "SampleData";
             $m["[[LIST]]"] = $this->list();

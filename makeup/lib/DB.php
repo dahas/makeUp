@@ -33,6 +33,11 @@ class DB {
         }
     }
 
+	public function isAvailable(): bool
+	{
+		return $this->conn ? true : false;
+	}
+
     public static function getInstance(): DB
     {
         if (self::$instance == null) {
