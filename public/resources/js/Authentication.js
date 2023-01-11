@@ -10,11 +10,10 @@ $(document).ready(() => {
                 data.segments.forEach(segment => {
                     $('*[data-mod="' + segment.dataMod + '"]').html(segment.html);
                 })
-                if (data?.toast) {
-                    showToast(data.toast[0], data.toast[1]);
-                }
+                
+                showToast(data.toast[0], data.toast[1]);
 
-                if (formName == 'signin') {
+                if (formName == 'signin' && data.toast[0] == "success") {
                     $(document).trigger("user.logged.in");
                 }
                 if (formName == 'signout') {
