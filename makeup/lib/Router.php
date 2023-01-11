@@ -71,14 +71,14 @@ class Router {
         } else {
             $method = $_SERVER['REQUEST_METHOD'];
             $uri = parse_url($_SERVER['REQUEST_URI']);
-            $formData = $this->parseFormData($_POST); // <-- POST vars are filtered and sanitized
+            $formData = Request::parseFormData($_POST); // <-- POST vars are filtered and sanitized
         }
 
         $path = $uri['path'];
         $query = [];
         if (isset($uri['query']) && $uri['query']) {
             parse_str($uri['query'], $query);
-            $query = $this->parseQuery($query); // <-- GET vars are filtered and sanitized
+            $query = Request::parseQuery($query); // <-- GET vars are filtered and sanitized
         }
 
         $routeArr = explode("/", $path);
@@ -93,39 +93,6 @@ class Router {
             "module" => $routeArr,
             "parameters" => array_merge($query, $formData)
         ]]);
-    }
-
-
-    /**
-     * Sanitizing GET variables.
-     * @param array $query
-     * @return array
-     */
-    public function parseQuery(array $query): array
-    {
-        return array_map('self::filterInput', $query);
-    }
-
-
-    /**
-     * Sanitizing POST variables.
-     * @param array $formData
-     * @return array
-     */
-    public function parseFormData(array $formData): array
-    {
-        return array_map('self::filterInput', $formData);
-    }
-
-
-    /**
-     * Applies Filter.
-     * @param mixed $input
-     * @return string
-     */
-    private static function filterInput($input): string
-    {
-        return htmlspecialchars(string: $input, encoding: Config::get("metatags", "charset"));
     }
 
 }
