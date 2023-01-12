@@ -54,30 +54,74 @@ $(document).ready(() => {
         localStorage.removeItem("toast")
     }
 
-    // submitForm = (path, name, reload) => {
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: path,
-    //         data: $('form[name="' + name + '"]').serialize(),
-    //         success: data => {
-    //             $('*[data-mod="' + data.segment.dataMod + '"]').html(data.segment.html);
-    //             if (reload) {
-    //                 if (data.payload?.toast) {
-    //                     localStorage.setItem("toast", JSON.stringify(data.payload.toast));
-    //                 }
-    //                 location.reload();
-    //             } else {
-    //                 if (data.payload?.toast) {
-    //                     showToast(data.payload.toast[0], data.payload.toast[1]);
-    //                 }
-    //                 if (data.content) {
-    //                     $('*[data-mod="App"]').html(data.content);
-    //                 }
-    //             }
-    //         },
-    //         dataType: 'json'
-    //     });
-    // }
+    /*****************************************************************************\
+    | ROUTING                                                                     |
+    |                                                                             |
+    | NOTE: A route is the Path segment of an URL.                                |
+    | E.g.: http://www.domain.tld/PATH                                            |
+    | In makeUp the first Path segment is the name of the Module while the        |
+    | optional second segment is a specific task.                                 |
+    | E.g.: http://www.domain.tld/Module/task                                     |
+    | IMPORTANT: The first letter of a Module is always capitalized!              |
+    \*****************************************************************************/
+
+    let fadeDurMS = 200;
+
+    setRoute = (obj, mod, task) => {
+        let route = "/" + mod;
+        if (task) {
+            route += "/" + task;
+        }
+
+        if (mod) {
+            $(this).blur();
+            if (obj) {
+                $('nav.navbar a.active').removeClass('active');
+                $(obj).addClass('active');
+            }
+            let state = { path: route, caching: true, title: '', content: '' };
+            loadContent(state)
+            history.pushState(state, mod, route);
+        }
+    }
+
+    loadContent = state => {
+        $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS, async () => {
+            let data = await requestData(state.path);
+            $('*[data-mod="App"]').html(data.content);
+            $(document).prop('title', data.title);
+            $('*[data-mod="App"]').animate({ opacity: 1 }, fadeDurMS);
+        });
+    }
+
+    requestData = async route => {
+        let state = {};
+        await $.ajax({
+            type: 'GET',
+            url: route + '?json',
+            dataType: 'json',
+            headers: {
+                Route: route
+            }
+        }).fail(() => {
+            state = {
+                path: route,
+                title: "Error!",
+                content: "Sorry! Something has gone wrong :("
+            };
+        }).done(data => {
+            state = { path: route, caching: data.caching, title: data.title, content: data.content };
+            history.replaceState(state, data.module, route);
+            $('*[data-mod="App"]').html(data.content);
+            $(document).trigger("module.loaded", [data.module]); 
+        });
+        return state;
+    }
+
+    window.onpopstate = event => {
+        loadContent(event.state);
+    }
+
 
 });
 
