@@ -8396,6 +8396,13 @@ textarea.form-control-lg {
 /* Detect browser user-agent
   --------------------------------------------------------------------- */
 /**** Begin: App header ****/
+html {
+  margin-right: calc(-100vw + 100%);
+  overflow-x: hidden; }
+
+body {
+  overflow-x: auto; }
+
 .jumbotron {
   background-image: url("../img/jumbotron_bg_1920.jpg");
   background-size: cover;
