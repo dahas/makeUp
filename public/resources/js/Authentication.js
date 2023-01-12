@@ -1,7 +1,9 @@
 
 $(document).ready(() => {
 
-    auth = (formName, path) => {
+    auth = (button, formName, path) => {
+        $(button).width($(button).width());
+        $(button).html('<i class="fa-solid fa-spinner fa-spin-pulse"></i>');
         $.ajax({
             type: 'POST',
             url: path,

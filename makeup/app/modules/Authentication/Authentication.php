@@ -23,7 +23,6 @@ class Authentication extends Module {
     {
         $html = $this->getTemplate("Authentication.login.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signin"),
-            "[[REGISTER_LINK]]" => Utils::linkBuilder("Authentication"),
             "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
         return $this->render($html);

@@ -3,9 +3,10 @@
     <td>[[NAME]]</td>
     <td>[[CITY]]</td>
     <td>[[COUNTRY]]</td>
-    <td align="right"><button style="border: none; background: none;" class="text-secondary" onclick="edit([[UID]]);">
+    <td align="right">
+        <button id="btn-edit-[[UID]]" style="border: none; background: none;" class="text-secondary" onclick="edit([[UID]]);">
             <i class="fa-solid fa-pencil"></i></button>
-        <button style="border: none; background: none;" class="text-danger" onclick="remove(this, [[UID]]);">
+        <button id="btn-del-[[UID]]" style="border: none; background: none;" class="text-danger" onclick="remove([[UID]]);">
             <i class="fa-solid fa-circle-xmark"></i></button>
     </td>
 </tr>
