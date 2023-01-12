@@ -10,6 +10,6 @@ class RouteNotFound extends Module {
 
 	protected function build(): string
 	{
-		return Utils::errorMessage(Lang::get("route_not_found"));
+		return $this->render(Utils::errorMessage(Lang::get("route_not_found")));
 	}
 }
