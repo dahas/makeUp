@@ -1,6 +1,6 @@
 {
   "name": "makeup",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "description": "A PHP SPA Framework for Bootstrap Apps",
   "main": "public/index.php",
   "scripts": {
@@ -24,5 +24,5 @@
   "bugs": {
     "url": "https://github.com/dahas/makeUp/issues"
   },
-  "homepage": "https://github.com/dahas/makeUp#readme"
+  "homepage": "http://makeup.martinwolf.info"
 }
