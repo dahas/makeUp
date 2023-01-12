@@ -65,10 +65,10 @@ $(document).ready(() => {
                     .addClass('normal');
                 showToast("success", "Model '" + data.name + "' has been added.");
                 $("#add-form input[type=text], textarea").val("");
-                $("#btn-insert").html(initialIcon);
             } else {
                 showToast("error", "You must be logged in to modify the list of Topmodels!");
             }
+            $("#btn-insert").html(initialIcon);
         });
     }
 
@@ -108,6 +108,7 @@ $(document).ready(() => {
                     showToast("success", "Model '" + data.name + "' has been deleted.")
                 } else {
                     locked = false;
+                    obj.children[0].className = "fa-solid fa-circle-xmark";
                     $("#btn-del-"+uid).parent().parent().removeClass('highlight');
                     showToast("error", "You must be logged in to delete a Topmodel!");
                 }
