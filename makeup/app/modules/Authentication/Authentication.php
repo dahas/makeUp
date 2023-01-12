@@ -59,11 +59,11 @@ class Authentication extends Module {
 
     public function signin()
     {
-        $rq = Module::requestData();
+        $rq = $this->requestData();
         if ($this->authorized($rq['login_token'], $rq['username'], $rq['password'])) {
-            $this->setLogin($rq['username']);
+            $this->auth(true);
             $toast = ["success", Lang::get('signed_in')];
-            $context = $this->route();
+            $context = $this->routeMod();
         } else {
             $toast = ["error", Lang::get('login_failed')];
             $context = "";
@@ -80,10 +80,9 @@ class Authentication extends Module {
 
     public function signout()
     {
-        $this->setLogout();
-        $routeMod = Module::create($this->route());
-        $context = !$routeMod->isProtected() ? $this->route() : "Home";
-        // array_push($segments, ["dataMod" => "App", "html" => $content]);
+        $this->auth(false);
+        $routeMod = Module::create($this->routeMod());
+        $context = !$routeMod->isProtected() ? $this->routeMod() : "Home";
         return json_encode([
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
@@ -95,7 +94,7 @@ class Authentication extends Module {
 
     public function register()
     {
-        $params = Module::requestData();
+        $params = $this->requestData();
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 

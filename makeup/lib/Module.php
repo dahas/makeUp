@@ -33,7 +33,7 @@ abstract class Module {
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			self::$isLoggedIn = isset($_SERVER['argv'][8]) && $_SERVER['argv'][8] > 0;
 		} else {
-			self::$isLoggedIn = Session::get("user") > "" && Session::get("logged_in");
+			self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
 		}
 	}
 
@@ -84,6 +84,7 @@ abstract class Module {
 			if ($protected && !self::checkLogin()) {
 				$module = new AccessDenied();
 				$module->setRender($render);
+				$module->setProtected($protected);
 			} else {
 				require_once $modFile;
 				$module = new $modName();
@@ -101,7 +102,7 @@ abstract class Module {
 	}
 
 
-	protected function render(string $html = ""): string
+	protected function render(string $html): string
 	{
 		$params = self::requestData();
 		if (!isset($params['json']) || $this->getRender() == "html")
@@ -202,19 +203,19 @@ abstract class Module {
 			$routeArr = explode("/", $headers['Route']);
 			array_shift($routeArr);
 			if ($routeArr[0]) {
-				Session::set("route", $routeArr[0]);
+				Session::set("routeMod", $routeArr[0]);
 			} else {
-				Session::set("route", "Home");
+				Session::set("routeMod", "Home");
 			}
-		} else if(!Session::get("route")) {
-			Session::set("route", $modName);
+		} else if(!Session::get("routeMod")) {
+			Session::set("routeMod", $modName);
 		}
 	}
 
 
-	protected function route(): string
+	protected function routeMod(): string
 	{
-		return Session::get("route");
+		return Session::get("routeMod");
 	}
 
 
@@ -262,21 +263,21 @@ abstract class Module {
 	}
 
 
-	protected function setLogin(string $un): void
+	/**
+	 * Use this function to grant or deny a user access to protected features and content.
+	 * @param bool $verified
+	 * @return void
+	 */
+	protected function auth(bool $verified): void
 	{
-		Session::set("logged_in", true);
-		Session::set("user", $un);
+		session_regenerate_id(true);
+		Session::set("logged_in", $verified);
 	}
+	
 
 	public static function checkLogin(): bool
 	{
-		return self::$isLoggedIn;
-	}
-
-	protected function setLogout(): void
-	{
-		Session::set("logged_in", false);
-		Session::set(Session::get("user"), null);
+		return Session::get("logged_in") ?? false;
 	}
 
 
