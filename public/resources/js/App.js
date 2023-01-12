@@ -1,18 +1,44 @@
 
 $(document).ready(() => {
 
-    // $(document).on("user.auth", event => {
-    //     loadModule('Navigation');
-    //     loadModule('Authentication');
-    // });
+    /*****************************************************************************\
+    | Below we handle dispatched events from modules.                             |
+    |                                                                             |
+    | NOTE: Events must be registered on document level since HTML elements are   |
+    | inserted and removed from the DOM asynchronously on demand.                 |
+    \*****************************************************************************/
 
-    loadModule = modName => {
+    // Events are triggered in Authentication.js
+    $(document).on("user.auth", (event, context) => {
+        loadModule('Navigation');
+    });
+    $(document).on("user.logged.in", (event, context) => {
+        loadModule('Authentication', 'buildLogoutForm');
+        setRoute(null, context);
+    });
+    $(document).on("user.logged.out", (event, context) => {
+        loadModule('Authentication', 'buildLoginForm');
+        setRoute(null, context);
+    });
+    $(document).on("user.registered", (event, context) => {
+        loadModule('Authentication', 'buildLogoutForm');
+        setRoute(null, context);
+    });
+
+    /******************************************************************************/
+
+    loadModule = (module, task) => {
+        let route = "/" + module;
+        if (task) {
+            route += "/" + task;
+        }
+
         $.ajax({
             type: 'GET',
-            url: modName + '?json',
+            url: route + '?json',
             dataType: 'json'
         }).done(data => {
-            $('*[data-mod="'+modName+'"]').html(data.content);
+            $('*[data-mod="' + module + '"]').html(data.content);
         });
     }
 
@@ -27,7 +53,7 @@ $(document).ready(() => {
         showToast(tempToast[0], tempToast[1]);
         localStorage.removeItem("toast")
     }
-    
+
     // submitForm = (path, name, reload) => {
     //     $.ajax({
     //         type: 'POST',

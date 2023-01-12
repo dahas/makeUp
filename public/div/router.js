@@ -3,16 +3,21 @@ $(document).ready(() => {
 
     let fadeDurMS = 200;
 
-    setRoute = (obj, mod, uri) => {
+    setRoute = (obj, mod, task) => {
+        let route = "/" + mod;
+        if (task) {
+            route += "/" + task;
+        }
+
         if (mod) {
             $(this).blur();
             if (obj) {
                 $('nav.navbar a.active').removeClass('active');
                 $(obj).addClass('active');
             }
-            let state = { path: uri, caching: true, title: '', content: '' };
+            let state = { path: route, caching: true, title: '', content: '' };
             loadContent(state)
-            history.pushState(state, mod, uri);
+            history.pushState(state, mod, route);
         }
     }
 

@@ -27,8 +27,8 @@ class Navigation extends Module {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                     $html .= $menuNoSubSlice->parse([
                         "[[ACTIVE]]" => $modName == @$data->module ? "active" : "",
-                        "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                        "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, @$data->task) : "",
+                        "[[MODULE]]" => @$data->module ? @$data->module : "",
+                        "[[TASK]]" => @$data->task ? @$data->task : "",
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
@@ -40,8 +40,8 @@ class Navigation extends Module {
             else {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                     $html .= $menuHasSubSlice->parse([
-                        "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                        "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, @$data->task) : "",
+                        "[[MODULE]]" => @$data->module ? @$data->module : "",
+                        "[[TASK]]" => @$data->task ? @$data->task : "",
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
@@ -75,8 +75,8 @@ class Navigation extends Module {
             // Dropdown item
             if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
                 $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
-                    "[[MOD_NAME]]" => @$data->module ? @$data->module : "",
-                    "[[LINK]]" => @$data->module ? Utils::linkBuilder(@$data->module, @$data->task) : "",
+                    "[[MODULE]]" => @$data->module ? @$data->module : "",
+                    "[[TASK]]" => @$data->task ? @$data->task : "",
                     "[[ACTIVE]]" => @$data->module == $modName ? "active" : "",
                     "[[TEXT]]" => $data->text,
                     "[[ICON]]" => ""
@@ -106,8 +106,8 @@ class Navigation extends Module {
             if (@$subData->module) {
                 if (@$subData->protected != 1 || (@$subData->protected == 1 && Module::checkLogin())) {
                     $markers = [
-                        "[[MOD_NAME]]" => @$subData->module ? @$subData->module : "",
-                        "[[LINK]]" => @$subData->module ? Utils::linkBuilder(@$subData->module, @$subData->task) : "",
+                        "[[MODULE]]" => @$subData->module ? @$subData->module : "",
+                        "[[TASK]]" => @$subData->task ? @$subData->task : "",
                         "[[ACTIVE]]" => @$subData->module == $modName ? "active" : "",
                         "[[TEXT]]" => $subData->text,
                         "[[ICON]]" => @$subData->icon ? $icon->parse([
