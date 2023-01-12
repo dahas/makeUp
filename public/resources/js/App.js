@@ -27,6 +27,9 @@ $(document).ready(() => {
 
     /******************************************************************************/
 
+    /**
+     * Use this function to load content into a segment of the page.
+     */
     loadModule = (module, task) => {
         let route = "/" + module;
         if (task) {
@@ -42,16 +45,15 @@ $(document).ready(() => {
         });
     }
 
-    showToast = (tid, msg) => {
-        $('#toast-' + tid + ' span.toast-msg').html(msg);
-        const toast = new bootstrap.Toast($('#toast-' + tid), { animation: true, delay: 3000 });
+    /**
+     * Use this function to display a toast.
+     * @param alert String - "success", "warning" or "error"
+     * @param msg String - The message to display
+     */
+    showToast = (alert, msg) => {
+        $('#toast-' + alert + ' span.toast-msg').html(msg);
+        const toast = new bootstrap.Toast($('#toast-' + alert), { animation: true, delay: 3000 });
         toast.show();
-    }
-
-    const tempToast = JSON.parse(localStorage.getItem("toast"));
-    if (tempToast) {
-        showToast(tempToast[0], tempToast[1]);
-        localStorage.removeItem("toast")
     }
 
     /*****************************************************************************\
@@ -63,10 +65,16 @@ $(document).ready(() => {
     | optional second segment is a specific task.                                 |
     | E.g.: http://www.domain.tld/Module/task                                     |
     | IMPORTANT: The first letter of a Module is always capitalized!              |
+    |                                                                             |
+    | USAGE: Use "setRoute(null, 'ModName'[, 'taskName'])" to redirect users or   |
+    | to display a page.                                                          |
     \*****************************************************************************/
 
     let fadeDurMS = 200;
 
+    /**
+     * Use this function to display a page.
+     */
     setRoute = (obj, mod, task) => {
         let route = "/" + mod;
         if (task) {
