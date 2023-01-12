@@ -90,7 +90,7 @@ $(document).ready(() => {
         });
     }
 
-    remove = (uid) => {
+    remove = uid => {
         if (!locked) {
             locked = true;
             $("#btn-del-"+uid).parent().parent().addClass('highlight');
@@ -108,11 +108,10 @@ $(document).ready(() => {
                     showToast("success", "Model '" + data.name + "' has been deleted.")
                 } else {
                     locked = false;
-                    obj.children[0].className = "fa-solid fa-circle-xmark";
                     $("#btn-del-"+uid).parent().parent().removeClass('highlight');
                     showToast("error", "You must be logged in to delete a Topmodel!");
+                    $("#btn-del-"+uid).html(initialIcon);
                 }
-                $("#btn-del-"+uid).html(initialIcon);
             });
         }
     }
