@@ -3,16 +3,12 @@ $(document).ready(() => {
 
     let locked = false;
 
-    $('form[name="add-sampledata"]').on("submit", () => { insert(); return false; });
-    $('form[name="edit-sampledata"]').on("submit", () => { update(); return false; });
-
-    // Event handler must be re-attached after user logged in/out. We catch the event here.
-    $(document).on("user.auth", () => {
-        $('form[name="add-sampledata"]').on("submit", () => { insert(); return false; });
-        $('form[name="edit-sampledata"]').on("submit", () => { update(); return false; });
-    })
-
     add = () => {
+        $('form[name="add-sampledata"]').on("submit", () => { 
+            insert(); 
+            return false; 
+        });
+
         $("#edit-form").hide();
         $("#add-form").fadeIn();
     }
@@ -24,6 +20,11 @@ $(document).ready(() => {
     }
 
     edit = (uid) => {
+        $('form[name="edit-sampledata"]').on("submit", () => { 
+            update(); 
+            return false; 
+        });
+        
         $.ajax({
             type: 'GET',
             url: "/SampleData/getItem?uid=" + uid,

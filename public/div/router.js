@@ -25,26 +25,26 @@ $(document).ready(() => {
         });
     }
 
-    requestData = async path => {
+    requestData = async route => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: path + '?json',
+            url: route + '?json',
             dataType: 'json',
             headers: {
-                Route: path
+                Route: route
             }
         }).fail(() => {
             state = {
-                path: path,
+                path: route,
                 title: "Error!",
                 content: "Sorry! Something has gone wrong :("
             };
         }).done(data => {
-            state = { path: path, caching: data.caching, title: data.title, content: data.content };
-            history.replaceState(state, data.module, path);
+            state = { path: route, caching: data.caching, title: data.title, content: data.content };
+            history.replaceState(state, data.module, route);
             $('*[data-mod="App"]').html(data.content);
-            $(document).trigger("module.loaded"); 
+            $(document).trigger("module.loaded", [data.module]); 
         });
         return state;
     }

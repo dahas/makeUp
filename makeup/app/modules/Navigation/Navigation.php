@@ -52,7 +52,7 @@ class Navigation extends Module {
             }
         }
 
-        return $html;
+        return $this->render($html);
     }
 
     private function submenu($data, string $modName): string
