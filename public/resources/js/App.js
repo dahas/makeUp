@@ -14,15 +14,15 @@ $(document).ready(() => {
     });
     $(document).on("user.logged.in", (event, context) => {
         loadModule('Authentication', 'buildLogoutForm');
-        setRoute(null, context);
+        setRoute(context);
     });
     $(document).on("user.logged.out", (event, context) => {
         loadModule('Authentication', 'buildLoginForm');
-        setRoute(null, context);
+        setRoute(context);
     });
     $(document).on("user.registered", (event, context) => {
         loadModule('Authentication', 'buildLogoutForm');
-        setRoute(null, context);
+        setRoute(context);
     });
 
     /******************************************************************************/
