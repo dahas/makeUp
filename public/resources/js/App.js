@@ -75,7 +75,7 @@ $(document).ready(() => {
     /**
      * Use this function to display a page.
      */
-    setRoute = (obj, mod, task) => {
+    setRoute = (mod, task, element) => {
         let route = "/" + mod;
         if (task) {
             route += "/" + task;
@@ -83,9 +83,9 @@ $(document).ready(() => {
 
         if (mod) {
             $(this).blur();
-            if (obj) {
+            if (element) {
                 $('nav.navbar a.active').removeClass('active');
-                $(obj).addClass('active');
+                $(element).addClass('active');
             }
             let state = { path: route, caching: true, title: '', content: '' };
             loadContent(state)
