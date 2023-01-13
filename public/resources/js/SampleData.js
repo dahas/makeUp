@@ -49,7 +49,6 @@ $(document).ready(() => {
     }
 
     insert = () => {
-        const initialIcon = $("#btn-insert").html();
         $("#btn-insert").html('<i class="fa-solid fa-spinner fa-spin-pulse"></i>');
         $.ajax({
             type: 'POST',
@@ -68,11 +67,12 @@ $(document).ready(() => {
             } else {
                 showToast("error", "You must be logged in to modify the list of Topmodels!");
             }
-            $("#btn-insert").html(initialIcon);
+            $("#btn-insert").html('<i class="fa-solid fa-check"></i>');
         });
     }
 
     update = () => {
+        $("#btn-update").html('<i class="fa-solid fa-spinner fa-spin-pulse"></i>');
         $.ajax({
             type: 'POST',
             url: "/SampleData/update",
@@ -87,6 +87,7 @@ $(document).ready(() => {
             } else {
                 showToast("error", "You must be logged in to modify the list of Topmodels!");
             }
+            $("#btn-update").html('<i class="fa-solid fa-check"></i>');
         });
     }
 
