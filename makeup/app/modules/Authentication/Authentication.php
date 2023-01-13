@@ -61,14 +61,17 @@ class Authentication extends Module {
         $rq = $this->requestData();
         if ($this->authorized($rq['login_token'], $rq['username'], $rq['password'])) {
             $this->auth(true);
+            $authorized = true;
             $toast = ["success", Lang::get('signed_in')];
             $context = $this->routeMod();
         } else {
+            $authorized = false;
             $toast = ["error", Lang::get('login_failed')];
             $context = "";
         }
 
         return json_encode([
+            "authorized" => $authorized,
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
             "toast" => $toast,
@@ -83,6 +86,7 @@ class Authentication extends Module {
         $routeMod = Module::create($this->routeMod());
         $context = !$routeMod->isProtected() ? $this->routeMod() : "Home";
         return json_encode([
+            "authorized" => $this->checkLogin(),
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
             "toast" => ["success", Lang::get('signed_out')],
@@ -101,17 +105,19 @@ class Authentication extends Module {
             Utils::checkFormToken("reg", $params['reg_token']) && $params['username'] && $params['password']) {
             $userdata = $params['username'] . ":" . password_hash($params['password'], PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
-            Session::set("logged_in", true);
-            Session::set("user", $params['username']);
+            $this->auth(true);
+            $authorized = true;
             $response = "success";
             $context = "Authentication";
         } else {
+            $authorized = false;
             $response = "error";
             $context = "";
         }
         fclose($file); 
 
         return json_encode([
+            "authorized" => $authorized,
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
             "toast" => [$response, Lang::get($response)],
