@@ -38,7 +38,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'GET',
-            url: route + '?json',
+            url: route,
             dataType: 'json'
         }).done(data => {
             $('*[data-mod="' + module + '"]').html(data.content);
@@ -113,10 +113,11 @@ $(document).ready(() => {
         let state = {};
         await $.ajax({
             type: 'GET',
-            url: route + '?json',
+            url: route,
             dataType: 'json',
             headers: {
-                Route: route
+                "X-makeUp-Route": route,
+                "X-makeUp-Ajax": "XHR"
             }
         }).fail((jqXHR, textStatus, errorThrown) => {
             state = {

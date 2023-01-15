@@ -13,6 +13,7 @@ abstract class Module {
 	protected $config = array();
 	protected $modName = "";
 	protected $render = "";
+	protected $isXHR = false;
 	protected $dataMod = "App";
 	protected $protected = 0;
 	protected static $isLoggedIn = false;
@@ -32,6 +33,7 @@ abstract class Module {
 		// Debugging:
 		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
 			self::$isLoggedIn = isset($_SERVER['argv'][8]) && $_SERVER['argv'][8] > 0;
+			$this->isXHR = isset($_SERVER['argv'][10]) && $_SERVER['argv'][10] > 0;
 		} else {
 			self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
 		}
@@ -47,14 +49,18 @@ abstract class Module {
 	{
 		$this->procArguments(func_get_args());
 
-		$rq = self::requestData();
 		$modName = self::name();
 		$task = self::task();
-		$render = isset($rq['json']) ? "json" : "html";
+
+		if(!Session::get("routeMod")) {
+			Session::set("routeMod", $modName);
+		}
 
 		if(function_exists("getallheaders")) {
-			$this->procRoute(getallheaders(), $modName, $render);
+			$this->procHttpRequest(getallheaders());
 		}
+
+		$render = $this->isXHR ? "json" : "html";
 
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($modName, $render)->$task();
@@ -63,6 +69,34 @@ abstract class Module {
 		}
 
 		die($appHtml);
+	}
+
+
+	/**
+	 * Make GET and POST vars available in Modules.
+	 * @param array $args
+	 * @return void
+	 */
+	protected function procArguments(array $args): void
+	{
+		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
+	}
+
+
+	protected function procHttpRequest(array $headers): void
+	{
+		if (isset($headers['X-makeUp-Route'])) {
+			$routeArr = explode("/", $headers['X-makeUp-Route']);
+			array_shift($routeArr);
+			if ($routeArr[0]) {
+				Session::set("routeMod", $routeArr[0]);
+			} else {
+				Session::set("routeMod", "Home");
+			}
+		}
+		// print_r($headers);
+		$this->isXHR = isset($headers['X-makeUp-Ajax']) || isset($headers['X-Requested-With']);
+
 	}
 
 
@@ -104,8 +138,7 @@ abstract class Module {
 
 	protected function render(string $html): string
 	{
-		$params = self::requestData();
-		if (!isset($params['json']) || $this->getRender() == "html")
+		if ($this->getRender() == "html")
 			return $html;
 		else
 			return $this->renderJSON($html);
@@ -183,33 +216,6 @@ abstract class Module {
 	{
 		$fname = $fileName ? $fileName : $this->modName . ".html";
 		return Template::load($this->modName, $fname);
-	}
-
-
-	/**
-	 * Make GET and POST vars available in Modules.
-	 * @param array $args
-	 * @return void
-	 */
-	protected function procArguments(array $args): void
-	{
-		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
-	}
-
-
-	protected function procRoute(array $headers, string $modName, string $render): void
-	{
-		if ($render == "json" && isset($headers['Route'])) {
-			$routeArr = explode("/", $headers['Route']);
-			array_shift($routeArr);
-			if ($routeArr[0]) {
-				Session::set("routeMod", $routeArr[0]);
-			} else {
-				Session::set("routeMod", "Home");
-			}
-		} else if(!Session::get("routeMod")) {
-			Session::set("routeMod", $modName);
-		}
 	}
 
 
