@@ -76,12 +76,16 @@ $(document).ready(() => {
      * Use this function to display a page.
      */
     setRoute = (mod, task, element) => {
+        mod = typeof mod == 'undefined' ? '' : mod;
+        task = typeof task == 'undefined' ? '' : task;
+        element = typeof element == 'undefined' ? null : element;
+
         let route = "/" + mod;
         if (task) {
             route += "/" + task;
         }
 
-        if (mod) {
+        // if (mod) {
             $(this).blur();
             if (element) {
                 $('nav.navbar a.active').removeClass('active');
@@ -90,15 +94,18 @@ $(document).ready(() => {
             let state = { path: route, caching: true, title: '', content: '' };
             loadContent(state)
             history.pushState(state, mod, route);
-        }
+        // }
     }
 
     loadContent = state => {
         $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS, async () => {
-            let data = await requestData(state.path);
-            $('*[data-mod="App"]').html(data.content);
-            $(document).prop('title', data.title);
-            $('*[data-mod="App"]').animate({ opacity: 1 }, fadeDurMS);
+            let data = await requestData(state.path)
+                .catch(() => {console.log("ERROR! Cannot render Module! Please check your controller.")});
+            if (data) {
+                $('*[data-mod="App"]').html(data.content);
+                $(document).prop('title', data.title);
+                $('*[data-mod="App"]').animate({ opacity: 1 }, fadeDurMS);
+            }
         });
     }
 
@@ -111,7 +118,7 @@ $(document).ready(() => {
             headers: {
                 Route: route
             }
-        }).fail(() => {
+        }).fail((jqXHR, textStatus, errorThrown) => {
             state = {
                 path: route,
                 title: "Error!",
