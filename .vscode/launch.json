@@ -7,10 +7,10 @@
             "request": "launch",
             "program": "${workspaceRoot}/public/index.php",
             "args": [
-                "--path", "/SampleData/getItem?uid=6",   // Route (module name) and query. E.g.: /test?json&var1=123&var2=444
+                "--path", "/Home",   // Route (module name) and query. E.g.: "SampleData/getItem?uid=6"
                 "--method", "GET",   // GET or POST
-                "--post-data", "post1=one&post2=two",           // Form data
-                "--auth", "0",      // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
+                "--post-data", "",   // Form data. E.g.: "post1=one&post2=two"
+                "--auth", "0",       // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
             ],
             "externalConsole": false,
             "port": 9003
