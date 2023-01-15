@@ -11,6 +11,7 @@
                 "--method", "GET",   // GET or POST
                 "--post-data", "",   // Form data. E.g.: "post1=one&post2=two"
                 "--auth", "0",       // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
+                "--xhr", "1",       // Simulate ajax request
             ],
             "externalConsole": false,
             "port": 9003
