@@ -25,10 +25,16 @@ class Navigation extends Module {
             // Main menu:
             if (!isset($data->submenu)) {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+                    if (@$data->module) {
+                        $module = @$data->module ? @$data->module : "";
+                        $task = @$data->task ? @$data->task : "";
+                        $routeHandler = "setRoute('$module', '$task', this);";
+                    } else {
+                        $routeHandler = "void(0);";
+                    }
                     $html .= $menuNoSubSlice->parse([
                         "[[ACTIVE]]" => $modName == @$data->module ? "active" : "",
-                        "[[MODULE]]" => @$data->module ? @$data->module : "",
-                        "[[TASK]]" => @$data->task ? @$data->task : "",
+                        "[[ROUTE_HANDLER]]" => $routeHandler,
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
@@ -39,9 +45,15 @@ class Navigation extends Module {
             // With submenu:
             else {
                 if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+                    if (@$data->module) {
+                        $module = @$data->module ? @$data->module : "";
+                        $task = @$data->task ? @$data->task : "";
+                        $routeHandler = "setRoute('$module', '$task', this);";
+                    } else {
+                        $routeHandler = "void(0);";
+                    }
                     $html .= $menuHasSubSlice->parse([
-                        "[[MODULE]]" => @$data->module ? @$data->module : "",
-                        "[[TASK]]" => @$data->task ? @$data->task : "",
+                        "[[ROUTE_HANDLER]]" => $routeHandler,
                         "[[TEXT]]" => $data->text,
                         "[[ICON]]" => @$data->icon ? $icon->parse([
                             "[[NAME]]" => @$data->icon
@@ -74,9 +86,15 @@ class Navigation extends Module {
         if (@$data->module) {
             // Dropdown item
             if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+                if (@$data->module) {
+                    $module = @$data->module ? @$data->module : "";
+                    $task = @$data->task ? @$data->task : "";
+                    $routeHandler = "setRoute('$module', '$task', this);";
+                } else {
+                    $routeHandler = "void(0);";
+                }
                 $ss["{{SUBMENU_NO_SUB}}"] .= $subMenuNoSubSlice->parse([
-                    "[[MODULE]]" => @$data->module ? @$data->module : "",
-                    "[[TASK]]" => @$data->task ? @$data->task : "",
+                    "[[ROUTE_HANDLER]]" => $routeHandler,
                     "[[ACTIVE]]" => @$data->module == $modName ? "active" : "",
                     "[[TEXT]]" => $data->text,
                     "[[ICON]]" => ""
@@ -105,9 +123,15 @@ class Navigation extends Module {
             // Module
             if (@$subData->module) {
                 if (@$subData->protected != 1 || (@$subData->protected == 1 && Module::checkLogin())) {
+                    if (@$subData->module) {
+                        $module = @$subData->module ? @$subData->module : "";
+                        $task = @$subData->task ? @$subData->task : "";
+                        $routeHandler = "setRoute('$module', '$task', this);";
+                    } else {
+                        $routeHandler = "void(0);";
+                    }
                     $markers = [
-                        "[[MODULE]]" => @$subData->module ? @$subData->module : "",
-                        "[[TASK]]" => @$subData->task ? @$subData->task : "",
+                        "[[ROUTE_HANDLER]]" => $routeHandler,
                         "[[ACTIVE]]" => @$subData->module == $modName ? "active" : "",
                         "[[TEXT]]" => $subData->text,
                         "[[ICON]]" => @$subData->icon ? $icon->parse([
