@@ -71,14 +71,14 @@ class Router {
         } else {
             $method = $_SERVER['REQUEST_METHOD'];
             $uri = parse_url($_SERVER['REQUEST_URI']);
-            $formData = Request::parseFormData($_POST); // <-- POST vars are filtered and sanitized
+            $formData = Request::parseFormData($_POST);
         }
 
         $path = $uri['path'];
         $query = [];
         if (isset($uri['query']) && $uri['query']) {
             parse_str($uri['query'], $query);
-            $query = Request::parseQuery($query); // <-- GET vars are filtered and sanitized
+            $query = Request::parseQuery($query);
         }
 
         $routeArr = explode("/", $path);
@@ -93,6 +93,10 @@ class Router {
             "module" => $routeArr,
             "parameters" => array_merge($query, $formData)
         ]]);
+
+        $_GET = null;
+        $_POST = null;
+        $_REQUEST = null;
     }
 
 }
