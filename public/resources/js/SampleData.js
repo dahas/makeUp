@@ -14,6 +14,9 @@ $(document).ready(() => {
     }
 
     cancel = mode => {
+        $('form[name="add-sampledata"]').off("submit");
+        $('form[name="edit-sampledata"]').off("submit");
+
         $("#" + mode + "-form").fadeOut(() => {
             $("#add-form input[type=text], textarea").val("");
         });
