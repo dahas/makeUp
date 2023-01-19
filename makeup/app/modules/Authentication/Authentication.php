@@ -3,13 +3,14 @@
 use makeUp\lib\Config;
 use makeUp\lib\Lang;
 use makeUp\lib\Module;
+use makeUp\lib\Request;
 use makeUp\lib\Utils;
 use makeUp\lib\Session;
 
 
 class Authentication extends Module {
 
-    protected function build(string $variant = ""): string
+    protected function build(Request $request, string $variant = ""): string
     {
         $html = match ($variant) {
             default => $this->buildRegistrationForm(),
@@ -56,10 +57,9 @@ class Authentication extends Module {
     }
 
 
-    public function signin()
+    public function signin(Request $request)
     {
-        $rq = $this->requestData();
-        if ($this->authorized($rq['login_token'], $rq['username'], $rq['password'])) {
+        if ($this->authorized($request->getParameter("login_token"), $request->getParameter("username"), $request->getParameter("password"))) {
             $this->auth(true);
             $authorized = true;
             $toast = ["success", Lang::get('signed_in')];
@@ -95,15 +95,14 @@ class Authentication extends Module {
     }
 
 
-    public function register()
+    public function register(Request $request)
     {
-        $params = $this->requestData();
         $docRoot = dirname(__DIR__, 3);
         $file = fopen($docRoot . "/users.txt", "a+");
 
-        if (!Module::checkLogin() && !$this->userExists($file, $params['username']) &&
-            Utils::checkFormToken("reg", $params['reg_token']) && $params['username'] && $params['password']) {
-            $userdata = $params['username'] . ":" . password_hash($params['password'], PASSWORD_BCRYPT) . ":END";
+        if (!Module::checkLogin() && !$this->userExists($file, $request->getParameter("username")) &&
+            Utils::checkFormToken("reg", $request->getParameter("reg_token")) && $request->getParameter("username") && $request->getParameter("password")) {
+            $userdata = $request->getParameter("username") . ":" . password_hash($request->getParameter("password"), PASSWORD_BCRYPT) . ":END";
             fwrite($file, $userdata . PHP_EOL);
             $this->auth(true);
             $authorized = true;

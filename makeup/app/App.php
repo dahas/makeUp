@@ -2,6 +2,7 @@
 
 namespace makeUp;
 
+use makeUp\lib\Request;
 use makeUp\lib\Config;
 use makeUp\lib\Template;
 use makeUp\lib\Module;
@@ -9,13 +10,13 @@ use makeUp\lib\Lang;
 
 class App extends Module {
 
-    protected function build(): string
+    protected function build(Request $request): string
     {
-        $modName = Module::name();
+        $modName = $request->getModule();
         $m = [];
 
         /**** IMPORTANT: Module with page content must come first! *************/
-        $m["[[CONTENT]]"] = Module::create($modName)->build();
+        $m["[[CONTENT]]"] = Module::create($modName)->build($request);
 
         /**** Parsing the HTML head section ************************************/
 
@@ -38,9 +39,9 @@ class App extends Module {
 
         /**** Parsing the HTML body section ************************************/
 
-        $m["[[NAVIGATION]]"] = Module::create("Navigation")->build(); // Adds the menu to the navbar
-        $m["[[AUTHENTICATION]]"] = Module::create("Authentication")->build("form"); // Adds the login form to the navbar
-        $m["[[LANGUAGE]]"] = Module::create("Language")->build(); // Adds the language selector to the navbar
+        $m["[[NAVIGATION]]"] = Module::create("Navigation")->build($request); // Adds the menu to the navbar
+        $m["[[AUTHENTICATION]]"] = Module::create("Authentication")->build($request, "form"); // Adds the login form to the navbar
+        $m["[[LANGUAGE]]"] = Module::create("Language")->build($request); // Adds the language selector to the navbar
         $m["[[SUBTITLE]]"] = Config::get("page_settings", "subtitle");
 
         $packageJson = json_decode(file_get_contents(dirname(__DIR__, 2) . "/package.json"), true);

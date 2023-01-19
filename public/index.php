@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 use makeUp\App;
-use makeUp\lib\Router;
+use makeUp\lib\FrontController;
 
 require dirname(__DIR__, 1) . "/makeup/vendor/autoload.php";
 
@@ -23,5 +23,5 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === "localhost:2400")
     error_reporting(0);
 }
 
-$Router = new Router();
-$Router->get("/", [App::class, "compile"])->run();
+$fc = new FrontController();
+$fc->handle();

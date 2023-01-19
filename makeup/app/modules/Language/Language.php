@@ -1,6 +1,7 @@
 <?php
 
 use makeUp\lib\Module;
+use makeUp\lib\Request;
 use makeUp\lib\Utils;
 use makeUp\lib\Cookie;
 use makeUp\lib\Session;
@@ -8,7 +9,7 @@ use makeUp\lib\Session;
 
 class Language extends Module {
 
-    protected function build(): string
+    protected function build(Request $request): string
     {
         $m = [];
         $s = [];
@@ -34,10 +35,9 @@ class Language extends Module {
     }
 
 
-    public function change(): string
+    public function change(Request $request): string
     {
-        $params = $this->requestData();
-        Cookie::set("lang_code", $params["cc"]);
+        Cookie::set("lang_code", $request->getParameter("cc"));
         Session::clear("translation"); // String resources must be renewed in the session
         return json_encode(['result' => 1]);
     }

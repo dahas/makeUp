@@ -2,13 +2,15 @@
 
 use makeUp\lib\Lang;
 use makeUp\lib\Module;
+use makeUp\lib\Request;
 
 
 class Home extends Module {
 
-    protected function build(): string
+    protected function build(Request $request): string
     {
-        $params = $this->requestData();
+        $parameters = $request->getParameters();
+
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
 
         if (Module::checkLogin()) {

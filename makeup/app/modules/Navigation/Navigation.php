@@ -2,14 +2,15 @@
 
 use makeUp\lib\Module;
 use makeUp\lib\Menu;
+use makeUp\lib\Request;
 use makeUp\lib\Utils;
 
 
 class Navigation extends Module {
 
-    public function build(): string
+    public function build(Request $request): string
     {
-        $modName = Module::name();
+        $modName = $request->getModule();
         $mainTmpl = $this->getTemplate();
 
         // Init slices:

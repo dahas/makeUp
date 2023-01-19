@@ -9,7 +9,6 @@ use ReflectionClass;
 
 abstract class Module {
 
-	protected static array $arguments = [];
 	protected $config = array();
 	protected $modName = "";
 	protected $render = "";
@@ -32,53 +31,38 @@ abstract class Module {
 		self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
 	}
 
-	abstract protected function build(): string;
+	abstract protected function build(Request $request): string;
 
 
 	/**
 	 * Compile and output the app as HTML.
 	 */
-	public function compile(): void
+	public function execute(Request $request): void
 	{
-		$this->procArguments(func_get_args());
-
-		$modName = self::name();
-		$task = self::task();
+		$modName = $request->getModule();
+		$task = $request->getTask();
 
 		if (!Session::get("routeMod")) {
 			Session::set("routeMod", $modName);
 		}
 
-		if (isset($_SERVER['HTTP_X_MAKEUP_ROUTE'])) {
-			$routeArr = explode("/", $_SERVER['HTTP_X_MAKEUP_ROUTE']);
-			array_shift($routeArr);
-			if ($routeArr[0]) {
-				Session::set("routeMod", $routeArr[0]);
+		if ($request->issetRouteHeader()) {
+			if ($request->getRouteHeader()) {
+				Session::set("routeMod", $request->getRouteHeader());
 			} else {
 				Session::set("routeMod", "Home");
 			}
 		}
 
-		$render = self::isXHR() ? "json" : "html";
+		$render = $request->isXHR() ? "json" : "html";
 
 		if ($render == "json" || $task != "build") { // Create only the Module
-			$appHtml = self::create($modName, $render)->$task();
+			$appHtml = self::create($modName, $render)->$task($request);
 		} else { // Create the whole App
-			$appHtml = $this->build();
+			$appHtml = $this->build($request);
 		}
 
 		die($appHtml);
-	}
-
-
-	/**
-	 * Make GET and POST vars available in Modules.
-	 * @param array $args
-	 * @return void
-	 */
-	protected function procArguments(array $args): void
-	{
-		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
 	}
 
 
@@ -91,7 +75,6 @@ abstract class Module {
 	 */
 	public static function create(string $modName, string $render = "html", bool $useDataMod = false): mixed
 	{
-		$params = self::requestData();
 		$modFile = dirname(__DIR__, 1) . "/app/modules/$modName/$modName.php";
 
 		if (is_file($modFile)) {
@@ -204,64 +187,6 @@ abstract class Module {
 	protected function routeMod(): string
 	{
 		return Session::get("routeMod");
-	}
-
-
-	/**
-	 * Access Name of a Module.
-	 * @return string
-	 */
-	protected static function isXHR(): bool
-	{
-		if (!empty(self::$arguments) && isset(self::$arguments['isXHR']) 
-				&& self::$arguments['isXHR'] == 1) {
-			return true;
-		}
-		return false;
-	}
-
-
-	/**
-	 * Access Name of a Module.
-	 * @return string
-	 */
-	protected static function name(): string
-	{
-		if (!empty(self::$arguments) && isset(self::$arguments['module']) &&
-			isset(self::$arguments['module'][0]) && self::$arguments['module'][0]) {
-			return self::$arguments['module'][0];
-		} else {
-			return Config::get("app_settings", "default_module");
-		}
-	}
-
-
-	/**
-	 * Access Name of a Task.
-	 * @return string
-	 */
-	protected static function task(): string
-	{
-		if (!empty(self::$arguments) && isset(self::$arguments['module']) &&
-			isset(self::$arguments['module'][1]) && self::$arguments['module'][1]) {
-			return self::$arguments['module'][1];
-		} else {
-			return "build";
-		}
-	}
-
-
-	/**
-	 * Access GET and POST vars in Modules.
-	 * @return array
-	 */
-	public static function requestData(): array
-	{
-		if (!empty(self::$arguments) && isset(self::$arguments['parameters'])) {
-			return self::$arguments['parameters'];
-		} else {
-			return [];
-		}
 	}
 
 
