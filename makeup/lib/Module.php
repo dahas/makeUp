@@ -13,7 +13,6 @@ abstract class Module {
 	protected $config = array();
 	protected $modName = "";
 	protected $render = "";
-	protected $isXHR = false;
 	protected $dataMod = "App";
 	protected $protected = 0;
 	protected static $isLoggedIn = false;
@@ -30,13 +29,7 @@ abstract class Module {
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name"));
 
-		// Debugging:
-		if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
-			self::$isLoggedIn = isset($_SERVER['argv'][8]) && $_SERVER['argv'][8] > 0;
-			$this->isXHR = isset($_SERVER['argv'][10]) && $_SERVER['argv'][10] > 0;
-		} else {
-			self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
-		}
+		self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
 	}
 
 	abstract protected function build(): string;
@@ -52,15 +45,21 @@ abstract class Module {
 		$modName = self::name();
 		$task = self::task();
 
-		if(!Session::get("routeMod")) {
+		if (!Session::get("routeMod")) {
 			Session::set("routeMod", $modName);
 		}
 
-		if(function_exists("getallheaders")) {
-			$this->procHttpRequest(getallheaders());
+		if (isset($_SERVER['HTTP_X_MAKEUP_ROUTE'])) {
+			$routeArr = explode("/", $_SERVER['HTTP_X_MAKEUP_ROUTE']);
+			array_shift($routeArr);
+			if ($routeArr[0]) {
+				Session::set("routeMod", $routeArr[0]);
+			} else {
+				Session::set("routeMod", "Home");
+			}
 		}
 
-		$render = $this->isXHR ? "json" : "html";
+		$render = self::isXHR() ? "json" : "html";
 
 		if ($render == "json" || $task != "build") { // Create only the Module
 			$appHtml = self::create($modName, $render)->$task();
@@ -80,23 +79,6 @@ abstract class Module {
 	protected function procArguments(array $args): void
 	{
 		self::$arguments = isset($args[0]) && $args[0] ? $args[0] : $args;
-	}
-
-
-	protected function procHttpRequest(array $headers): void
-	{
-		if (isset($headers['X-makeUp-Route'])) {
-			$routeArr = explode("/", $headers['X-makeUp-Route']);
-			array_shift($routeArr);
-			if ($routeArr[0]) {
-				Session::set("routeMod", $routeArr[0]);
-			} else {
-				Session::set("routeMod", "Home");
-			}
-		}
-		// print_r($headers);
-		$this->isXHR = isset($headers['X-makeUp-Ajax']) || isset($headers['X-Requested-With']);
-
 	}
 
 
@@ -229,6 +211,20 @@ abstract class Module {
 	 * Access Name of a Module.
 	 * @return string
 	 */
+	protected static function isXHR(): bool
+	{
+		if (!empty(self::$arguments) && isset(self::$arguments['isXHR']) 
+				&& self::$arguments['isXHR'] == 1) {
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Access Name of a Module.
+	 * @return string
+	 */
 	protected static function name(): string
 	{
 		if (!empty(self::$arguments) && isset(self::$arguments['module']) &&
@@ -279,7 +275,7 @@ abstract class Module {
 		session_regenerate_id(true);
 		Session::set("logged_in", $verified);
 	}
-	
+
 
 	public static function checkLogin(): bool
 	{

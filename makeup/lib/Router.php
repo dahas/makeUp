@@ -63,16 +63,10 @@ class Router {
      */
     public function run(): void
     {
-        // Debugging:
-        if (isset($_SERVER['argc']) && $_SERVER['argc'] > 1) {
-            $method = $_SERVER['argv'][4];
-            $uri = parse_url($_SERVER['argv'][2]);
-            parse_str($_SERVER['argv'][6], $formData);
-        } else {
-            $method = $_SERVER['REQUEST_METHOD'];
-            $uri = parse_url($_SERVER['REQUEST_URI']);
-            $formData = Request::parseFormData($_POST);
-        }
+        $isXHR = (isset($_SERVER['HTTP_X_MAKEUP_AJAX']) && $_SERVER['HTTP_X_MAKEUP_AJAX'] == 1) || isset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        $method = $_SERVER['REQUEST_METHOD'];
+        $uri = parse_url($_SERVER['REQUEST_URI']);
+        $formData = Request::parseFormData($_POST);
 
         $path = $uri['path'];
         $query = [];
@@ -89,6 +83,7 @@ class Router {
         $callback = [new $this->handler["callback"][0], $this->handler["callback"][1]];
 
         call_user_func_array($callback, [[
+            "isXHR" => $isXHR,
             "method" => $method,
             "module" => $routeArr,
             "parameters" => array_merge($query, $formData)

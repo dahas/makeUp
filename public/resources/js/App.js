@@ -117,7 +117,7 @@ $(document).ready(() => {
             dataType: 'json',
             headers: {
                 "X-makeUp-Route": route,
-                "X-makeUp-Ajax": "XHR"
+                "X-makeUp-Ajax": 1
             }
         }).fail((jqXHR, textStatus, errorThrown) => {
             state = {

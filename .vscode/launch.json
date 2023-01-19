@@ -5,14 +5,8 @@
             "name": "makeUp xdebug",
             "type": "php",
             "request": "launch",
-            "program": "${workspaceRoot}/public/index.php",
-            "args": [
-                "--path", "/Home",   // Route (module name) and query. E.g.: "SampleData/getItem?uid=6"
-                "--method", "GET",   // GET or POST
-                "--post-data", "",   // Form data. E.g.: "post1=one&post2=two"
-                "--auth", "0",       // Simulate logged in user ("0"=not logged in (default) or "1"=logged in)
-                "--xhr", "1",       // Simulate ajax request
-            ],
+            "program": "${workspaceRoot}/debug.php",
+            "args": [],
             "externalConsole": false,
             "port": 9003
         }
