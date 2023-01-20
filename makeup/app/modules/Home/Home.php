@@ -1,8 +1,8 @@
 <?php
 
-use makeUp\lib\Lang;
-use makeUp\lib\Module;
-use makeUp\lib\Request;
+use makeUp\src\Lang;
+use makeUp\src\Module;
+use makeUp\src\Request;
 
 
 class Home extends Module {

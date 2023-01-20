@@ -1,7 +1,7 @@
 <?php
 
-use makeUp\lib\Lang;
-use makeup\lib\Module;
+use makeUp\src\Lang;
+use makeup\src\Module;
 
 
 class PerfumeMen extends Module

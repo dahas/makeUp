@@ -1,8 +1,8 @@
 <?php
 
-use makeUp\lib\Lang;
-use makeup\lib\Module;
-use makeUp\lib\Request;
+use makeUp\src\Lang;
+use makeup\src\Module;
+use makeUp\src\Request;
 
 
 class Skincare extends Module {

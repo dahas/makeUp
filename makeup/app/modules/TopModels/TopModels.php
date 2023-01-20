@@ -1,8 +1,8 @@
 <?php
 
-use makeUp\lib\Cookie;
-use makeUp\lib\Module;
-use makeUp\lib\Request;
+use makeUp\src\Cookie;
+use makeUp\src\Module;
+use makeUp\src\Request;
 
 
 class TopModels extends Module {

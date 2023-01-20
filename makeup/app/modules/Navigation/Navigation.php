@@ -1,9 +1,8 @@
 <?php
 
-use makeUp\lib\Module;
-use makeUp\lib\Menu;
-use makeUp\lib\Request;
-use makeUp\lib\Utils;
+use makeUp\src\Module;
+use makeUp\src\Menu;
+use makeUp\src\Request;
 
 
 class Navigation extends Module {

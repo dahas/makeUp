@@ -1,6 +1,6 @@
 <?php
 
-namespace makeUp\lib\attributes;
+namespace makeUp\src\attributes;
 
 use Attribute;
 

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace makeUp\lib;
+namespace makeUp\src;
 
-use makeUp\lib\interfaces\RequestIF;
+use makeUp\src\interfaces\HttpRequest;
 
 
-class Request implements RequestIF {
+class Request implements HttpRequest {
 
     private array $route;
     private array $parameters;
@@ -15,7 +15,13 @@ class Request implements RequestIF {
         $uri = parse_url($_SERVER['REQUEST_URI']);
         $this->route = explode("/", substr($uri['path'], 1));
 
-        $this->parameters = $this->parseRequest($_REQUEST);
+        $query = [];
+        if (isset($uri['query']) && $uri['query']) {
+            parse_str($uri['query'], $query);
+        }
+        $params = array_merge($_POST, $query);
+
+        $this->parameters = $this->parseRequest($params);
 
         $_GET = null;
         $_POST = null;
@@ -40,7 +46,10 @@ class Request implements RequestIF {
 
     public function getRouteHeader(): string 
     {
-        return substr($_SERVER['HTTP_X_MAKEUP_ROUTE'], 1);
+        if (isset($_SERVER['HTTP_X_MAKEUP_ROUTE'])) {
+            return substr($_SERVER['HTTP_X_MAKEUP_ROUTE'], 1);
+        }
+        return "";
     }
 
     public function getModule(): string

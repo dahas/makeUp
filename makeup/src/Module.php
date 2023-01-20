@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace makeUp\lib;
+namespace makeUp\src;
 
-use makeUp\lib\AccessDenied;
-use makeUp\lib\RouteNotFound;
+use makeUp\lib\Template;
 use ReflectionClass;
 
 
@@ -22,6 +21,8 @@ abstract class Module {
 		$modNsArr = explode("\\", $this::class);
 		$this->modName = array_pop($modNsArr);
 
+		Session::start();
+
 		// Order matters!
 		Config::init(self::name());
 		Lang::init();
@@ -34,10 +35,7 @@ abstract class Module {
 	abstract protected function build(Request $request): string;
 
 
-	/**
-	 * Compile and output the app as HTML.
-	 */
-	public function execute(Request $request): void
+	public function handle(Request $request, Response $response): void
 	{
 		$modName = $request->getModule();
 		$task = $request->getTask();
@@ -62,7 +60,10 @@ abstract class Module {
 			$appHtml = $this->build($request);
 		}
 
-		die($appHtml);
+		$response->setStatus("200 OK");
+		$response->addHeader("Auth", $this->checkLogin() ? "1" : "0");
+		$response->write($appHtml);
+		$response->flush();
 	}
 
 
@@ -82,17 +83,15 @@ abstract class Module {
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
 			if ($protected && !self::checkLogin()) {
 				$module = new AccessDenied();
-				$module->setRender($render);
-				$module->setProtected($protected);
 			} else {
 				require_once $modFile;
 				$module = new $modName();
 				$module->injectServices();
-				$module->setRender($render);
-				$module->setProtected($protected);
-				if ($useDataMod)
-					$module->setDataMod($modName);
 			}
+			$module->setRender($render);
+			$module->setProtected($protected);
+			if ($useDataMod)
+				$module->setDataMod($modName);
 		} else {
 			$module = new RouteNotFound();
 		}

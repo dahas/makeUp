@@ -1,6 +1,6 @@
 <?php
 
-namespace makeUp\lib\exceptions;
+namespace makeUp\src\exceptions;
 
 use Exception;
 

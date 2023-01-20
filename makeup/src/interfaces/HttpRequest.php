@@ -1,9 +1,9 @@
 <?php
 
-namespace makeUp\lib\interfaces;
+namespace makeUp\src\interfaces;
 
 
-interface RequestIF {
+interface HttpRequest {
 
     public function isXHR(): bool;
     public function getMethod(): string;

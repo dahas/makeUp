@@ -2,11 +2,11 @@
 
 namespace makeUp;
 
-use makeUp\lib\Request;
-use makeUp\lib\Config;
+use makeUp\src\Request;
+use makeUp\src\Config;
 use makeUp\lib\Template;
-use makeUp\lib\Module;
-use makeUp\lib\Lang;
+use makeUp\src\Module;
+use makeUp\src\Lang;
 
 class App extends Module {
 

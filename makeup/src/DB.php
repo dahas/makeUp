@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace makeUp\lib;
+namespace makeUp\src;
 
 use mysqli_sql_exception;
 

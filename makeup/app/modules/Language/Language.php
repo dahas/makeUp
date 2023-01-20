@@ -1,10 +1,10 @@
 <?php
 
-use makeUp\lib\Module;
-use makeUp\lib\Request;
-use makeUp\lib\Utils;
-use makeUp\lib\Cookie;
-use makeUp\lib\Session;
+use makeUp\src\Module;
+use makeUp\src\Request;
+use makeUp\src\Utils;
+use makeUp\src\Cookie;
+use makeUp\src\Session;
 
 
 class Language extends Module {

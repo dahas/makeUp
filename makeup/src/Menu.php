@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace makeUp\lib;
+namespace makeUp\src;
 
-use makeUp\lib\Session;
+use makeUp\src\Session;
 
 
 class Menu 

@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'makeUp\\src\\' => array($baseDir . '/src'),
     'makeUp\\services\\' => array($baseDir . '/services'),
     'makeUp\\lib\\' => array($baseDir . '/lib'),
     'makeUp\\' => array($baseDir . '/app'),

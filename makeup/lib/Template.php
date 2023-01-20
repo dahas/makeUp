@@ -1,6 +1,8 @@
 <?php declare(strict_types = 1);
 
 namespace makeUp\lib;
+use makeUp\src\Config;
+use makeUp\src\Utils;
 
 
 final class Template

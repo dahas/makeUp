@@ -1,10 +1,9 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
-namespace makeUp\lib;
+namespace makeUp\src;
 
 
-final class Config
-{
+final class Config {
     private static $modName = array();
     private static $config = array();
 
@@ -30,14 +29,14 @@ final class Config
                 $modConfig['additional_js_files_body']['js'] = self::setJsFilesPath($modConfig, 'body');
                 $appConfig = Utils::arrayMerge($appConfig, $modConfig);
             }
-        } 
-        
+        }
+
         self::$config = $appConfig;
 
         $_SESSION['_config'] = $appConfig;
     }
 
-    public static function get() : mixed
+    public static function get(): mixed
     {
         $args = func_get_args();
         if ($args) {
@@ -57,7 +56,7 @@ final class Config
         return self::$config;
     }
 
-    private static function translateArgument($arg) : string
+    private static function translateArgument($arg): string
     {
         $arg = $arg ?: "";
         $pos = strpos($arg, "*");
@@ -69,43 +68,43 @@ final class Config
         return $arg;
     }
 
-    public static function getAdditionalCssFiles() : array
+    public static function getAdditionalCssFiles(): array
     {
         return self::removeDuplicateFiles(self::$config['additional_css_files']);
     }
 
-    public static function getAdditionalJsFilesHead() : array
+    public static function getAdditionalJsFilesHead(): array
     {
         return self::removeDuplicateFiles(self::$config['additional_js_files_head']);
     }
 
-    public static function getAdditionalJsFilesBody() : array
+    public static function getAdditionalJsFilesBody(): array
     {
         return self::removeDuplicateFiles(self::$config['additional_js_files_body']);
     }
 
-    public static function setAdditionalCssFiles(array $files = array()) : void
+    public static function setAdditionalCssFiles(array $files = array()): void
     {
         if (isset($files['css'])) {
             self::$config['additional_css_files'] = array_merge_recursive(self::$config['additional_css_files'], $files);
         }
     }
 
-    public static function setAdditionalJsFilesHead(array $files = array()) : void
+    public static function setAdditionalJsFilesHead(array $files = array()): void
     {
         if (isset($files['js'])) {
             self::$config['additional_js_files_head'] = array_merge_recursive(self::$config['additional_js_files_head'], $files);
         }
     }
 
-    public static function setAdditionalJsFilesBody(array $files = array()) : void
+    public static function setAdditionalJsFilesBody(array $files = array()): void
     {
         if (isset($files['js'])) {
             self::$config['additional_js_files_body'] = array_merge_recursive(self::$config['additional_js_files_body'], $files);
         }
     }
 
-    private static function setCssFilesPath(array|bool $config, string $type) : array
+    private static function setCssFilesPath(array |bool $config, string $type): array
     {
         $newPath = [];
         if ($config && isset($config['additional_css_files'][strtolower($type)][0]) && $config['additional_css_files'][strtolower($type)][0]) {
@@ -116,18 +115,18 @@ final class Config
         return $newPath;
     }
 
-    private static function setJsFilesPath(array|bool $config, string $type) : array
+    private static function setJsFilesPath(array |bool $config, string $type): array
     {
         $newPath = [];
-        if (isset($config['additional_js_files_'.strtolower($type)]['js'][0]) && $config['additional_js_files_'.strtolower($type)]['js'][0]) {
-            foreach ($config['additional_js_files_'.strtolower($type)]['js'] as $file) {
+        if (isset($config['additional_js_files_' . strtolower($type)]['js'][0]) && $config['additional_js_files_' . strtolower($type)]['js'][0]) {
+            foreach ($config['additional_js_files_' . strtolower($type)]['js'] as $file) {
                 $newPath[] = $file;
             }
         }
         return $newPath;
     }
 
-    private static function removeDuplicateFiles(array $array) : array
+    private static function removeDuplicateFiles(array $array): array
     {
         $fixedArr = array();
         if (isset($array['css'])) {

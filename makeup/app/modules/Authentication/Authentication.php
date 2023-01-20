@@ -1,11 +1,11 @@
 <?php
 
-use makeUp\lib\Config;
-use makeUp\lib\Lang;
-use makeUp\lib\Module;
-use makeUp\lib\Request;
-use makeUp\lib\Utils;
-use makeUp\lib\Session;
+use makeUp\src\Config;
+use makeUp\src\Lang;
+use makeUp\src\Module;
+use makeUp\src\Request;
+use makeUp\src\Utils;
+use makeUp\src\Session;
 
 
 class Authentication extends Module {

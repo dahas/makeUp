@@ -1,8 +1,8 @@
 <?php
 
-use makeup\lib\Module;
-use makeUp\lib\attributes\Inject;
-use makeUp\lib\Request;
+use makeup\src\Module;
+use makeUp\src\attributes\Inject;
+use makeUp\src\Request;
 use makeUp\lib\Template;
 
 
