@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Template;
 use makeUp\src\Module;
 use makeUp\src\Menu;
 use makeUp\src\Request;
@@ -10,7 +11,7 @@ class Navigation extends Module {
     public function build(Request $request): string
     {
         $modName = $request->getModule();
-        $mainTmpl = $this->getTemplate();
+        $mainTmpl = Template::load("Navigation");
 
         // Init slices:
         $menuNoSubSlice = $mainTmpl->getSlice("{{MENU_NO_SUB}}");
@@ -69,7 +70,7 @@ class Navigation extends Module {
 
     private function submenu($data, string $modName): string
     {
-        $subMenuTmpl = $this->getTemplate("Navigation.sub.html");
+        $subMenuTmpl = Template::load("Navigation", "Navigation.sub.html");
 
         // Init slices:
         $subMenuNoSubSlice = $subMenuTmpl->getSlice("{{SUBMENU_NO_SUB}}");

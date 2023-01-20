@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Template;
 use makeUp\src\Module;
 use makeUp\src\Request;
 use makeUp\src\Utils;
@@ -14,12 +15,14 @@ class Language extends Module {
         $m = [];
         $s = [];
 
+        $template = Template::load("Language");
+
         $suppLangs = Utils::getSupportedLanguages();
         $current = Cookie::get("lang_code") ?? Utils::getUserLanguageCode();
 
         $m["[[CURRENT_LANGUAGE]]"] = $suppLangs[$current];
 
-        $slice = $this->getTemplate()->getSlice("{{SUPPORTED_LANGUAGES}}");
+        $slice = $template->getSlice("{{SUPPORTED_LANGUAGES}}");
 
         $s["{{SUPPORTED_LANGUAGES}}"] = "";
 
@@ -31,7 +34,7 @@ class Language extends Module {
             $s["{{SUPPORTED_LANGUAGES}}"] .= $slice->parse($sm);
         }
 
-        return $this->getTemplate()->parse($m, $s);
+        return $template->parse($m, $s);
     }
 
 

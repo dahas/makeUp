@@ -2,7 +2,6 @@
 
 namespace makeUp\src;
 
-use makeUp\lib\Template;
 use ReflectionClass;
 
 
@@ -173,13 +172,6 @@ abstract class Module {
 	protected function isProtected(): int
 	{
 		return $this->protected;
-	}
-
-
-	protected function getTemplate($fileName = ""): Template
-	{
-		$fname = $fileName ? $fileName : $this->modName . ".html";
-		return Template::load($this->modName, $fname);
 	}
 
 

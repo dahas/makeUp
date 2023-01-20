@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Template;
 use makeUp\src\Cookie;
 use makeUp\src\Module;
 use makeUp\src\Request;
@@ -20,7 +21,7 @@ class TopModels extends Module {
             $m["[[HELP_TEXT]]"] = "";
         }
 
-        $html = $this->getTemplate("TopModels.html")->parse($m);
+        $html = Template::load("TopModels", "TopModels.html")->parse($m);
         return $this->render($html);
     }
 

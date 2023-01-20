@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Template;
 use makeUp\src\Lang;
 use makeup\src\Module;
 use makeUp\src\Request;
@@ -13,7 +14,7 @@ class Skincare extends Module {
         $m["[[MOD_CREATED_SUCCESS]]"] = Lang::get("module_created_success");
         $m["[[CONTINUE_LEARNING]]"] = Lang::get("continue_learning");
 
-        $html = $this->getTemplate("Skincare.html")->parse($m);
+        $html = Template::load("Skincare", "Skincare.html")->parse($m);
         return $this->render($html);
     }
 

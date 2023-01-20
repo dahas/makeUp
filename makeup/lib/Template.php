@@ -15,14 +15,18 @@ final class Template
 			$this->loadFile($file);
 	}
 
-	public static function load(string $modName, string $templateFile): Template
+	public static function load(string $component, string $fileName = ""): Template
 	{
-		$realPath = realpath('');
+		$dir = dirname(__DIR__, 2) . "/makeup/app";
 
-		if ($modName == "App")
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/App.html";
+		if(!$fileName) {
+			$fileName = "$component.html";
+		}
+
+		if ($component == "App")
+			$file = "$dir/$fileName";
 		else
-			$file = str_replace("/public", "", str_replace("\\", "/", $realPath)) . "/makeup/app/modules/$modName/$templateFile";
+			$file = "$dir/modules/$component/$fileName";
 
 		return new Template($file);
 	}

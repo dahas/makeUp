@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Template;
 use makeUp\src\Config;
 use makeUp\src\Lang;
 use makeUp\src\Module;
@@ -22,7 +23,7 @@ class Authentication extends Module {
 
     public function buildLoginForm(): string
     {
-        $html = $this->getTemplate("Authentication.login.html")->parse([
+        $html = Template::load("Authentication", "Authentication.login.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signin"),
             "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
@@ -32,7 +33,7 @@ class Authentication extends Module {
 
     public function buildLogoutForm(): string
     {
-        $html = $this->getTemplate("Authentication.logout.html")->parse([
+        $html = Template::load("Authentication", "Authentication.logout.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signout")
         ]);
         return $this->render($html);
@@ -44,12 +45,12 @@ class Authentication extends Module {
         if (!Module::checkLogin()) {
             $token = Utils::createFormToken("reg");
 
-            $html = $this->getTemplate("Authentication.register.html")->parse([
+            $html = Template::load("Authentication", "Authentication.register.html")->parse([
                 "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "register"),
                 "[[TOKEN]]" => $token
             ]);
         } else {
-            $html = $this->getTemplate("Authentication.signup.html")->parse([
+            $html = Template::load("Authentication", "Authentication.signup.html")->parse([
                 "[[WELCOME_MSG]]" => sprintf(Lang::get("welcome"), Session::get('user'))
             ]);
         }

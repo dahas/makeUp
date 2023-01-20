@@ -18,12 +18,12 @@ class SampleData extends Module {
 
         if ($this->SampleService->isAvailable()) {
             $count = $this->SampleService->read(where: "deleted=0");
-            $template = $this->getTemplate("SampleData.html");
+            $template = Template::load("SampleData");
             $m["[[DATA-MOD]]"] = "SampleData";
             $m["[[LIST]]"] = $this->list();
             $html = $template->parse($m);
         } else {
-            $template = $this->getTemplate("SampleData.nodb.html");
+            $template = Template::load("SampleData", "SampleData.nodb.html");
             $html = $template->parse();
         }
 
@@ -34,7 +34,7 @@ class SampleData extends Module {
     public function list(): string
     {
         $html = "";
-        $Template = $this->getTemplate("SampleData.list.html");
+        $Template = Template::load("SampleData", "SampleData.list.html");
 
         $this->SampleService->read(where: "deleted=0", orderBy: "year DESC");
         if ($this->SampleService->count() > 0) {
@@ -89,7 +89,7 @@ class SampleData extends Module {
             $SampleItem->setProperty("country", $request->getParameter("country"));
             $uid = $SampleItem->store();
     
-            $Template = $this->getTemplate("SampleData.list.html");
+            $Template = Template::load("SampleData", "SampleData.list.html");
             $rowHTML = $this->renderRow($Template, $uid, $request->getParameter("year"), 
                 $request->getParameter("name"), $request->getParameter("city"), 
                 $request->getParameter("country"), true);
@@ -124,7 +124,7 @@ class SampleData extends Module {
                 $SampleItem->update();
             }
     
-            $Template = $this->getTemplate("SampleData.list.html");
+            $Template = Template::load("SampleData", "SampleData.list.html");
             $rowHTML = $this->renderRow($Template, $request->getParameter("uid"), 
                 $request->getParameter("year"), $request->getParameter("name"), 
                 $request->getParameter("city"), $request->getParameter("country"));
