@@ -21,7 +21,7 @@ class TopModels extends Module {
             $m["[[HELP_TEXT]]"] = "";
         }
 
-        $html = Template::load("TopModels", "TopModels.html")->parse($m);
+        $html = Template::load("TopModels")->parse($m);
         return $this->render($html);
     }
 
