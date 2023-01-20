@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Auth;
 use makeup\src\Module;
 use makeUp\src\attributes\Inject;
 use makeUp\src\Request;
@@ -79,7 +80,7 @@ class SampleData extends Module {
         $modelName = "";
         $rowHTML = "";
 
-        if (Module::checkLogin()) {
+        if (Auth::checkLogin()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->create();
@@ -112,7 +113,7 @@ class SampleData extends Module {
         $modelName = "";
         $rowHTML = "";
 
-        if (Module::checkLogin()) {
+        if (Auth::checkLogin()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->getByUniqueId($request->getParameter("uid"));
@@ -147,7 +148,7 @@ class SampleData extends Module {
         $uid = 0;
         $modelName = "";
 
-        if (Module::checkLogin()) {
+        if (Auth::checkLogin()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->getByUniqueId($request->getParameter("uid"));
@@ -173,7 +174,7 @@ class SampleData extends Module {
         $props = $SampleItem->getProperties();
         return json_encode([
             ...$props,
-            "authorized" => Module::checkLogin()
+            "authorized" => Auth::checkLogin()
         ]);
     }
 

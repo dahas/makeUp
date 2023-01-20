@@ -18,11 +18,4 @@ class Skincare extends Module {
         return $this->render($html);
     }
 
-
-    public function doSomething()
-    {
-        // Do something ...
-        return;
-    }
-
 }

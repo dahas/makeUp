@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Auth;
 use makeUp\lib\Template;
 use makeUp\src\Lang;
 use makeUp\src\Module;
@@ -16,7 +17,7 @@ class Home extends Module {
 
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
 
-        if (Module::checkLogin()) {
+        if (Auth::checkLogin()) {
             $s["{{TOP_SECRET}}"] = $template->getSlice("{{TOP_SECRET}}")->parse();
         } else {
             $s["{{TOP_SECRET}}"] = "";

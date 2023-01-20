@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Auth;
 use makeUp\lib\Template;
 use makeUp\src\Config;
 use makeUp\src\Lang;
@@ -11,11 +12,18 @@ use makeUp\src\Session;
 
 class Authentication extends Module {
 
+    private Auth $auth;
+
+    public function __construct()
+    {
+        $this->auth = new Auth();
+    }
+
     protected function build(Request $request, string $variant = ""): string
     {
         $html = match ($variant) {
             default => $this->buildRegistrationForm(),
-            "form" => Module::checkLogin() ? $this->buildLogoutForm() : $this->buildLoginForm()
+            "form" => $this->auth->checkLogin() ? $this->buildLogoutForm() : $this->buildLoginForm()
         };
         return $this->render($html);
     }
@@ -24,7 +32,7 @@ class Authentication extends Module {
     public function buildLoginForm(): string
     {
         $html = Template::load("Authentication", "Authentication.login.html")->parse([
-            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signin"),
+            "[[FORM_ACTION]]" => Utils::linkBuilder("Authentication", "signin"),
             "[[TOKEN]]" => Utils::createFormToken("auth")
         ]);
         return $this->render($html);
@@ -34,7 +42,7 @@ class Authentication extends Module {
     public function buildLogoutForm(): string
     {
         $html = Template::load("Authentication", "Authentication.logout.html")->parse([
-            "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "signout")
+            "[[FORM_ACTION]]" => Utils::linkBuilder("Authentication", "signout")
         ]);
         return $this->render($html);
     }
@@ -42,11 +50,11 @@ class Authentication extends Module {
 
     public function buildRegistrationForm(): string
     {
-        if (!Module::checkLogin()) {
+        if (!$this->auth->checkLogin()) {
             $token = Utils::createFormToken("reg");
 
             $html = Template::load("Authentication", "Authentication.register.html")->parse([
-                "[[FORM_ACTION]]" => Utils::linkBuilder($this->modName, "register"),
+                "[[FORM_ACTION]]" => Utils::linkBuilder("Authentication", "register"),
                 "[[TOKEN]]" => $token
             ]);
         } else {
@@ -60,8 +68,7 @@ class Authentication extends Module {
 
     public function signin(Request $request)
     {
-        if ($this->authorized($request->getParameter("login_token"), $request->getParameter("username"), $request->getParameter("password"))) {
-            $this->auth(true);
+        if ($this->auth->authorized($request->getParameter("login_token"), $request->getParameter("username"), $request->getParameter("password"))) {
             $authorized = true;
             $toast = ["success", Lang::get('signed_in')];
             $context = $this->routeMod();
@@ -70,6 +77,8 @@ class Authentication extends Module {
             $toast = ["error", Lang::get('login_failed')];
             $context = "";
         }
+
+        $this->auth->verified($authorized);
 
         return json_encode([
             "authorized" => $authorized,
@@ -83,7 +92,7 @@ class Authentication extends Module {
 
     public function signout()
     {
-        $this->auth(false);
+        $this->auth->verified(false);
         $routeMod = Module::create($this->routeMod());
         $context = !$routeMod->isProtected() ? $this->routeMod() : "Home";
         return json_encode([
@@ -98,23 +107,22 @@ class Authentication extends Module {
 
     public function register(Request $request)
     {
-        $docRoot = dirname(__DIR__, 3);
-        $file = fopen($docRoot . "/users.txt", "a+");
+        $authorized = false;
+        if (Utils::checkFormToken("reg", $request->getParameter("reg_token")) &&
+                $request->getParameter("username") && $request->getParameter("password")) {
+            $authorized = $this->auth->register($request->getParameter("username"),
+                $request->getParameter("password"));
 
-        if (!Module::checkLogin() && !$this->userExists($file, $request->getParameter("username")) &&
-            Utils::checkFormToken("reg", $request->getParameter("reg_token")) && $request->getParameter("username") && $request->getParameter("password")) {
-            $userdata = $request->getParameter("username") . ":" . password_hash($request->getParameter("password"), PASSWORD_BCRYPT) . ":END";
-            fwrite($file, $userdata . PHP_EOL);
-            $this->auth(true);
-            $authorized = true;
+            $this->auth->verified($authorized);
+        }
+
+        if ($authorized) {
             $response = "success";
             $context = "Authentication";
         } else {
-            $authorized = false;
             $response = "error";
             $context = "";
         }
-        fclose($file); 
 
         return json_encode([
             "authorized" => $authorized,
@@ -123,40 +131,6 @@ class Authentication extends Module {
             "toast" => [$response, Lang::get($response)],
             "context" => $context
         ]);
-    }
-
-
-    public function authorized(string $token, string $un, string $pw): bool
-    {
-        $docRoot = dirname(__DIR__, 3);
-        $file = @fopen($docRoot . "/users.txt", "r");
-        if (!$file)
-            return false;
-
-        $userData = $this->userExists($file, $un);
-
-        if (!$userData)
-            return false;
-
-        $username = $userData[0];
-        $hash = $userData[1];
-        $validPw = password_verify($pw, $hash);
-        fclose($file);
-        return Utils::checkFormToken("auth", $token) && $username === $un && $validPw;
-    }
-
-
-    private function userExists($file, string $username): array |false
-    {
-        if ($file) {
-            while (($line = fgets($file, 4096)) !== FALSE) {
-                $dataArr = explode(":", $line);
-                if ($dataArr[0] == $username) {
-                    return $dataArr;
-                }
-            }
-        }
-        return false;
     }
 
 }

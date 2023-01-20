@@ -2,6 +2,7 @@
 
 namespace makeUp\src;
 
+use makeUp\lib\Auth;
 use ReflectionClass;
 
 
@@ -80,7 +81,7 @@ abstract class Module {
 		if (is_file($modFile)) {
 			$modConfig = Utils::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
-			if ($protected && !self::checkLogin()) {
+			if ($protected && !Auth::checkLogin()) {
 				$module = new AccessDenied();
 			} else {
 				require_once $modFile;
@@ -178,24 +179,6 @@ abstract class Module {
 	protected function routeMod(): string
 	{
 		return Session::get("routeMod");
-	}
-
-
-	/**
-	 * Use this function to grant or deny a user access to protected features and content.
-	 * @param bool $verified
-	 * @return void
-	 */
-	protected function auth(bool $verified): void
-	{
-		session_regenerate_id(true);
-		Session::set("logged_in", $verified);
-	}
-
-
-	public static function checkLogin(): bool
-	{
-		return Session::get("logged_in") ?? false;
 	}
 
 

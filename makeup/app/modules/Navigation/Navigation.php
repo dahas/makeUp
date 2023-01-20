@@ -1,5 +1,6 @@
 <?php
 
+use makeUp\lib\Auth;
 use makeUp\lib\Template;
 use makeUp\src\Module;
 use makeUp\src\Menu;
@@ -25,7 +26,7 @@ class Navigation extends Module {
         foreach ($menuConf as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
-                if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
                     if (@$data->module) {
                         $module = @$data->module ? @$data->module : "";
                         $task = @$data->task ? @$data->task : "";
@@ -45,7 +46,7 @@ class Navigation extends Module {
             }
             // With submenu:
             else {
-                if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
                     if (@$data->module) {
                         $module = @$data->module ? @$data->module : "";
                         $task = @$data->task ? @$data->task : "";
@@ -86,7 +87,7 @@ class Navigation extends Module {
 
         if (@$data->module) {
             // Dropdown item
-            if (@$data->protected != 1 || (@$data->protected == 1 && Module::checkLogin())) {
+            if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
                 if (@$data->module) {
                     $module = @$data->module ? @$data->module : "";
                     $task = @$data->task ? @$data->task : "";
@@ -123,7 +124,7 @@ class Navigation extends Module {
 
             // Module
             if (@$subData->module) {
-                if (@$subData->protected != 1 || (@$subData->protected == 1 && Module::checkLogin())) {
+                if (@$subData->protected != 1 || (@$subData->protected == 1 && Auth::checkLogin())) {
                     if (@$subData->module) {
                         $module = @$subData->module ? @$subData->module : "";
                         $task = @$subData->task ? @$subData->task : "";
