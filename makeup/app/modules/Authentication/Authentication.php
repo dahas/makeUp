@@ -23,7 +23,7 @@ class Authentication extends Module {
     {
         $html = match ($variant) {
             default => $this->buildRegistrationForm(),
-            "form" => $this->auth->checkLogin() ? $this->buildLogoutForm() : $this->buildLoginForm()
+            "form" => $this->auth->check() ? $this->buildLogoutForm() : $this->buildLoginForm()
         };
         return $this->render($html);
     }
@@ -33,7 +33,7 @@ class Authentication extends Module {
     {
         $html = Template::load("Authentication", "Authentication.login.html")->parse([
             "[[FORM_ACTION]]" => Utils::linkBuilder("Authentication", "signin"),
-            "[[TOKEN]]" => Utils::createFormToken("auth")
+            "[[TOKEN]]" => $this->auth->createFormToken("auth")
         ]);
         return $this->render($html);
     }
@@ -50,8 +50,8 @@ class Authentication extends Module {
 
     public function buildRegistrationForm(): string
     {
-        if (!$this->auth->checkLogin()) {
-            $token = Utils::createFormToken("reg");
+        if (!$this->auth->check()) {
+            $token = $this->auth->createFormToken("reg");
 
             $html = Template::load("Authentication", "Authentication.register.html")->parse([
                 "[[FORM_ACTION]]" => Utils::linkBuilder("Authentication", "register"),
@@ -108,7 +108,7 @@ class Authentication extends Module {
     public function register(Request $request)
     {
         $authorized = false;
-        if (Utils::checkFormToken("reg", $request->getParameter("reg_token")) &&
+        if ($this->auth->checkFormToken("reg", $request->getParameter("reg_token")) &&
                 $request->getParameter("username") && $request->getParameter("password")) {
             $authorized = $this->auth->register($request->getParameter("username"),
                 $request->getParameter("password"));

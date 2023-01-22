@@ -80,7 +80,7 @@ class SampleData extends Module {
         $modelName = "";
         $rowHTML = "";
 
-        if (Auth::checkLogin()) {
+        if (Auth::check()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->create();
@@ -113,7 +113,7 @@ class SampleData extends Module {
         $modelName = "";
         $rowHTML = "";
 
-        if (Auth::checkLogin()) {
+        if (Auth::check()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->getByUniqueId($request->getParameter("uid"));
@@ -148,7 +148,7 @@ class SampleData extends Module {
         $uid = 0;
         $modelName = "";
 
-        if (Auth::checkLogin()) {
+        if (Auth::check()) {
             $authorized = true;
 
             $SampleItem = $this->SampleService->getByUniqueId($request->getParameter("uid"));
@@ -174,7 +174,7 @@ class SampleData extends Module {
         $props = $SampleItem->getProperties();
         return json_encode([
             ...$props,
-            "authorized" => Auth::checkLogin()
+            "authorized" => Auth::check()
         ]);
     }
 

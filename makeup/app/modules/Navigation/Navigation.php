@@ -26,7 +26,7 @@ class Navigation extends Module {
         foreach ($menuConf as $data) {
             // Main menu:
             if (!isset($data->submenu)) {
-                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::check())) {
                     if (@$data->module) {
                         $module = @$data->module ? @$data->module : "";
                         $task = @$data->task ? @$data->task : "";
@@ -46,7 +46,7 @@ class Navigation extends Module {
             }
             // With submenu:
             else {
-                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
+                if (@$data->protected != 1 || (@$data->protected == 1 && Auth::check())) {
                     if (@$data->module) {
                         $module = @$data->module ? @$data->module : "";
                         $task = @$data->task ? @$data->task : "";
@@ -87,7 +87,7 @@ class Navigation extends Module {
 
         if (@$data->module) {
             // Dropdown item
-            if (@$data->protected != 1 || (@$data->protected == 1 && Auth::checkLogin())) {
+            if (@$data->protected != 1 || (@$data->protected == 1 && Auth::check())) {
                 if (@$data->module) {
                     $module = @$data->module ? @$data->module : "";
                     $task = @$data->task ? @$data->task : "";
@@ -124,7 +124,7 @@ class Navigation extends Module {
 
             // Module
             if (@$subData->module) {
-                if (@$subData->protected != 1 || (@$subData->protected == 1 && Auth::checkLogin())) {
+                if (@$subData->protected != 1 || (@$subData->protected == 1 && Auth::check())) {
                     if (@$subData->module) {
                         $module = @$subData->module ? @$subData->module : "";
                         $task = @$subData->task ? @$subData->task : "";

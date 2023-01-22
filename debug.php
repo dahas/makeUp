@@ -2,7 +2,6 @@
 
 use makeUp\App;
 use makeUp\src\Request;
-use makeUp\src\Response;
 
 require __DIR__ . "/makeup/vendor/autoload.php";
 
@@ -15,7 +14,7 @@ $_SERVER['HTTP_X_MAKEUP_AJAX'] = 0;
 
 // $_POST['param1'] = "Post data 1";
 
-$_SESSION["logged_in"] = false;
+$_SESSION["logged_in"] = true;
 
 $App = new App();
-$App->handle(new Request(), new Response());
+$App->handle(new Request());

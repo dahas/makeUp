@@ -1,29 +1,32 @@
 <?php declare(strict_types=1);
 
-use makeUp\lib\Module;
+use makeUp\src\Module;
 use PHPUnit\Framework\TestCase;
-use makeUp\lib\Utils;
+use makeUp\src\Utils;
+use makeUp\lib\Auth;
 
 class AuthenticationTest extends TestCase
 {
     private $auth; 
+    private $authentication; 
  
     protected function setUp() : void
     {
-        $this->auth = Module::create('Authentication');
+        $this->authentication = Module::create('Authentication');
+        $this->auth = new Auth();
     }
  
     protected function tearDown() : void
     {
-        $this->auth = NULL;
+        $this->authentication = NULL;
     }
     
 
     public function testAuthenticate()
     {
-        $token = Utils::createFormToken("auth");
-        $this->assertTrue($this->auth->authorized($token, 'user', 'pass'));
-        $this->assertFalse($this->auth->authorized($token, 'user', 'asdfg'));
-        $this->assertFalse($this->auth->authorized($token, 'qwert', 'pass'));
+        $token = $this->auth->createFormToken("auth");
+        $this->assertTrue($this->authentication->authorized($token, 'user', 'pass'));
+        $this->assertFalse($this->authentication->authorized($token, 'user', 'asdfg'));
+        $this->assertFalse($this->authentication->authorized($token, 'qwert', 'pass'));
     }
 }

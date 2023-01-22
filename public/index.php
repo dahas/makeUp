@@ -14,7 +14,6 @@
 
 use makeUp\App;
 use makeUp\src\Request;
-use makeUp\src\Response;
 
 require dirname(__DIR__, 1) . "/makeup/vendor/autoload.php";
 
@@ -25,4 +24,4 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === "localhost:2400")
 }
 
 $App = new App();
-$App->handle(new Request(), new Response());
+$App->handle(new Request());

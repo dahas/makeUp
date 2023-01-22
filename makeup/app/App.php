@@ -49,6 +49,8 @@ class App extends Module {
         $m["[[VERSION_NO]]"] = $packageJson['version'];
         $m["[[COPYRIGHT_YEAR]]"] = date("Y");
 
-        return Template::load("App")->parse($m);
+        $html = Template::load("App")->parse($m);
+
+        return $this->render($html);
     }
 }

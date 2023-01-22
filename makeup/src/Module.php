@@ -8,12 +8,12 @@ use ReflectionClass;
 
 abstract class Module {
 
-	protected $config = array();
-	protected $modName = "";
-	protected $render = "";
-	protected $dataMod = "App";
-	protected $protected = 0;
-	protected static $isLoggedIn = false;
+	protected array $config;
+	protected string $modName;
+	protected bool $isXHR = false;
+	protected string $dataMod = "App";
+	protected int $protected = 0;
+	protected static bool $isLoggedIn = false;
 
 
 	public function __construct()
@@ -35,8 +35,10 @@ abstract class Module {
 	abstract protected function build(Request $request): string;
 
 
-	public function handle(Request $request, Response $response): void
+	public function handle(Request $request): void
 	{
+		$response = new Response();
+
 		$modName = $request->getModule();
 		$task = $request->getTask();
 
@@ -52,16 +54,15 @@ abstract class Module {
 			}
 		}
 
-		$render = $request->isXHR() ? "json" : "html";
-
-		if ($render == "json" || $task != "build") { // Create only the Module
-			$appHtml = self::create($modName, $render)->$task($request);
+		if ($request->isXHR() || $task != "build") { // Create only the Module
+			$module = self::create($request->getModule(), $request->isXHR());
+			$appHtml = $module->$task($request);
 		} else { // Create the whole App
 			$appHtml = $this->build($request);
 		}
 
 		$response->setStatus("200 OK");
-		$response->addHeader("Auth", $this->checkLogin() ? "1" : "0");
+		$response->addHeader("Auth", Auth::check() ? "1" : "0");
 		$response->write($appHtml);
 		$response->flush();
 	}
@@ -74,21 +75,21 @@ abstract class Module {
 	 * @param mixed $dataMod
 	 * @return mixed
 	 */
-	public static function create(string $modName, string $render = "html", bool $useDataMod = false): mixed
+	public static function create(string $modName, bool $isXHR = false, bool $useDataMod = false): mixed
 	{
 		$modFile = dirname(__DIR__, 1) . "/app/modules/$modName/$modName.php";
 
 		if (is_file($modFile)) {
 			$modConfig = Utils::loadIniFile($modName);
 			$protected = isset($modConfig["mod_settings"]["protected"]) ? intval($modConfig["mod_settings"]["protected"]) : 0;
-			if ($protected && !Auth::checkLogin()) {
+			if ($protected && !Auth::check()) {
 				$module = new AccessDenied();
 			} else {
 				require_once $modFile;
 				$module = new $modName();
 				$module->injectServices();
 			}
-			$module->setRender($render);
+			$module->setXHR($isXHR);
 			$module->setProtected($protected);
 			if ($useDataMod)
 				$module->setDataMod($modName);
@@ -102,10 +103,10 @@ abstract class Module {
 
 	protected function render(string $html): string
 	{
-		if ($this->getRender() == "html")
-			return $html;
-		else
+		if ($this->isXHR())
 			return $this->renderJSON($html);
+		else
+			return $html;
 	}
 
 
@@ -143,14 +144,14 @@ abstract class Module {
 	}
 
 
-	protected function setRender(string $render = ""): void
+	protected function setXHR(bool $xhr = false): void
 	{
-		$this->render = $render;
+		$this->isXHR = $xhr;
 	}
 
-	protected function getRender(): string
+	protected function isXHR(): bool
 	{
-		return $this->render;
+		return $this->isXHR;
 	}
 
 

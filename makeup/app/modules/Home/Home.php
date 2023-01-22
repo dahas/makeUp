@@ -17,7 +17,7 @@ class Home extends Module {
 
         $m["[[APP_CREATED_SUCCESS]]"] = Lang::get("app_created_success");
 
-        if (Auth::checkLogin()) {
+        if (Auth::check()) {
             $s["{{TOP_SECRET}}"] = $template->getSlice("{{TOP_SECRET}}")->parse();
         } else {
             $s["{{TOP_SECRET}}"] = "";

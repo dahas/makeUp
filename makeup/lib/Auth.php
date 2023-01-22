@@ -17,9 +17,15 @@ final class Auth {
 	}
 
 
+	public static function check(): bool
+	{
+		return Session::get("logged_in") ?? false;
+	}
+
+
 	public function register(string $username, string $password): bool
 	{
-		if ($this->checkLogin())
+		if (self::check())
 			return false;
 
 		if ($this->userExists($username))
@@ -62,7 +68,7 @@ final class Auth {
 		$hash = $userData[1];
 		$validPw = password_verify($pw, $hash);
 
-		return Utils::checkFormToken("auth", $token) && $username === $un && $validPw;
+		return $this->checkFormToken("auth", $token) && $username === $un && $validPw;
 	}
 
 
@@ -84,10 +90,27 @@ final class Auth {
 		return false;
 	}
 
+    public function createFormToken(string $name): string
+    {
+        $expSecs = 5; // Token expires after this amount of seconds
+        $timestamp = time();
+        if ($timestamp >= Session::get($name . "_token_expires")) {
+            $token = sha1($timestamp . random_int(1000, 9999));
+            Session::set($name . "_token", $token);
+            Session::set($name . "_token_expires", $timestamp + $expSecs);
+            return $token;
+        } else {
+            return Session::get($name . "_token");
+        }
+    }
 
-	public static function checkLogin(): bool
-	{
-		return Session::get("logged_in") ?? false;
-	}
+    public function checkFormToken(string $name, string $token): bool
+    {
+        $valid = $token == Session::get($name . "_token");
+        if (time() >= Session::get($name . "_token_expires")) {
+            Session::clear($name . "_token");
+        }
+        return $valid;
+    }
 
 }
