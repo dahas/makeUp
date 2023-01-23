@@ -3,7 +3,6 @@
 namespace makeUp\lib;
 
 use makeUp\src\Session;
-use makeUp\src\Utils;
 
 
 final class Auth {
@@ -38,6 +37,7 @@ final class Auth {
 		$userdata = $username . ":" . password_hash($password, PASSWORD_BCRYPT) . ":END";
 		if(fwrite($file, $userdata . PHP_EOL)) {
 			fclose($file);
+			$this->setState(true);
 			return true;
 		}
 
@@ -50,14 +50,13 @@ final class Auth {
 	 * @param bool $verified
 	 * @return void
 	 */
-	public function verified(bool $verified): void
+	public function destroy(): void
 	{
-		session_regenerate_id(true);
-		Session::set("logged_in", $verified);
+		$this->setState(false);
 	}
 
 
-	public function authorized(string $token, string $un, string $pw): bool
+	public function authorize(string $un, string $pw): bool
 	{
 		$userData = $this->userExists($un);
 
@@ -68,7 +67,12 @@ final class Auth {
 		$hash = $userData[1];
 		$validPw = password_verify($pw, $hash);
 
-		return $this->checkFormToken("auth", $token) && $username === $un && $validPw;
+		if ($username === $un && $validPw) {
+			$this->setState(true);
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -112,5 +116,17 @@ final class Auth {
         }
         return $valid;
     }
+
+
+	/**
+	 * Set new login state.
+	 * @param bool $loggedIn
+	 * @return void
+	 */
+	private function setState(bool $loggedIn): void
+	{
+		session_regenerate_id(true);
+		Session::set("logged_in", $loggedIn);
+	}
 
 }

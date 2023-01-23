@@ -68,17 +68,25 @@ class Authentication extends Module {
 
     public function signin(Request $request)
     {
-        if ($this->auth->authorized($request->getParameter("login_token"), $request->getParameter("username"), $request->getParameter("password"))) {
-            $authorized = true;
-            $toast = ["success", Lang::get('signed_in')];
-            $context = $this->routeMod();
+        $token = $request->getParameter("login_token");
+        $username = $request->getParameter("username");
+        $password = $request->getParameter("password");
+
+        $authorized = false;
+
+        if ($this->auth->checkFormToken("auth", $token)) {
+            $authorized = $this->auth->authorize($username, $password);
+            if ($authorized) {
+                $toast = ["success", Lang::get('signed_in')];
+                $context = $this->routeMod();
+            } else {
+                $toast = ["error", Lang::get('login_failed')];
+                $context = "";
+            }
         } else {
-            $authorized = false;
             $toast = ["error", Lang::get('login_failed')];
             $context = "";
         }
-
-        $this->auth->verified($authorized);
 
         return json_encode([
             "authorized" => $authorized,
@@ -92,11 +100,11 @@ class Authentication extends Module {
 
     public function signout()
     {
-        $this->auth->verified(false);
+        $this->auth->destroy();
         $routeMod = Module::create($this->routeMod());
         $context = !$routeMod->isProtected() ? $this->routeMod() : "Home";
         return json_encode([
-            "authorized" => $this->checkLogin(),
+            "authorized" => Auth::check(),
             "title" => Config::get("page_settings", "title"),
             "module" => "Authentication",
             "toast" => ["success", Lang::get('signed_out')],
@@ -112,8 +120,6 @@ class Authentication extends Module {
                 $request->getParameter("username") && $request->getParameter("password")) {
             $authorized = $this->auth->register($request->getParameter("username"),
                 $request->getParameter("password"));
-
-            $this->auth->verified($authorized);
         }
 
         if ($authorized) {
