@@ -9,18 +9,14 @@ use ReflectionClass;
 abstract class Module {
 
 	protected array $config;
-	protected string $modName;
+	protected string $name;
 	protected bool $isXHR = false;
 	protected string $dataMod = "App";
 	protected int $protected = 0;
-	protected static bool $isLoggedIn = false;
 
 
 	public function __construct()
 	{
-		$modNsArr = explode("\\", $this::class);
-		$this->modName = array_pop($modNsArr);
-
 		Session::start();
 
 		// Order matters!
@@ -28,8 +24,6 @@ abstract class Module {
 		Lang::init();
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name"));
-
-		self::$isLoggedIn = Session::get("logged_in") && Session::get("logged_in") === true;
 	}
 
 	abstract protected function build(Request $request): string;
@@ -69,10 +63,10 @@ abstract class Module {
 
 
 	/**
-	 * Creates an object of a module.
-	 * @param mixed $modName
-	 * @param mixed $render
-	 * @param mixed $dataMod
+	 * Creates an instance of a module.
+	 * @param string $modName The name of the Module.
+	 * @param bool $isXHR Whether the request is asynchronous or not.
+	 * @param bool $useDataMod Render response into the related data-mod tag of this Module. Otherwise data-mod="App" is used.
 	 * @return mixed
 	 */
 	public static function create(string $modName, bool $isXHR = false, bool $useDataMod = false): mixed
@@ -90,6 +84,7 @@ abstract class Module {
 				$module->injectServices();
 			}
 			$module->setXHR($isXHR);
+			$module->setName($modName);
 			$module->setProtected($protected);
 			if ($useDataMod)
 				$module->setDataMod($modName);
@@ -123,7 +118,7 @@ abstract class Module {
 			"metatags" => Config::get("metatags"),
 			"meta_http_equiv" => Config::get("meta_http_equiv"),
 			"caching" => false, // $this->getHistoryCaching(),
-			"module" => $this->modName,
+			"module" => $this->getName(),
 			"content" => $html
 		]);
 	}
@@ -152,6 +147,17 @@ abstract class Module {
 	protected function isXHR(): bool
 	{
 		return $this->isXHR;
+	}
+
+
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
+
+	public function getName(): string
+	{
+		return $this->name;
 	}
 
 
