@@ -17,10 +17,9 @@ abstract class Module {
 
 	public function __construct()
 	{
-		Session::start();
-
 		// Order matters!
-		Config::init(self::name());
+		Session::start();
+		Config::init();
 		Lang::init();
 		if (Config::get("cookie", "name"))
 			Cookie::read(Config::get("cookie", "name"));
@@ -49,7 +48,7 @@ abstract class Module {
 		}
 
 		if ($request->isXHR() || $task != "build") { // Create only the Module
-			$module = self::create($request->getModule(), $request->isXHR());
+			$module = Module::create($request->getModule(), $request->isXHR());
 			$appHtml = $module->$task($request);
 		} else { // Create the whole App
 			$appHtml = $this->build($request);
