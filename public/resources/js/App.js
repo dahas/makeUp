@@ -96,7 +96,6 @@ $(document).ready(() => {
     }
 
     loadContent = state => {
-        console.log(state);
         let path = state ? state.path : "/"
         $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS, async () => {
             let data = await requestData(path)
