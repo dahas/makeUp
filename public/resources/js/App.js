@@ -85,22 +85,22 @@ $(document).ready(() => {
             route += "/" + task;
         }
 
-        // if (mod) {
-            $(this).blur();
-            if (element) {
-                $('nav.navbar a.active').removeClass('active');
-                $(element).addClass('active');
-            }
-            let state = { path: route, caching: true, title: '', content: '' };
-            loadContent(state)
-            history.pushState(state, mod, route);
-        // }
+        $(this).blur();
+        if (element) {
+            $('nav.navbar a.active').removeClass('active');
+            $(element).addClass('active');
+        }
+        let state = { path: route, caching: true, title: '', content: '' };
+        loadContent(state)
+        history.pushState(state, mod, route);
     }
 
     loadContent = state => {
+        console.log(state);
+        let path = state ? state.path : "/"
         $('*[data-mod="App"]').animate({ opacity: 0 }, fadeDurMS, async () => {
-            let data = await requestData(state.path)
-                .catch(() => {console.log("ERROR! Cannot render Module! Please check your controller.")});
+            let data = await requestData(path)
+                .catch(() => { console.log("ERROR! Cannot render Module! Please check your controller.") });
             if (data) {
                 $('*[data-mod="App"]').html(data.content);
                 $(document).prop('title', data.title);
@@ -129,7 +129,7 @@ $(document).ready(() => {
             state = { path: route, caching: data.caching, title: data.title, content: data.content };
             history.replaceState(state, data.module, route);
             $('*[data-mod="App"]').html(data.content);
-            $(document).trigger("module.loaded", [data.module]); 
+            $(document).trigger("module.loaded", [data.module]);
         });
         return state;
     }
