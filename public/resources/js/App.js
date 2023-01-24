@@ -138,6 +138,4 @@ $(document).ready(() => {
         loadContent(event.state);
     }
 
-
 });
-
