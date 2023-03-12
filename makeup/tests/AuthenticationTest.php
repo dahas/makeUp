@@ -7,26 +7,23 @@ use makeUp\lib\Auth;
 
 class AuthenticationTest extends TestCase
 {
-    private $auth; 
-    private $authentication; 
+    private $auth;
  
     protected function setUp() : void
     {
-        $this->authentication = Module::create('Authentication');
         $this->auth = new Auth();
     }
  
     protected function tearDown() : void
     {
-        $this->authentication = NULL;
+        $this->auth = NULL;
     }
     
 
     public function testAuthenticate()
     {
-        $token = $this->auth->createFormToken("auth");
-        $this->assertTrue($this->authentication->authorize($token, 'user', 'pass'));
-        $this->assertFalse($this->authentication->authorize($token, 'user', 'asdfg'));
-        $this->assertFalse($this->authentication->authorize($token, 'qwert', 'pass'));
+        $this->assertTrue($this->auth->authorize('user', 'pass'));
+        $this->assertFalse($this->auth->authorize('user', 'asdfg'));
+        $this->assertFalse($this->auth->authorize('qwert', 'pass'));
     }
 }

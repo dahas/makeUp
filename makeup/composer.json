@@ -9,6 +9,9 @@
             "email": "dahas@gmx.de"
         }
     ],
+    "scripts": {
+        "test": "./vendor/bin/phpunit"
+    },
     "autoload": {
         "psr-4": {
             "makeUp\\": "app/",
@@ -17,6 +20,7 @@
             "makeUp\\services\\": "services/"
         }
     },
-    "require": {
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
     }
 }

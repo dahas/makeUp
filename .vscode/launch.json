@@ -2,10 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "makeUp xdebug",
+            "name": "App",
             "type": "php",
             "request": "launch",
             "program": "${workspaceRoot}/debug.php",
+            "args": [],
+            "externalConsole": false,
+            "port": 9003
+        },
+        {
+            "name": "File",
+            "type": "php",
+            "request": "launch",
+            "program": "${file}",
             "args": [],
             "externalConsole": false,
             "port": 9003
