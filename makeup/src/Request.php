@@ -12,16 +12,18 @@ class Request implements HttpRequest {
 
     public function __construct()
     {
-        $uri = parse_url($_SERVER['REQUEST_URI']);
-        $this->route = explode("/", substr($uri['path'], 1));
-
-        $query = [];
-        if (isset($uri['query']) && $uri['query']) {
-            parse_str($uri['query'], $query);
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $uri = parse_url($_SERVER['REQUEST_URI']);
+            $this->route = explode("/", substr($uri['path'], 1));
+    
+            $query = [];
+            if (isset($uri['query']) && $uri['query']) {
+                parse_str($uri['query'], $query);
+            }
+            $params = array_merge($_POST, $query);
+    
+            $this->parameters = $this->parseRequest($params);
         }
-        $params = array_merge($_POST, $query);
-
-        $this->parameters = $this->parseRequest($params);
 
         $_GET = null;
         $_POST = null;
