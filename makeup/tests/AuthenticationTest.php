@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-use makeUp\src\Module;
 use PHPUnit\Framework\TestCase;
-use makeUp\src\Utils;
 use makeUp\lib\Auth;
 
 class AuthenticationTest extends TestCase
@@ -18,7 +16,6 @@ class AuthenticationTest extends TestCase
     {
         $this->auth = NULL;
     }
-    
 
     public function testAuthenticate()
     {
