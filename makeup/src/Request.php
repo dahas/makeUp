@@ -38,7 +38,7 @@ class Request implements HttpRequest {
 
     public function getMethod(): string
     {
-        return $_SERVER['REQUEST_METHOD'];
+        return $_SERVER['REQUEST_METHOD'] ?? "";
     }
 
     public function issetRouteHeader(): bool 
