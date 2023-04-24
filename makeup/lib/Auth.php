@@ -69,6 +69,7 @@ final class Auth {
 		$validPw = password_verify($pw, $hash);
 
 		if ($username === $un && $validPw) {
+			Session::set("user", $username);
 			$this->setState(true);
 			return true;
 		}
