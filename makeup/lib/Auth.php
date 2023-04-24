@@ -37,6 +37,7 @@ final class Auth {
 		$userdata = $username . ":" . password_hash($password, PASSWORD_BCRYPT) . ":END";
 		if(fwrite($file, $userdata . PHP_EOL)) {
 			fclose($file);
+			Session::set("user", $username);
 			$this->setState(true);
 			return true;
 		}
